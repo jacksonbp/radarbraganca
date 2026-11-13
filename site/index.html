@@ -137,8 +137,8 @@ section{padding-top:44px;padding-bottom:8px}
 .more-d summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(--b);list-style:none;padding:4px 0}
 .more-d summary::-webkit-details-marker{display:none}
 .more-d summary::after{content:" ↓"}.more-d[open] summary::after{content:" ↑"}
-.badge .slot{display:none}
-.bh{padding:16px 18px 14px}
+@media(max-width:759px){.badge .slot{display:none}.bh{padding:16px 18px 14px}}
+@media(min-width:760px){.more-d summary{display:none}.bb2{padding-top:0}.method summary{cursor:default}.method summary::after{display:none}}
 .pres{display:flex;gap:14px;align-items:center}
 .pres p{margin:0;font-size:14.5px}
 .pres small{display:block;color:var(--mute);font-size:13px;margin-top:2px}
@@ -416,6 +416,7 @@ function openNaos(vi){
 
 /* ---------- topo vivo ---------- */
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const CEL=!matchMedia('(min-width:760px)').matches; // versão compacta só no celular
 function countUp(el,to){ if(reduce){el.textContent=nf(to);return} const t0=performance.now(),from=Math.round(to*.82);
   const step=t=>{const p=Math.min(1,(t-t0)/900),e=1-Math.pow(1-p,3);el.textContent=nf(Math.round(from+(to-from)*e));if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)}
 const STATS=[['',IT.length,'propostas até agora'],['k-b',D.catot.b||0,'pedidos nos bairros até agora'],['k-h',D.catot.h||0,'homenagens até agora'],['k-l',D.catot.l||0,'propostas de lei até agora']];
@@ -481,18 +482,19 @@ function bairro(q){
   if(!items.length){host.innerHTML=`<div class="panel"><p class="mute" style="margin:0">Nada encontrado para “${esc(q)}”. Confira a grafia ou tente só uma parte do nome.</p></div>`;return}
   const cnt=new Map(); items.forEach(it=>it[6].forEach(a=>cnt.set(a,(cnt.get(a)||0)+1)));
   const top=[...cnt.entries()].sort((a,b)=>b[1]-a[1]), mx=top[0][1];
-  const th=themeCount(items.filter(it=>it[4]==='b'||it[4]==='c')).slice(0,city?3:5);
+  const th=themeCount(items.filter(it=>it[4]==='b'||it[4]==='c')).slice(0,city&&CEL?3:5);
   const reps=city?[]:D.rep.filter(g=>g.items.some(it=>it.n.includes(k))).slice(0,3);
   host.innerHTML=`<div class="panel">
    <div class="ph"><span class="big num">${nf(items.length)}</span><p>${city?'propostas para <b>a cidade inteira</b> até agora':`${items.length===1?'proposta cita':'propostas citam'} <b>${esc(q.trim())}</b> até agora`}</p></div>
    <div class="two">
-     <div><h3>${city?'Quem mais propôs':'Quem mais pediu'}</h3><ol class="rank">${top.slice(0,city?3:5).map(([a,n])=>`<li>${av(a)}<span class="nm">${esc(V[a].ap)} <span class="mute" style="font-weight:400">· ${esc(V[a].part)}</span></span><b class="num">${nf(n)}</b><span class="br"><i style="width:${n/mx*100}%"></i></span></li>`).join('')}</ol>
-       ${top.length>(city?3:5)?`<p class="mute" style="font-size:13.5px;margin:10px 0 0">${city?`Os outros ${top.length-3} estão nos crachás, mais abaixo.`:`Mais ${top.length-5} vereadores também citaram.`}</p>`:''}</div>
+     <div><h3>${city?'Quem mais propôs':'Quem mais pediu'}</h3><ol class="rank">${top.slice(0,city&&CEL?3:5).map(([a,n])=>`<li>${av(a)}<span class="nm">${esc(V[a].ap)} <span class="mute" style="font-weight:400">· ${esc(V[a].part)}</span></span><b class="num">${nf(n)}</b><span class="br"><i style="width:${n/mx*100}%"></i></span></li>`).join('')}</ol>
+       ${top.length>(city&&CEL?3:5)?`<p class="mute" style="font-size:13.5px;margin:10px 0 0">${city?`Os outros ${top.length-(CEL?3:5)} estão nos crachás, mais abaixo.`:`Mais ${top.length-5} vereadores também citaram.`}</p>`:''}</div>
      ${th.length?`<div><h3>O que mais pedem</h3><ul class="themes">${th.map(([t,n])=>`<li><span class="ti">${svg(ICON[TH[t][1]],18)}</span><span>${esc(TH[t][0])}</span><b class="num">${nf(n)}</b></li>`).join('')}</ul></div>`:''}
+     ${city&&!CEL?`<div><h3>Bairros mais citados</h3><ul class="themes">${D.bairros.slice(0,5).map((b,i)=>`<li><span class="ti">${svg(ICON.pin,18)}</span><button class="lnk" type="button" data-b="${esc(b)}">${esc(b)}</button><b class="num">${nf(D.bairrosn[i])}</b></li>`).join('')}</ul></div>`:''}
    </div>
    ${reps.length?`<p class="h3" style="margin-top:24px">Problemas que voltam aqui</p><div class="reps">${reps.map(repHTML).join('')}</div>`:''}
    <p class="h3" style="margin-top:24px">${city?'As propostas mais recentes da cidade':'Os pedidos mais recentes'}</p><div id="blist"></div></div>`;
-  pager($('blist'),items,true,city?2:4);
+  pager($('blist'),items,true,city&&CEL?2:4);
 }
 $('bq').addEventListener('input',e=>{clearTimeout(bTimer);bTimer=setTimeout(()=>bairro(e.target.value),150)});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b){$('bq').value=b.dataset.b;bairro(b.dataset.b);$('bairro').scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'})}});
@@ -523,10 +525,12 @@ function badge(v){
      <div class="tags"><span class="pill">${esc(v.part)}</span>${v.mesa?`<span class="pill r">${esc(v.mesa)} da Câmara</span>`:''}</div></div>
    <div class="bb">
      <div class="pres">${ring(v)}<p><b class="num">${v.P} de ${t}</b> sessões ${D.pri?'desde '+mesAno(D.pri.replace(/-/g,'')):''}<small class="num">${v.A} ${v.A===1?'ausência justificada':'ausências justificadas'} · <b class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</b></small></p></div>
-     <div class="sum num"><span><b>${nf(tot)}</b> propostas</span><span class="ok"><b>${nf(v.vs)}</b> sim</span><span class="no"><b>${nf(v.vn+v.va)}</b> ${v.va?'não/abst.':'não'}</span></div>
-     <div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>
-     <details class="more-d"><summary>Ver o que propôs e como votou</summary><div class="bb2">
+     ${CEL?`<div class="sum num"><span><b>${nf(tot)}</b> propostas</span><span class="ok"><b>${nf(v.vs)}</b> sim</span><span class="no"><b>${nf(v.vn+v.va)}</b> ${v.va?'não/abst.':'não'}</span></div>
+     <div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>`
+     :`<div class="mini num"><div><b>${brl.format(D.sal.v).replace(/,\d\d$/,'')}</b><span>salário por mês${D.sal.confirmado?'':' (a confirmar)'}</span></div><div><b>${nf(tot)}</b><span>propostas desde a posse</span></div></div>`}
+     <details class="more-d" ${CEL?'':'open'}><summary>Ver o que propôs e como votou</summary><div class="bb2">
      <div><p class="h3">O que propôs até agora</p>
+       ${CEL?'':`<div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>`}
        ${ORDER.map(c=>`<button class="pick k-${c} num" type="button" data-v="${i}" data-c="${c}" ${v.cat[c]?'':'disabled'}><i></i><span>${CAT[c][0]}</span><b>${nf(v.cat[c])}</b><span class="ar" aria-hidden="true">›</span></button>`).join('')}</div>
      <div><p class="h3">Como votou até agora</p>
        <div class="vote num"><div><b>${nf(v.vs)}</b><span>vezes sim</span></div><div class="n"><b>${nf(v.vn+v.va)}</b><span>${v.va?'não ou abstenção':'vezes não'}</span></div></div>
@@ -552,6 +556,7 @@ render();
 $('m-pres').innerHTML=`Conta a presença na hora das votações nominais do plenário: quem votou (sim, não, abstenção, ou o presidente que não vota) estava lá; quem aparece como “ausente” em todas as votações da sessão teve falta. Foram ${D.sess} sessões${D.pri?' de '+dt(D.pri):''} até ${D.ult?dt(D.ult):'agora'}. <b>A Câmara só passou a registrar no sistema o voto de cada vereador em ${D.pri?mesAno(D.pri.replace(/-/g,'')):'2026'}</b>; antes disso, desde a posse, não há registro nominal, e o site não acusa ninguém por esse período. Sessões só com votação simbólica (sem lista de nomes) não entram.`;
 $('m-sal').innerHTML=`O valor é o mesmo para os ${V.length} e foi fixado pela <a href="${esc(D.sal.u)}" target="_blank" rel="noopener">${esc(D.sal.lei)}</a>. É o valor bruto. O contador do topo é uma estimativa: ${V.length} salários por mês, proporcional ao tempo desde a posse, sem 13º nem outros pagamentos.`+(D.sal.confirmado?'':' <b>O valor de R$ '+nf(D.sal.v)+' foi publicado pela imprensa local e ainda precisa ser conferido no texto oficial.</b>');
 $('m-vot').textContent=`Só entram as votações nominais, em que o sistema registra o voto de cada um: ${nf(D.nvot)}${D.pri?' desde '+dt(D.pri):''}. Em ${nf(D.unan)} delas, todos votaram igual.`;
+if(!CEL)document.querySelectorAll('.method details').forEach(d=>{d.open=true;d.querySelector('summary').addEventListener('click',e=>e.preventDefault())});
 $('m-erro').innerHTML=CONFIG.contato?`Escreva para <b>${esc(CONFIG.contato)}</b> com o link da proposta. A correção é feita rápido.`:'Avise pelo contato do projeto com o link da proposta. A correção é feita rápido.';
 $('rod').textContent=`Fonte: sistema legislativo da Câmara Municipal de Bragança Paulista (braganca.siscam.com.br). Coleta de ${dt(D.ger)}.`;
 </script>
