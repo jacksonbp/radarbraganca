@@ -146,6 +146,11 @@ section{padding-top:44px;padding-bottom:8px}
 .pill.r{background:#fff;color:var(--ink)}
 .bb{padding:14px 18px 16px;display:grid;gap:12px;flex:1}
 .bb2{display:grid;gap:14px;padding-top:12px}
+.vg{margin:0;font-size:14.5px}.vg b{font-size:17px}
+.cmp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.cmp div{background:var(--soft);border-radius:14px;padding:10px 12px}
+.cmp b{display:block;font-size:19px}.cmp span{font-size:12px;color:var(--mute)}
+.cmp .up b{color:var(--l)}.cmp .down b{color:var(--bad)}
 .sum{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14.5px;color:var(--mute)}
 .sum b{color:var(--ink);font-size:17px}.sum .ok b{color:var(--l)}.sum .no b{color:var(--bad)}
 .more-d summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(--b);list-style:none;padding:4px 0}
@@ -283,7 +288,7 @@ footer{border-top:1px solid var(--hair);margin-top:48px;padding-top:22px;padding
     <label class="field">Partido<select id="partido"><option value="">Todos</option></select></label>
     <label class="field">Ordenar por<select id="ordem">
       <option value="nome">Nome (A–Z)</option><option value="faltas">Mais faltas</option><option value="b">Mais pedidos no bairro</option>
-      <option value="l">Mais propostas de lei</option><option value="h">Mais homenagens</option><option value="nao">Mais votos “não”</option></select></label>
+      <option value="l">Mais propostas de lei</option><option value="h">Mais homenagens</option><option value="nao">Mais votos “não”</option><option value="vot">Mais votos em 2024</option><option value="vg">Mais gasto em viagens</option></select></label>
   </div>
   <p class="mute" id="conta" style="font-size:14px;margin:4px 0 0"></p>
   <div class="grid" id="grid"></div>
@@ -299,6 +304,8 @@ footer{border-top:1px solid var(--hair);margin-top:48px;padding-top:22px;padding
     <details><summary>Votos</summary><p id="m-vot"></p></details>
     <details><summary>Salário</summary><p id="m-sal"></p></details>
     <details><summary>Bairros e ruas</summary><p>O bairro e a rua são lidos do texto oficial de cada pedido (o trecho “Rua tal – Bairro tal”). Quando o texto não segue esse formato, o pedido não entra no cruzamento por rua, mas continua aparecendo na busca por palavra.</p></details>
+    <details><summary>Viagens oficiais</summary><p>Do Portal da Transparência da Câmara (Despesas de Viagens). O valor de cada viagem é lido da prestação de contas oficial (PDF). Ele soma alimentação e hospedagem de todos que foram na viagem, inclusive motorista e servidores, e não inclui combustível nem pedágio. Viagem com mais de um vereador aparece no crachá de cada um.</p></details>
+    <details><summary>Votos em 2024 e comparação com 2021–2024</summary><p>Os votos são o resultado oficial do TSE na eleição de 2024. A comparação usa as propostas que cada vereador apresentou na legislatura 2021–2024, com a mesma regra de grupos, divididas por 4 anos; o “agora” divide as propostas atuais pelo tempo desde a posse. Presença e votos da legislatura anterior não podem ser comparados: a Câmara só passou a registrar o voto de cada vereador em 2026.</p></details>
     <details><summary>O que não é falta</summary><p>Se o sistema não registrou ninguém numa sessão, ela não conta. Ausência justificada e licença médica aparecem separadas e não contam como falta.</p></details>
     <details open><summary>Achou um erro?</summary><p id="m-erro"></p></details>
   </div>
@@ -541,7 +548,7 @@ function badge(v){
      <div class="pres">${ring(v)}<p><b class="num">${v.P} de ${t}</b> sessões ${D.pri?'desde '+mesAno(D.pri.replace(/-/g,'')):''}<small class="num">${v.A} ${v.A===1?'ausência justificada':'ausências justificadas'} · <b class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</b></small></p></div>
      ${CEL?`<div class="sum num"><span><b>${nf(tot)}</b> propostas</span><span class="ok"><b>${nf(v.vs)}</b> sim</span><span class="no"><b>${nf(v.vn+v.va)}</b> ${v.va?'não/abst.':'não'}</span></div>
      <div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>`
-     :`<div class="mini num"><div><b>${brl.format(D.sal.v).replace(/,\d\d$/,'')}</b><span>salário por mês${D.sal.confirmado?'':' (a confirmar)'}</span></div><div><b>${nf(tot)}</b><span>propostas desde a posse</span></div></div>`}
+     :`<div class="mini num"><div><b>${brl.format(D.sal.v).replace(/,\d\d$/,'')}</b><span>salário por mês${D.sal.confirmado?'':' (a confirmar)'}</span></div><div><b>${v.vot!=null?nf(v.vot):'–'}</b><span>votos em 2024</span></div></div>`}
      <details class="more-d" ${CEL?'':'open'}><summary>Ver o que propôs e como votou</summary><div class="bb2">
      <div><p class="h3">O que propôs até agora</p>
        ${CEL?'':`<div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>`}
@@ -550,10 +557,32 @@ function badge(v){
        <div class="vote num"><div><b>${nf(v.vs)}</b><span>vezes sim</span></div><div class="n"><b>${nf(v.vn+v.va)}</b><span>${v.va?'não ou abstenção':'vezes não'}</span></div></div>
        ${v.mesa==='Presidente'?'<p class="mute" style="font-size:13.5px;margin:8px 0 0">O presidente só vota em caso de empate ou quórum especial.</p>':''}
        ${v.naos.length?`<p style="margin:10px 0 0"><button class="lnk" type="button" data-n="${i}">Ver quando não votou sim →</button></p>`:''}</div>
-     <p class="foot"><a href="${esc(v.ficha||v.url)}" target="_blank" rel="noopener">Ficha oficial na Câmara ↗</a>${v.email?` · <a href="mailto:${esc(v.email)}">${esc(v.email)}</a>`:''}</p>
+     ${antHTML(v,tot)}
+     <div><p class="h3">Viagens oficiais desde a posse</p>${v.vg&&v.vg.length
+       ?`<p class="vg num"><b>${nf(v.vg.length)}</b> ${v.vg.length===1?'viagem':'viagens'} · <b>${brl.format(v.vgt||0)}</b> em despesas</p><p style="margin:6px 0 0"><button class="lnk" type="button" data-vg="${i}">Ver destinos e motivos →</button></p>`
+       :`<p class="vg mute">${v.vg?'Nenhuma viagem oficial registrada no Portal da Transparência.':'Dado ainda não coletado.'}</p>`}</div>
+     <p class="foot">${CEL&&v.vot!=null?`<span class="mute">${nf(v.vot)} votos em 2024 (TSE)</span><br>`:''}<a href="${esc(v.ficha||v.url)}" target="_blank" rel="noopener">Ficha oficial na Câmara ↗</a>${v.email?` · <a href="mailto:${esc(v.email)}">${esc(v.email)}</a>`:''}</p>
    </div></details></div></article>`;
 }
-const ORD={nome:(a,b)=>a.ap.localeCompare(b.ap,'pt'),faltas:(a,b)=>(b.F-a.F)||(b.A-a.A),l:(a,b)=>b.cat.l-a.cat.l,h:(a,b)=>b.cat.h-a.cat.h,b:(a,b)=>b.cat.b-a.cat.b,nao:(a,b)=>(b.vn+b.va)-(a.vn+a.va)};
+/* comparação com a legislatura 2021–2024: propostas por ano, mesma regra de grupos */
+const ANOS_ATUAL=Math.max(.25,(Date.now()-new Date(D.posse+'T00:00:00-03:00').getTime())/(365.25*864e5));
+function antHTML(v,tot){
+  if(!v.ant)return '';
+  if(!v.ant.tot)return `<div><p class="h3">Comparado com 2021–2024</p><p class="vg mute">Não apresentou propostas em 2021–2024: é o primeiro mandato ou era suplente.</p></div>`;
+  const a=v.ant.tot/4, b=tot/ANOS_ATUAL, d=a?Math.round((b-a)/a*100):0;
+  const f=x=>x.toLocaleString('pt-BR',{maximumFractionDigits:0});
+  return `<div><p class="h3">Comparado com 2021–2024</p>
+    <div class="cmp num"><div><b>${f(a)}</b><span>propostas por ano antes</span></div><div><b>${f(b)}</b><span>propostas por ano agora</span></div><div class="${d>=0?'up':'down'}"><b>${d>0?'+':''}${d}%</b><span>${d>=0?'a mais':'a menos'}</span></div></div>
+    <p class="mute" style="font-size:12.5px;margin:6px 0 0">Antes: ${nf(v.ant.cat.b)} pedidos, ${nf(v.ant.cat.l)} propostas de lei, ${nf(v.ant.cat.h)} homenagens (4 anos).</p></div>`;
+}
+function openVg(vi){
+  const v=V[vi];
+  openSheet('o','bus',`Viagens oficiais de ${v.ap}`,`${v.vg.length} ${v.vg.length===1?'viagem':'viagens'} · ${brl.format(v.vgt||0)} desde a posse`);
+  $('sh-b').innerHTML=`<p class="warn" style="margin-bottom:14px">O valor é o que a Câmara registrou na prestação de contas de cada viagem: alimentação e hospedagem de <b>todos os participantes</b> (inclusive motorista e servidores). <b>Não inclui combustível e pedágio.</b></p><ul class="items">`+v.vg.map(t=>`<li class="it k-o"><span class="ic">${svg(ICON.bus)}</span><div><p class="tx"><b>${esc(t.de)}</b><br>${esc(t.mo)}</p>
+    <div class="mt">${t.v!=null?`<span class="stt">${brl.format(t.v)}</span>`:'<span class="stt">valor não lido</span>'}${t.dt?`<span>${esc(t.dt)}</span>`:''}<span>·</span><span>Despesa ${esc(t.k.split('-')[1])}/${esc(t.k.split('-')[0])}</span></div>
+    <div class="ft"><span></span>${t.u?`<a class="ext" href="${esc(t.u)}" target="_blank" rel="noopener">Prestação de contas ↗</a>`:''}</div></div></li>`).join('')+'</ul>';
+}
+const ORD={nome:(a,b)=>a.ap.localeCompare(b.ap,'pt'),faltas:(a,b)=>(b.F-a.F)||(b.A-a.A),l:(a,b)=>b.cat.l-a.cat.l,h:(a,b)=>b.cat.h-a.cat.h,b:(a,b)=>b.cat.b-a.cat.b,nao:(a,b)=>(b.vn+b.va)-(a.vn+a.va),vot:(a,b)=>(b.vot||0)-(a.vot||0),vg:(a,b)=>(b.vgt||0)-(a.vgt||0)};
 function render(){
   const q=norm($('q').value.trim()),p=$('partido').value,o=$('ordem').value;
   const L=V.filter(v=>(!p||v.part===p)&&(!q||norm(v.ap+' '+v.nome).includes(q))).sort((a,b)=>ORD[o](a,b)||ORD.nome(a,b));
@@ -563,6 +592,7 @@ function render(){
 ['q','partido','ordem'].forEach(id=>$(id).addEventListener('input',render));
 $('grid').addEventListener('click',e=>{
   const p=e.target.closest('.pick'); if(p&&!p.disabled){openCat(p.dataset.c,+p.dataset.v);return}
+  const g=e.target.closest('[data-vg]'); if(g){openVg(+g.dataset.vg);return}
   const n=e.target.closest('[data-n]'); if(n)openNaos(+n.dataset.n)});
 render();
 

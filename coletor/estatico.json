@@ -1,0 +1,271 @@
+{
+ "fonte_tse": "https://resultados.tse.jus.br/oficial/ele2024/619/dados/sp/sp62510-c0013-e000619-u.json",
+ "v": {
+  "181": {
+   "votos": 1527,
+   "sit": "Eleito por média",
+   "ant": {
+    "cat": {
+     "b": 0,
+     "c": 0,
+     "h": 0,
+     "l": 0,
+     "o": 0
+    },
+    "tot": 0
+   }
+  },
+  "196": {
+   "votos": 1516,
+   "sit": "Eleito por média",
+   "ant": {
+    "cat": {
+     "b": 0,
+     "c": 0,
+     "h": 0,
+     "l": 0,
+     "o": 0
+    },
+    "tot": 0
+   }
+  },
+  "362": {
+   "votos": 1730,
+   "sit": "Eleito por QP",
+   "ant": {
+    "cat": {
+     "b": 339,
+     "c": 176,
+     "h": 3735,
+     "l": 15,
+     "o": 17
+    },
+    "tot": 4282
+   }
+  },
+  "363": {
+   "votos": 1391,
+   "sit": "Eleito por QP",
+   "ant": {
+    "cat": {
+     "b": 1295,
+     "c": 254,
+     "h": 3728,
+     "l": 2,
+     "o": 3
+    },
+    "tot": 5282
+   }
+  },
+  "176": {
+   "votos": 1187,
+   "sit": "Eleito por QP",
+   "ant": {
+    "cat": {
+     "b": 0,
+     "c": 0,
+     "h": 0,
+     "l": 0,
+     "o": 0
+    },
+    "tot": 0
+   }
+  },
+  "56": {
+   "votos": 2621,
+   "sit": "Eleito por QP",
+   "ant": {
+    "cat": {
+     "b": 212,
+     "c": 120,
+     "h": 3732,
+     "l": 6,
+     "o": 10
+    },
+    "tot": 4080
+   }
+  },
+  "158": {
+   "votos": 1477,
+   "sit": "Eleito por QP",
+   "ant": {
+    "cat": {
+     "b": 327,
+     "c": 110,
+     "h": 3644,
+     "l": 2,
+     "o": 5
+    },
+    "tot": 4088
+   }
+  },
+  "194": {
+   "votos": 883,
+   "sit": "Eleito por média",
+   "ant": {
+    "cat": {
+     "b": 0,
+     "c": 0,
+     "h": 0,
+     "l": 0,
+     "o": 0
+    },
+    "tot": 0
+   }
+  },
+  "166": {
+   "votos": 978,
+   "sit": "Eleito por média",
+   "ant": {
+    "cat": {
+     "b": 818,
+     "c": 122,
+     "h": 3627,
+     "l": 3,
+     "o": 2
+    },
+    "tot": 4572
+   }
+  },
+  "182": {
+   "votos": 1188,
+   "sit": "Eleito por média",
+   "ant": {
+    "cat": {
+     "b": 0,
+     "c": 0,
+     "h": 0,
+     "l": 0,
+     "o": 0
+    },
+    "tot": 0
+   }
+  },
+  "161": {
+   "votos": 2341,
+   "sit": "Eleito por QP",
+   "ant": {
+    "cat": {
+     "b": 4222,
+     "c": 326,
+     "h": 3721,
+     "l": 2,
+     "o": 4
+    },
+    "tot": 8275
+   }
+  },
+  "180": {
+   "votos": 1243,
+   "sit": "Eleito por média",
+   "ant": {
+    "cat": {
+     "b": 0,
+     "c": 0,
+     "h": 0,
+     "l": 0,
+     "o": 0
+    },
+    "tot": 0
+   }
+  },
+  "77": {
+   "votos": 1611,
+   "sit": "Eleito por QP",
+   "ant": {
+    "cat": {
+     "b": 965,
+     "c": 415,
+     "h": 3578,
+     "l": 0,
+     "o": 2
+    },
+    "tot": 4960
+   }
+  },
+  "183": {
+   "votos": 699,
+   "sit": "Eleito por QP",
+   "ant": {
+    "cat": {
+     "b": 597,
+     "c": 169,
+     "h": 3736,
+     "l": 9,
+     "o": 5
+    },
+    "tot": 4516
+   }
+  },
+  "302": {
+   "votos": 2713,
+   "sit": "Eleito por QP",
+   "ant": {
+    "cat": {
+     "b": 12,
+     "c": 1406,
+     "h": 21,
+     "l": 6,
+     "o": 2
+    },
+    "tot": 1447
+   }
+  },
+  "311": {
+   "votos": 968,
+   "sit": "Eleito por média",
+   "ant": {
+    "cat": {
+     "b": 0,
+     "c": 0,
+     "h": 0,
+     "l": 0,
+     "o": 0
+    },
+    "tot": 0
+   }
+  },
+  "262": {
+   "votos": 639,
+   "sit": "Eleito por média",
+   "ant": {
+    "cat": {
+     "b": 159,
+     "c": 127,
+     "h": 1920,
+     "l": 7,
+     "o": 3
+    },
+    "tot": 2216
+   }
+  },
+  "171": {
+   "votos": 1022,
+   "sit": "Eleito por QP",
+   "ant": {
+    "cat": {
+     "b": 0,
+     "c": 0,
+     "h": 0,
+     "l": 0,
+     "o": 0
+    },
+    "tot": 0
+   }
+  },
+  "329": {
+   "votos": 1314,
+   "sit": "Eleito por QP",
+   "ant": {
+    "cat": {
+     "b": 275,
+     "c": 68,
+     "h": 3729,
+     "l": 1,
+     "o": 3
+    },
+    "tot": 4076
+   }
+  }
+ }
+}

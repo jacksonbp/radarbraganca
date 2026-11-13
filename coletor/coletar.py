@@ -357,6 +357,19 @@ def montar():
     docs = coletar_documentos(V)
     votos = coletar_votacoes(V)
     just = coletar_justificadas(V)
+    try:
+        from viagens import coletar_viagens
+        coletar_viagens(V, baixar, baixar_bin)
+    except Exception as e:  # viagens são um extra: se falhar, o resto do site continua
+        print("   ! viagens não coletadas:", e, file=sys.stderr)
+    try:
+        est = json.load(open(os.path.join(RAIZ, "coletor", "estatico.json"), encoding="utf-8"))["v"]
+        for v in V:
+            e = est.get(str(v["sid"]), {})
+            v["vot"] = e.get("votos")
+            v["ant"] = e.get("ant")
+    except Exception as e:
+        print("   ! estatico.json não lido:", e, file=sys.stderr)
 
     print("5/5 Cruzando os dados…")
     # itens: [id, codigo, texto, aaaammdd, grupo, resultado, autores, temGrupo(1=proposituras,3=projetos), tema, rua, bairro]
@@ -442,7 +455,7 @@ def montar():
         "sess": len(sess_ok), "ult": max((d for _, d in sess_ok), default=""), "pri": min((d for _, d in sess_ok), default=""), "semreg": len(semreg),
         "bairros": [b for b, _ in bairros], "bairrosn": [n for _, n in bairros],
         "rep": rep,
-        "v": [{k: v.get(k) for k in ("id", "ap", "nome", "part", "mesa", "foto", "email", "url", "ficha", "cat", "vs", "vn", "va", "P", "A", "F", "naos")} for v in V],
+        "v": [{k: v.get(k) for k in ("id", "ap", "nome", "part", "mesa", "foto", "email", "url", "ficha", "cat", "vs", "vn", "va", "P", "A", "F", "naos", "vot", "ant", "vg", "vgt")} for v in V],
         "items": IT,
     }
     conferir(dados)
