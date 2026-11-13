@@ -41,7 +41,7 @@ A Câmara de Bragança **não usa o SAPL** (o sistema de Hortolândia). Ela usa 
 2. Envie todos estes arquivos para o repositório (botão "Add file → Upload files", arrastando as pastas).
 3. No repositório: **Settings → Pages → Source: GitHub Actions**.
 4. Vá em **Actions → Atualizar dados e publicar → Run workflow** para rodar a primeira vez.
-5. O site fica em `https://SEU-USUARIO.github.io/radarbraganca/`. Depois, ajuste `site:` no `CONFIG`.
+5. O site fica em `https://jacksonbp.github.io/radarbraganca/`. Depois, ajuste `site:` no `CONFIG`.
 
 ## Rodar o robô no seu computador
 
