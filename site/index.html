@@ -130,7 +130,15 @@ section{padding-top:44px;padding-bottom:8px}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .pill{background:var(--ink);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.04em;border-radius:7px;padding:3px 8px;text-transform:uppercase}
 .pill.r{background:#fff;color:var(--ink)}
-.bb{padding:16px 18px 18px;display:grid;gap:14px;flex:1}
+.bb{padding:14px 18px 16px;display:grid;gap:12px;flex:1}
+.bb2{display:grid;gap:14px;padding-top:12px}
+.sum{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14.5px;color:var(--mute)}
+.sum b{color:var(--ink);font-size:17px}.sum .ok b{color:var(--l)}.sum .no b{color:var(--bad)}
+.more-d summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(--b);list-style:none;padding:4px 0}
+.more-d summary::-webkit-details-marker{display:none}
+.more-d summary::after{content:" ↓"}.more-d[open] summary::after{content:" ↑"}
+.badge .slot{display:none}
+.bh{padding:16px 18px 14px}
 .pres{display:flex;gap:14px;align-items:center}
 .pres p{margin:0;font-size:14.5px}
 .pres small{display:block;color:var(--mute);font-size:13px;margin-top:2px}
@@ -194,9 +202,12 @@ section{padding-top:44px;padding-bottom:8px}
 /* método */
 .method{display:grid;gap:12px}
 @media(min-width:760px){.method{grid-template-columns:repeat(2,1fr)}}
-.method div{background:var(--soft);border-radius:18px;padding:16px 18px}
-.method h3{margin:0 0 6px;font-size:16px}
-.method p{margin:0;font-size:14.5px;color:var(--mute)}
+.method{gap:8px}
+.method details{background:var(--soft);border-radius:14px;padding:12px 16px}
+.method summary{cursor:pointer;font-weight:700;font-size:15.5px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.method summary::-webkit-details-marker{display:none}
+.method summary::after{content:"+";color:var(--mute);font-weight:400}.method details[open] summary::after{content:"–"}
+.method p{margin:8px 0 2px;font-size:14.5px;color:var(--mute)}
 footer{border-top:1px solid var(--hair);margin-top:48px;padding-top:22px;padding-bottom:40px;font-size:13.5px;color:var(--mute)}
 @media (prefers-reduced-motion:reduce){.live i{animation:none}.sheet,.veil{transition:none}}
 </style>
@@ -268,14 +279,14 @@ footer{border-top:1px solid var(--hair);margin-top:48px;padding-top:22px;padding
   <p class="eyebrow">Transparência</p>
   <h2>Como contamos</h2>
   <div class="method">
-    <div><h3>De onde vêm os dados</h3><p>Do sistema oficial da Câmara Municipal de Bragança Paulista (braganca.siscam.com.br) e do site camarabp.sp.gov.br. Um robô volta lá todo dia de madrugada. Cada proposta tem um link para a página oficial.</p></div>
-    <div><h3>Presença</h3><p id="m-pres"></p></div>
-    <div><h3>Os grupos de propostas</h3><p>A mesma regra vale para todos. <b>Indicação</b> é pedido de melhoria. <b>Pedido de informação</b> e <b>requerimento</b> são cobranças. Moções, requerimentos e projetos que dão parabéns, votos de pesar, título, medalha, nome de rua ou criam data comemorativa são <b>homenagens</b>. Os demais projetos são <b>propostas de lei</b>. Moções de apoio ou repúdio e regras internas da Câmara ficam em <b>outros</b>.</p></div>
-    <div><h3>Votos</h3><p id="m-vot"></p></div>
-    <div><h3>Salário</h3><p id="m-sal"></p></div>
-    <div><h3>Bairros e ruas</h3><p>O bairro e a rua são lidos do texto oficial de cada pedido (o trecho “Rua tal – Bairro tal”). Quando o texto não segue esse formato, o pedido não entra no cruzamento por rua, mas continua aparecendo na busca por palavra.</p></div>
-    <div><h3>O que não é falta</h3><p>Se o sistema não registrou ninguém numa sessão, ela não conta. Ausência justificada e licença médica aparecem separadas e não contam como falta.</p></div>
-    <div><h3>Achou um erro?</h3><p id="m-erro"></p></div>
+    <details><summary>De onde vêm os dados</summary><p>Do sistema oficial da Câmara Municipal de Bragança Paulista (braganca.siscam.com.br) e do site camarabp.sp.gov.br. Um robô volta lá todo dia de madrugada. Cada proposta tem um link para a página oficial.</p></details>
+    <details><summary>Presença</summary><p id="m-pres"></p></details>
+    <details><summary>Os grupos de propostas</summary><p>A mesma regra vale para todos. <b>Indicação</b> é pedido de melhoria. <b>Pedido de informação</b>, <b>requerimento</b> e moção de <b>apelo</b> são cobranças. Moções, requerimentos e projetos que dão parabéns, votos de pesar, título, medalha, nome de rua ou criam data comemorativa são <b>homenagens</b>. Os demais projetos são <b>propostas de lei</b>. Moções de apoio ou repúdio e regras internas da Câmara ficam em <b>outros</b>.</p></details>
+    <details><summary>Votos</summary><p id="m-vot"></p></details>
+    <details><summary>Salário</summary><p id="m-sal"></p></details>
+    <details><summary>Bairros e ruas</summary><p>O bairro e a rua são lidos do texto oficial de cada pedido (o trecho “Rua tal – Bairro tal”). Quando o texto não segue esse formato, o pedido não entra no cruzamento por rua, mas continua aparecendo na busca por palavra.</p></details>
+    <details><summary>O que não é falta</summary><p>Se o sistema não registrou ninguém numa sessão, ela não conta. Ausência justificada e licença médica aparecem separadas e não contam como falta.</p></details>
+    <details open><summary>Achou um erro?</summary><p id="m-erro"></p></details>
   </div>
 </section>
 </main>
@@ -453,7 +464,8 @@ function openRep(g){
 document.addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(b)openRep(D.rep[+b.dataset.g])});
 (function(){let n=0; const host=$('reps'), btn=document.createElement('button'); btn.className='more'; btn.type='button'; btn.style.gridColumn='1/-1';
   if(!D.rep.length){host.innerHTML='<p class="mute">Ainda não há pedidos repetidos para a mesma rua.</p>';return}
-  const add=()=>{host.insertAdjacentHTML('beforeend',D.rep.slice(n,n+9).map(repHTML).join(''));n+=9;host.appendChild(btn);
+  const step=matchMedia('(min-width:760px)').matches?9:3;
+  const add=()=>{host.insertAdjacentHTML('beforeend',D.rep.slice(n,n+step).map(repHTML).join(''));n+=step;host.appendChild(btn);
     if(n>=D.rep.length)btn.remove();else btn.textContent=`Mostrar mais ruas (${D.rep.length-n} na fila)`};
   btn.addEventListener('click',()=>{btn.remove();add()}); add();})();
 
@@ -469,19 +481,18 @@ function bairro(q){
   if(!items.length){host.innerHTML=`<div class="panel"><p class="mute" style="margin:0">Nada encontrado para “${esc(q)}”. Confira a grafia ou tente só uma parte do nome.</p></div>`;return}
   const cnt=new Map(); items.forEach(it=>it[6].forEach(a=>cnt.set(a,(cnt.get(a)||0)+1)));
   const top=[...cnt.entries()].sort((a,b)=>b[1]-a[1]), mx=top[0][1];
-  const th=themeCount(items.filter(it=>it[4]==='b'||it[4]==='c')).slice(0,5);
+  const th=themeCount(items.filter(it=>it[4]==='b'||it[4]==='c')).slice(0,city?3:5);
   const reps=city?[]:D.rep.filter(g=>g.items.some(it=>it.n.includes(k))).slice(0,3);
   host.innerHTML=`<div class="panel">
    <div class="ph"><span class="big num">${nf(items.length)}</span><p>${city?'propostas para <b>a cidade inteira</b> até agora':`${items.length===1?'proposta cita':'propostas citam'} <b>${esc(q.trim())}</b> até agora`}</p></div>
    <div class="two">
-     <div><h3>${city?'Quem mais propôs':'Quem mais pediu'}</h3><ol class="rank">${top.slice(0,5).map(([a,n])=>`<li>${av(a)}<span class="nm">${esc(V[a].ap)} <span class="mute" style="font-weight:400">· ${esc(V[a].part)}</span></span><b class="num">${nf(n)}</b><span class="br"><i style="width:${n/mx*100}%"></i></span></li>`).join('')}</ol>
-       ${top.length>5?`<p class="mute" style="font-size:13.5px;margin:10px 0 0">${city?`Os outros ${top.length-5} estão nos crachás, mais abaixo.`:`Mais ${top.length-5} vereadores também citaram.`}</p>`:''}</div>
+     <div><h3>${city?'Quem mais propôs':'Quem mais pediu'}</h3><ol class="rank">${top.slice(0,city?3:5).map(([a,n])=>`<li>${av(a)}<span class="nm">${esc(V[a].ap)} <span class="mute" style="font-weight:400">· ${esc(V[a].part)}</span></span><b class="num">${nf(n)}</b><span class="br"><i style="width:${n/mx*100}%"></i></span></li>`).join('')}</ol>
+       ${top.length>(city?3:5)?`<p class="mute" style="font-size:13.5px;margin:10px 0 0">${city?`Os outros ${top.length-3} estão nos crachás, mais abaixo.`:`Mais ${top.length-5} vereadores também citaram.`}</p>`:''}</div>
      ${th.length?`<div><h3>O que mais pedem</h3><ul class="themes">${th.map(([t,n])=>`<li><span class="ti">${svg(ICON[TH[t][1]],18)}</span><span>${esc(TH[t][0])}</span><b class="num">${nf(n)}</b></li>`).join('')}</ul></div>`:''}
-     ${city?`<div><h3>Bairros mais citados</h3><ul class="themes">${D.bairros.slice(0,5).map((b,i)=>`<li><span class="ti">${svg(ICON.pin,18)}</span><button class="lnk" type="button" data-b="${esc(b)}">${esc(b)}</button><b class="num">${nf(D.bairrosn[i])}</b></li>`).join('')}</ul></div>`:''}
    </div>
    ${reps.length?`<p class="h3" style="margin-top:24px">Problemas que voltam aqui</p><div class="reps">${reps.map(repHTML).join('')}</div>`:''}
    <p class="h3" style="margin-top:24px">${city?'As propostas mais recentes da cidade':'Os pedidos mais recentes'}</p><div id="blist"></div></div>`;
-  pager($('blist'),items,true,4);
+  pager($('blist'),items,true,city?2:4);
 }
 $('bq').addEventListener('input',e=>{clearTimeout(bTimer);bTimer=setTimeout(()=>bairro(e.target.value),150)});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b){$('bq').value=b.dataset.b;bairro(b.dataset.b);$('bairro').scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'})}});
@@ -512,16 +523,17 @@ function badge(v){
      <div class="tags"><span class="pill">${esc(v.part)}</span>${v.mesa?`<span class="pill r">${esc(v.mesa)} da Câmara</span>`:''}</div></div>
    <div class="bb">
      <div class="pres">${ring(v)}<p><b class="num">${v.P} de ${t}</b> sessões ${D.pri?'desde '+mesAno(D.pri.replace(/-/g,'')):''}<small class="num">${v.A} ${v.A===1?'ausência justificada':'ausências justificadas'} · <b class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</b></small></p></div>
-     <div class="mini num"><div><b>${brl.format(D.sal.v).replace(/,\d\d$/,'')}</b><span>salário por mês${D.sal.confirmado?'':' (a confirmar)'}</span></div><div><b>${nf(tot)}</b><span>propostas desde a posse</span></div></div>
+     <div class="sum num"><span><b>${nf(tot)}</b> propostas</span><span class="ok"><b>${nf(v.vs)}</b> sim</span><span class="no"><b>${nf(v.vn+v.va)}</b> ${v.va?'não/abst.':'não'}</span></div>
+     <div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>
+     <details class="more-d"><summary>Ver o que propôs e como votou</summary><div class="bb2">
      <div><p class="h3">O que propôs até agora</p>
-       <div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>
        ${ORDER.map(c=>`<button class="pick k-${c} num" type="button" data-v="${i}" data-c="${c}" ${v.cat[c]?'':'disabled'}><i></i><span>${CAT[c][0]}</span><b>${nf(v.cat[c])}</b><span class="ar" aria-hidden="true">›</span></button>`).join('')}</div>
      <div><p class="h3">Como votou até agora</p>
        <div class="vote num"><div><b>${nf(v.vs)}</b><span>vezes sim</span></div><div class="n"><b>${nf(v.vn+v.va)}</b><span>${v.va?'não ou abstenção':'vezes não'}</span></div></div>
        ${v.mesa==='Presidente'?'<p class="mute" style="font-size:13.5px;margin:8px 0 0">O presidente só vota em caso de empate ou quórum especial.</p>':''}
        ${v.naos.length?`<p style="margin:10px 0 0"><button class="lnk" type="button" data-n="${i}">Ver quando não votou sim →</button></p>`:''}</div>
      <p class="foot"><a href="${esc(v.ficha||v.url)}" target="_blank" rel="noopener">Ficha oficial na Câmara ↗</a>${v.email?` · <a href="mailto:${esc(v.email)}">${esc(v.email)}</a>`:''}</p>
-   </div></article>`;
+   </div></details></div></article>`;
 }
 const ORD={nome:(a,b)=>a.ap.localeCompare(b.ap,'pt'),faltas:(a,b)=>(b.F-a.F)||(b.A-a.A),l:(a,b)=>b.cat.l-a.cat.l,h:(a,b)=>b.cat.h-a.cat.h,b:(a,b)=>b.cat.b-a.cat.b,nao:(a,b)=>(b.vn+b.va)-(a.vn+a.va)};
 function render(){
