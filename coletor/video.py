@@ -375,6 +375,11 @@ cenas = [cena_abertura(), cena_cidade(),
                      ["das votações:", "todos votaram igual"], nota=f"{D['unan']} de {D['nvot']} votações nominais desde {D['pri'][8:10]}/{D['pri'][5:7]}/{D['pri'][:4]}."),
          cena_rua(), cena_transicao()] + [c for i, v in enumerate(V) for c in (cena_vereador(v, i), cena_pedidos(v, i))] + [cena_propaganda(), cena_final()]
 
+if os.environ.get("DURS"):  # tempos de cada cena ajustados à narração gravada
+    _d = json.load(open(os.environ["DURS"]))["durs"]
+    assert len(_d) == len(cenas), (len(_d), len(cenas))
+    cenas = [(q, d) for (q, _), d in zip(cenas, _d)]
+
 if os.environ.get("PREVIA"):  # só tira fotos de algumas cenas, para conferir o visual
     pasta = os.path.join(RAIZ, "video", "previa"); os.makedirs(pasta, exist_ok=True)
     for k in [int(x) for x in os.environ["PREVIA"].split(",")]:
