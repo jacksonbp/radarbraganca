@@ -93,10 +93,10 @@ def cena_abertura():
             texto(d, (W // 2, 1605), "Só dados oficiais da Câmara", F(BOLD, 42), INK, "mm")
         rodape(d, "bragancaterraquerida.com.br")
         return im
-    return q, 4.0
+    return q, 3.5
 
 
-def cena_numero(eyebrow, grande, cor, linhas, nota=None, dur=4.0, de=None):
+def cena_numero(eyebrow, grande, cor, linhas, nota=None, dur=4.5, de=None):
     def q(t):
         im = Image.new("RGB", (W, H), WHITE); d = ImageDraw.Draw(im); faixa(d)
         texto(d, (W // 2, 470), eyebrow.upper(), F(BOLD, 40), MUTE, "mm")
@@ -137,7 +137,7 @@ def cena_cidade():
             texto(d, (W // 2, 1660), f"Para cada proposta de lei, {nf(c.get('b', 0) / max(1, c.get('l', 1)))} pedidos de bairro.", F(BOLD, 44), INK, "mm")
         rodape(d)
         return im
-    return q, 5.0
+    return q, 6.0
 
 
 def cena_rua():
@@ -160,17 +160,22 @@ def cena_rua():
                 texto(d, (W // 2, y + 260 + k * 60), l, F(REG, 42), MUTE, "mm")
         rodape(d, "Fonte: Indicações oficiais da Câmara (SISCAM)")
         return im
-    return q, 5.0
+    return q, 5.5
 
 
 def cena_transicao():
     def q(t):
         im = Image.new("RGB", (W, H), INK); d = ImageDraw.Draw(im)
         texto(d, (W // 2, 820), "E cada um", F(BLACK, 110), WHITE, "mm")
-        texto(d, (W // 2, 960), "dos 19 vereadores?", F(BLACK, 96), (255, 143, 139), "mm")
+        texto(d, (W // 2, 960), "dos 19 vereadores?", F(BLACK, 84), (255, 143, 139), "mm")
         texto(d, (W // 2, 1140), "Em ordem alfabética, com a mesma régua.", F(BOLD, 46), (184, 194, 204), "mm")
+        for k, (s, cor) in enumerate([("Presença nas sessões", WHITE), ("Propostas que fez", (109, 156, 255)), ("Bairro com mais pedidos", (255, 143, 139))]):
+            if t > .8 + k * .5:
+                y = 1320 + k * 110
+                d.rounded_rectangle([170, y - 44, W - 170, y + 44], 44, fill=(40, 48, 58))
+                texto(d, (W // 2, y), s, F(BOLD, 48), cor, "mm")
         return im
-    return q, 2.6
+    return q, 6.0
 
 
 FOTOS = {}
@@ -347,7 +352,7 @@ def cena_propaganda():
             texto(d, (W // 2, 1685), "bragancaterraquerida.com.br", F(BLACK, 58), WHITE, "mm")
             texto(d, (W // 2, 1830), "Link na bio  ·  só dados oficiais  ·  atualizado todo dia", F(BOLD, 36), (184, 194, 204), "mm")
         return im
-    return q, 7.5
+    return q, 6.5
 
 
 def cena_final():
@@ -362,7 +367,7 @@ def cena_final():
         texto(d, (W // 2, 1640), "Compartilhe com quem mora em Bragança", F(BOLD, 46), RED, "mm")
         rodape(d, "Fontes: Câmara Municipal (SISCAM), Portal da Transparência e TSE")
         return im
-    return q, 4.0
+    return q, 3.5
 
 
 cenas = [cena_abertura(), cena_cidade(),
