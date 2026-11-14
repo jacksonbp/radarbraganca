@@ -2,3 +2,5 @@ coleta.log
 __pycache__/
 *.tmp
 .claude/
+video/
+auditoria.log

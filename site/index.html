@@ -160,6 +160,9 @@ section{padding-top:44px;padding-bottom:8px}
 @media(min-width:760px){.more-d summary{display:none}.bb2{padding-top:0}.method summary{cursor:default}.method summary::after{display:none}}
 .pres{display:flex;gap:14px;align-items:center}
 .pres p{margin:0;font-size:14.5px}
+.com{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:baseline;font-size:14px;background:var(--soft);border-radius:12px;padding:8px 12px}
+.com .cl{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.com small{grid-column:1/-1;font-size:12px}
 .pres small{display:block;color:var(--mute);font-size:13px;margin-top:2px}
 .bad{color:var(--bad)}
 .ring{position:relative;flex:none}
@@ -288,7 +291,7 @@ footer{border-top:1px solid var(--hair);margin-top:48px;padding-top:22px;padding
     <label class="field">Partido<select id="partido"><option value="">Todos</option></select></label>
     <label class="field">Ordenar por<select id="ordem">
       <option value="nome">Nome (A–Z)</option><option value="faltas">Mais faltas</option><option value="b">Mais pedidos no bairro</option>
-      <option value="l">Mais propostas de lei</option><option value="h">Mais homenagens</option><option value="nao">Mais votos “não”</option><option value="vot">Mais votos em 2024</option><option value="vg">Mais gasto em viagens</option></select></label>
+      <option value="l">Mais propostas de lei</option><option value="h">Mais homenagens</option><option value="nao">Mais votos “não”</option><option value="vot">Mais votos em 2024</option><option value="vg">Mais gasto em viagens</option><option value="cf">Mais faltas em comissões</option></select></label>
   </div>
   <p class="mute" id="conta" style="font-size:14px;margin:4px 0 0"></p>
   <div class="grid" id="grid"></div>
@@ -306,6 +309,7 @@ footer{border-top:1px solid var(--hair);margin-top:48px;padding-top:22px;padding
     <details><summary>Bairros e ruas</summary><p>O bairro e a rua são lidos do texto oficial de cada pedido (o trecho “Rua tal – Bairro tal”). Quando o texto não segue esse formato, o pedido não entra no cruzamento por rua, mas continua aparecendo na busca por palavra.</p></details>
     <details><summary>Viagens oficiais</summary><p>Do Portal da Transparência da Câmara (Despesas de Viagens). O valor de cada viagem é lido da prestação de contas oficial (PDF). Ele soma alimentação e hospedagem de todos que foram na viagem, inclusive motorista e servidores, e não inclui combustível nem pedágio. Viagem com mais de um vereador aparece no crachá de cada um.</p></details>
     <details><summary>Votos em 2024 e comparação com 2021–2024</summary><p>Os votos são o resultado oficial do TSE na eleição de 2024. A comparação usa as propostas que cada vereador apresentou na legislatura 2021–2024, com a mesma regra de grupos, divididas por 4 anos; o “agora” divide as propostas atuais pelo tempo desde a posse. Presença e votos da legislatura anterior não podem ser comparados: a Câmara só passou a registrar o voto de cada vereador em 2026.</p></details>
+    <details><summary>Presença nas comissões</summary><p id="m-com"></p></details>
     <details><summary>O que não é falta</summary><p>Se o sistema não registrou ninguém numa sessão, ela não conta. Ausência justificada e licença médica aparecem separadas e não contam como falta.</p></details>
     <details open><summary>Achou um erro?</summary><p id="m-erro"></p></details>
   </div>
@@ -508,8 +512,8 @@ function bairro(q){
   host.innerHTML=`<div class="panel">
    <div class="ph"><span class="big num">${nf(items.length)}</span><p>${city?'propostas para <b>a cidade inteira</b> até agora':`${items.length===1?'proposta cita':'propostas citam'} <b>${esc(q.trim())}</b> até agora`}</p></div>
    <div class="two">
-     <div><h3>${city?'Quem mais propôs':'Quem mais pediu'}</h3><ol class="rank">${top.slice(0,city&&CEL?3:5).map(([a,n])=>`<li>${av(a)}<span class="nm">${esc(V[a].ap)} <span class="mute" style="font-weight:400">· ${esc(V[a].part)}</span></span><b class="num">${nf(n)}</b><span class="br"><i style="width:${n/mx*100}%"></i></span></li>`).join('')}</ol>
-       ${top.length>(city&&CEL?3:5)?`<p class="mute" style="font-size:13.5px;margin:10px 0 0">${city?`Os outros ${top.length-(CEL?3:5)} estão nos crachás, mais abaixo.`:`Mais ${top.length-5} vereadores também citaram.`}</p>`:''}</div>
+     ${city?'':`<div><h3>Quem mais pediu</h3><ol class="rank">${top.slice(0,5).map(([a,n])=>`<li>${av(a)}<span class="nm">${esc(V[a].ap)} <span class="mute" style="font-weight:400">· ${esc(V[a].part)}</span></span><b class="num">${nf(n)}</b><span class="br"><i style="width:${n/mx*100}%"></i></span></li>`).join('')}</ol>
+       ${top.length>5?`<p class="mute" style="font-size:13.5px;margin:10px 0 0">Mais ${top.length-5} vereadores também citaram.</p>`:''}</div>`}
      ${th.length?`<div><h3>O que mais pedem</h3><ul class="themes">${th.map(([t,n])=>`<li><span class="ti">${svg(ICON[TH[t][1]],18)}</span><span>${esc(TH[t][0])}</span><b class="num">${nf(n)}</b></li>`).join('')}</ul></div>`:''}
      ${city&&!CEL?`<div><h3>Bairros mais citados</h3><ul class="themes">${D.bairros.slice(0,5).map((b,i)=>`<li><span class="ti">${svg(ICON.pin,18)}</span><button class="lnk" type="button" data-b="${esc(b)}">${esc(b)}</button><b class="num">${nf(D.bairrosn[i])}</b></li>`).join('')}</ul></div>`:''}
    </div>
@@ -545,7 +549,8 @@ function badge(v){
      <div class="idr">${v.foto?`<img class="pho" src="fotos/${v.id}.jpg" alt="Foto de ${esc(v.ap)}" loading="lazy">`:`<div class="pho" aria-hidden="true">${v.in}</div>`}<div><h3>${esc(v.ap)}</h3><p class="civil">${esc(v.nome)}</p></div></div>
      <div class="tags"><span class="pill">${esc(v.part)}</span>${v.mesa?`<span class="pill r">${esc(v.mesa)} da Câmara</span>`:''}</div></div>
    <div class="bb">
-     <div class="pres">${ring(v)}<p><b class="num">${v.P} de ${t}</b> sessões ${D.pri?'desde '+mesAno(D.pri.replace(/-/g,'')):''}<small class="num">${v.A} ${v.A===1?'ausência justificada':'ausências justificadas'} · <b class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</b></small></p></div>
+     <div class="pres">${ring(v)}<p><b class="num">${v.P} de ${t}</b> sessões do plenário ${D.pri?'desde '+mesAno(D.pri.replace(/-/g,'')):''}<small class="num">${v.A} ${v.A===1?'ausência justificada':'ausências justificadas'} · <b class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</b></small></p></div>
+     ${comHTML(v)}
      ${CEL?`<div class="sum num"><span><b>${nf(tot)}</b> propostas</span><span class="ok"><b>${nf(v.vs)}</b> sim</span><span class="no"><b>${nf(v.vn+v.va)}</b> ${v.va?'não/abst.':'não'}</span></div>
      <div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>`
      :`<div class="mini num"><div><b>${brl.format(D.sal.v).replace(/,\d\d$/,'')}</b><span>salário por mês${D.sal.confirmado?'':' (a confirmar)'}</span></div><div><b>${v.vot!=null?nf(v.vot):'–'}</b><span>votos em 2024</span></div></div>`}
@@ -555,7 +560,6 @@ function badge(v){
        ${ORDER.map(c=>`<button class="pick k-${c} num" type="button" data-v="${i}" data-c="${c}" ${v.cat[c]?'':'disabled'}><i></i><span>${CAT[c][0]}</span><b>${nf(v.cat[c])}</b><span class="ar" aria-hidden="true">›</span></button>`).join('')}</div>
      <div><p class="h3">Como votou até agora</p>
        <div class="vote num"><div><b>${nf(v.vs)}</b><span>vezes sim</span></div><div class="n"><b>${nf(v.vn+v.va)}</b><span>${v.va?'não ou abstenção':'vezes não'}</span></div></div>
-       ${v.mesa==='Presidente'?'<p class="mute" style="font-size:13.5px;margin:8px 0 0">O presidente só vota em caso de empate ou quórum especial.</p>':''}
        ${v.naos.length?`<p style="margin:10px 0 0"><button class="lnk" type="button" data-n="${i}">Ver quando não votou sim →</button></p>`:''}</div>
      ${antHTML(v,tot)}
      <div><p class="h3">Viagens oficiais desde a posse</p>${v.vg&&v.vg.length
@@ -563,6 +567,15 @@ function badge(v){
        :`<p class="vg mute">${v.vg?'Nenhuma viagem oficial registrada no Portal da Transparência.':'Dado ainda não coletado.'}</p>`}</div>
      <p class="foot">${CEL&&v.vot!=null?`<span class="mute">${nf(v.vot)} votos em 2024 (TSE)</span><br>`:''}<a href="${esc(v.ficha||v.url)}" target="_blank" rel="noopener">Ficha oficial na Câmara ↗</a>${v.email?` · <a href="mailto:${esc(v.email)}">${esc(v.email)}</a>`:''}</p>
    </div></details></div></article>`;
+}
+/* presença nas comissões (só sessões com lista de presença registrada) */
+function comHTML(v){
+  const c=v.cm; if(!c)return '';
+  const t=c.P+c.A+c.F;
+  if(!t)return `<div class="com"><span class="cl">Comissões</span><span class="mute">Não aparece em nenhuma lista de presença de comissão registrada no sistema.</span></div>`;
+  const pc=Math.round(c.P/t*100);
+  const por=Object.entries(c.por).map(([s,x])=>`${esc((D.comissoes||{})[s]||s)}: ${x.P} de ${x.P+x.A+x.F}`).join(' · ');
+  return `<div class="com num"><span class="cl">Comissões</span><span><b>${c.P} de ${t}</b> sessões (${pc}%) · <b class="${c.F?'bad':''}">${c.F} ${c.F===1?'falta':'faltas'}</b>${c.A?` · ${c.A} justificada${c.A>1?'s':''}`:''}</span><small class="mute">${por}</small></div>`;
 }
 /* comparação com a legislatura 2021–2024: propostas por ano, mesma regra de grupos */
 const ANOS_ATUAL=Math.max(.25,(Date.now()-new Date(D.posse+'T00:00:00-03:00').getTime())/(365.25*864e5));
@@ -582,7 +595,7 @@ function openVg(vi){
     <div class="mt">${t.v!=null?`<span class="stt">${brl.format(t.v)}</span>`:'<span class="stt">valor não lido</span>'}${t.dt?`<span>${esc(t.dt)}</span>`:''}<span>·</span><span>Despesa ${esc(t.k.split('-')[1])}/${esc(t.k.split('-')[0])}</span></div>
     <div class="ft"><span></span>${t.u?`<a class="ext" href="${esc(t.u)}" target="_blank" rel="noopener">Prestação de contas ↗</a>`:''}</div></div></li>`).join('')+'</ul>';
 }
-const ORD={nome:(a,b)=>a.ap.localeCompare(b.ap,'pt'),faltas:(a,b)=>(b.F-a.F)||(b.A-a.A),l:(a,b)=>b.cat.l-a.cat.l,h:(a,b)=>b.cat.h-a.cat.h,b:(a,b)=>b.cat.b-a.cat.b,nao:(a,b)=>(b.vn+b.va)-(a.vn+a.va),vot:(a,b)=>(b.vot||0)-(a.vot||0),vg:(a,b)=>(b.vgt||0)-(a.vgt||0)};
+const ORD={nome:(a,b)=>a.ap.localeCompare(b.ap,'pt'),faltas:(a,b)=>(b.F-a.F)||(b.A-a.A),l:(a,b)=>b.cat.l-a.cat.l,h:(a,b)=>b.cat.h-a.cat.h,b:(a,b)=>b.cat.b-a.cat.b,nao:(a,b)=>(b.vn+b.va)-(a.vn+a.va),vot:(a,b)=>(b.vot||0)-(a.vot||0),vg:(a,b)=>(b.vgt||0)-(a.vgt||0),cf:(a,b)=>((b.cm||{}).F||0)-((a.cm||{}).F||0)};
 function render(){
   const q=norm($('q').value.trim()),p=$('partido').value,o=$('ordem').value;
   const L=V.filter(v=>(!p||v.part===p)&&(!q||norm(v.ap+' '+v.nome).includes(q))).sort((a,b)=>ORD[o](a,b)||ORD.nome(a,b));
@@ -599,6 +612,7 @@ render();
 /* ---------- método ---------- */
 $('m-pres').innerHTML=`Conta a presença na hora das votações nominais do plenário: quem votou (sim, não, abstenção, ou o presidente que não vota) estava lá; quem aparece como “ausente” em todas as votações da sessão teve falta. Foram ${D.sess} sessões${D.pri?' de '+dt(D.pri):''} até ${D.ult?dt(D.ult):'agora'}. <b>A Câmara só passou a registrar no sistema o voto de cada vereador em ${D.pri?mesAno(D.pri.replace(/-/g,'')):'2026'}</b>; antes disso, desde a posse, não há registro nominal, e o site não acusa ninguém por esse período. Sessões só com votação simbólica (sem lista de nomes) não entram.`;
 $('m-sal').innerHTML=`O valor é o mesmo para os ${V.length} e foi fixado pela <a href="${esc(D.sal.u)}" target="_blank" rel="noopener">${esc(D.sal.lei)}</a>. É o valor bruto. O contador do topo é uma estimativa: ${V.length} salários por mês, proporcional ao tempo desde a posse, sem 13º nem outros pagamentos.`+(D.sal.confirmado?'':' <b>O valor de R$ '+nf(D.sal.v)+' foi publicado pela imprensa local e ainda precisa ser conferido no texto oficial.</b>');
+$('m-com').textContent=`As comissões (Finanças e Orçamento, Justiça e Redação, Educação e Cultura e Socioeconômica) analisam os projetos e dão parecer antes de irem ao plenário. Contamos as ${nf(D.ncom||0)} sessões de comissão${D.pricom?' desde '+dt(D.pricom):''} em que a Câmara registrou a lista de presença no sistema. Cada vereador só é contado nas comissões de que é membro. Sessões sem lista registrada não entram: dado ausente não é falta.`;
 $('m-vot').textContent=`Só entram as votações nominais, em que o sistema registra o voto de cada um: ${nf(D.nvot)}${D.pri?' desde '+dt(D.pri):''}. Em ${nf(D.unan)} delas, todos votaram igual.`;
 if(!CEL)document.querySelectorAll('.method details').forEach(d=>{d.open=true;d.querySelector('summary').addEventListener('click',e=>e.preventDefault())});
 $('m-erro').innerHTML=CONFIG.contato?`Escreva para <b>${esc(CONFIG.contato)}</b> com o link da proposta. A correção é feita rápido.`:'Avise pelo contato do projeto com o link da proposta. A correção é feita rápido.';

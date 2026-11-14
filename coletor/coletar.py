@@ -278,6 +278,9 @@ def endereco(txt):
         return None, None
     rua = re.sub(r"\s+", " ", m.group(1)).strip().rstrip(".")
     rua = re.sub(r"^Av\.\s*", "Avenida ", rua)
+    rua = re.sub(r"\s*\)+\s*$", "", rua).strip(" .,")  # tira parêntese solto no fim ("Rua 2)")
+    if rua.count("(") > rua.count(")"):
+        rua = rua.split("(")[0].strip()
     bairro = re.sub(r"\s+", " ", m.group(2)).strip().rstrip(".")
     bairro = re.split(r"\s+(?:e|em|no|na|para|com|entre)\s+", bairro)[0]
     if len(bairro) < 3 or re.match(r"(?i)(rua|avenida|altura|esquina|pr[oó]ximo)", bairro):
@@ -351,12 +354,64 @@ def coletar_justificadas(V):
     return just
 
 
+COMISSOES = {"CFO": "Finanças e Orçamento", "CJR": "Justiça e Redação", "CEC": "Educação e Cultura", "CAS": "Socioeconômica"}
+
+
+def coletar_comissoes(V):
+    """Presença nas sessões das comissões (Frequências, tipo 'Sessões das Comissões').
+    Por sessão: presente se aparece como presente em algum momento; ausência justificada/licença
+    conta à parte; falta se só aparece como ausente. Só conta quem é membro (aparece na lista)."""
+    print("Presença nas comissões…")
+    por_nome = {chave_nome(v["NOME"]): i for i, v in enumerate(V)}
+    sess = defaultdict(lambda: defaultdict(set))  # reuniao -> vereador -> {estados}
+    info = {}
+    pagina = 1
+    while True:
+        s = baixar(f"{BASE}/Frequencias?TipoId=3&ItemsPerPage=100&CurrentPage={pagina}")
+        itens = s.split('<div class="data-list-item">')[1:]
+        if not itens:
+            break
+        for it in itens:
+            mr = re.search(r'/Reunioes/Details\?id=(\d+)">(.*?)</a>', it, re.S)
+            datas = re.findall(r"<strong>Data:</strong>\s*([\d/]+)", it)
+            if not mr or not datas or data_br(datas[-1]) < POSSE:
+                continue
+            rid = int(mr.group(1))
+            ms = re.search(r"Comiss[ãa]o\s+([A-Z]{2,5})", limpa(mr.group(2)))
+            info[rid] = (ms.group(1) if ms else "?", data_br(datas[-1]))
+            for rot, nomes in re.findall(r"<strong>([^<]+?)\s*\(\d+\):</strong>(.*?)</p>", it, re.S):
+                r = norm(limpa(rot))
+                est = "A" if re.search(r"justificad|licen", r) else ("P" if r.startswith("presen") else "F")
+                for nm in re.split(r",\s*(?=[A-ZÁÉÍÓÚÂÊÔÃÕÇ])", limpa(nomes)):
+                    k = chave_nome(nm)
+                    if k in por_nome:
+                        sess[rid][por_nome[k]].add(est)
+        if len(itens) < 100:
+            break
+        pagina += 1
+    for v in V:
+        v["cm"] = {"P": 0, "A": 0, "F": 0, "por": {}}
+    for rid, regs in sess.items():
+        sig = info[rid][0]
+        for i, ests in regs.items():
+            e = "P" if "P" in ests else ("A" if "A" in ests else "F")
+            V[i]["cm"][e] += 1
+            V[i]["cm"]["por"].setdefault(sig, {"P": 0, "A": 0, "F": 0})[e] += 1
+    print(f"   {len(sess)} sessões de comissão com lista de presença")
+    return len(sess), min((d for _, d in info.values()), default="")
+
+
 # ---------------------------------------------------------------- montagem
 def montar():
     V = coletar_vereadores()
     docs = coletar_documentos(V)
     votos = coletar_votacoes(V)
     just = coletar_justificadas(V)
+    try:
+        ncom, pricom = coletar_comissoes(V)
+    except Exception as e:  # extra: se falhar, o resto continua
+        print("   ! comissões não coletadas:", e, file=sys.stderr)
+        ncom, pricom = 0, ""
     try:
         from viagens import coletar_viagens
         coletar_viagens(V, baixar, baixar_bin)
@@ -453,9 +508,10 @@ def montar():
         "gerh": agora.isoformat(timespec="seconds"), "ger": agora.strftime("%Y-%m-%d"), "posse": POSSE,
         "sal": SALARIO, "catot": catot, "nvot": nvot, "unan": unan,
         "sess": len(sess_ok), "ult": max((d for _, d in sess_ok), default=""), "pri": min((d for _, d in sess_ok), default=""), "semreg": len(semreg),
+        "ncom": ncom, "pricom": pricom, "comissoes": COMISSOES,
         "bairros": [b for b, _ in bairros], "bairrosn": [n for _, n in bairros],
         "rep": rep,
-        "v": [{k: v.get(k) for k in ("id", "ap", "nome", "part", "mesa", "foto", "email", "url", "ficha", "cat", "vs", "vn", "va", "P", "A", "F", "naos", "vot", "ant", "vg", "vgt")} for v in V],
+        "v": [{k: v.get(k) for k in ("id", "ap", "nome", "part", "mesa", "foto", "email", "url", "ficha", "cat", "vs", "vn", "va", "P", "A", "F", "naos", "vot", "ant", "vg", "vgt", "cm")} for v in V],
         "items": IT,
     }
     conferir(dados)

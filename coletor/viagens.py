@@ -78,18 +78,25 @@ def coletar_viagens(V, baixar, baixar_bin):
                 destino = _limpa((re.search(r'<div class="destino">(.*?)</div>', bloco, re.S) or [None, ""])[1])
                 motivo = _limpa((re.search(r'<div class="motivo">(.*?)</div>', bloco, re.S) or [None, ""])[1])
                 doc = (re.search(r'href="(https://camarabp\.sp\.gov\.br/download/[^"]+)"', bloco) or [None, ""])[1]
-                if chave not in cache or cache[chave].get("v") is None:
+                # ATENÇÃO: o número da despesa se repete entre pessoas diferentes (cada servidor/vereador tem a
+                # sua "Despesa 47/2026"). A identidade única de cada viagem é o PDF da prestação de contas.
+                ident = doc or f"{url}#{chave}"
+                if ident not in cache or cache[ident].get("v") is None:
                     valor, data = (None, "")
                     if doc:
                         try:
                             valor, data = _valor_pdf(baixar_bin(doc))
                         except Exception as e:  # noqa
                             print("   PDF falhou:", chave, e)
-                    cache[chave] = {"v": valor, "dt": data}
-                c = cache[chave]
-                if any(t["k"] == chave for t in por_ver[i]):
+                    cache[ident] = {"v": valor, "dt": data, "k": chave}
+                c = cache[ident]
+                if any(t.get("id") == ident for t in por_ver[i]):
                     continue
-                por_ver[i].append({"k": chave, "de": destino, "mo": motivo, "v": c["v"], "dt": c["dt"], "u": doc})
+                por_ver[i].append({"id": ident, "k": chave, "de": destino, "mo": motivo, "v": c["v"], "dt": c["dt"], "u": doc})
+    for lst in por_ver.values():
+        for t in lst:
+            t.pop("id", None)
+    cache = {k: c for k, c in cache.items() if k.startswith("http")}  # descarta chaves antigas (só número)
     with open(CACHE, "w", encoding="utf-8") as f:
         json.dump(cache, f, ensure_ascii=False, indent=0, sort_keys=True)
     for i, lst in por_ver.items():
