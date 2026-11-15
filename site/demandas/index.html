@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voz do Bairro · Radar Bragança</title>
+<meta name="description" content="Mande seu pedido, reclamação ou denúncia sobre Bragança Paulista. A mensagem é organizada e encaminhada aos vereadores ou à Câmara Municipal.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Radar Bragança">
+<meta property="og:title" content="Voz do Bairro: qual é o problema do seu bairro?">
+<meta property="og:description" content="Escreva o problema do seu bairro. A mensagem é encaminhada aos vereadores ou à Câmara de Bragança Paulista.">
+<meta property="og:url" content="https://www.bragancaterraquerida.com.br/demandas/">
+<meta property="og:image" content="https://www.bragancaterraquerida.com.br/capa.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#e5322d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='5' fill='%23e5322d'/%3E%3Cpath d='M8 8a11 11 0 000 16M24 8a11 11 0 010 16' stroke='%230f1720' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fff; --ink:#111a24; --mute:#5d6976; --hair:#d9dee4; --soft:#f4f6f8;
+  --b:#1f5fd6; --b-t:#e9f0ff; --red:#e5322d; --bad:#cf3a2e; --ok:#0b8758; --ok-t:#e3f6ee;
+  --display:"Archivo","Inter",system-ui,sans-serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+a{color:var(--b);text-underline-offset:3px}
+:focus-visible{outline:2.5px solid var(--b);outline-offset:2px;border-radius:8px}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px}
+.top{padding-top:22px}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;text-decoration:none;color:var(--mute)}
+.logo{display:flex;align-items:center;gap:12px;margin:16px 0 8px;font-family:var(--display);font-weight:900;line-height:.86;letter-spacing:-.03em;color:var(--ink);text-decoration:none}
+.logo svg{flex:none;width:52px;height:auto}
+.logo b{display:block;font-size:38px}
+.logo b+b{color:var(--red)}
+.tag{display:inline-block;margin:22px 0 0;background:var(--ink);color:#fff;font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:999px;padding:6px 12px}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(30px,8vw,44px);line-height:1.05;letter-spacing:-.02em;margin:12px 0 10px}
+.lead{color:var(--mute);font-size:17px;margin:0 0 10px}
+.steps{list-style:none;margin:16px 0 6px;display:grid;gap:7px;background:var(--soft);border-radius:14px;padding:12px 14px}
+.steps li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;line-height:1.4}
+.steps b.n{flex:none;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:13px}
+form{margin:26px 0 10px}
+fieldset{border:0;margin:0 0 22px;padding:0}
+legend,.lab{display:block;font-weight:700;font-size:15.5px;margin:0 0 8px;padding:0}
+.opt{font-weight:400;color:var(--mute);font-size:14px}
+.hint{font-size:13.5px;color:var(--mute);margin:6px 0 0}
+.tipos{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tipos label{position:relative;display:block;border:2px solid var(--hair);border-radius:14px;padding:12px 12px 12px 42px;cursor:pointer;font-weight:600;font-size:15px;line-height:1.25}
+.tipos label small{display:block;font-weight:400;color:var(--mute);font-size:13px;margin-top:2px}
+.tipos input{position:absolute;left:14px;top:15px;width:18px;height:18px;margin:0;accent-color:var(--ink)}
+.tipos label:has(input:checked){border-color:var(--ink);background:var(--soft)}
+input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:2px solid var(--hair);border-radius:12px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{border-color:var(--ink);outline:none}
+textarea{min-height:150px;resize:vertical}
+.count{float:right;font-size:12.5px;color:var(--mute);font-weight:400}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;margin:10px 0}
+.check input{flex:none;width:20px;height:20px;margin:2px 0 0;accent-color:var(--ink)}
+.box{border:1px solid var(--hair);border-radius:16px;padding:16px;background:#fff}
+.privacy{background:var(--b-t);border-radius:14px;padding:14px 16px;font-size:14px;margin:0 0 18px}
+.privacy p{margin:0 0 6px}.privacy p:last-child{margin:0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.send{width:100%;font:inherit;font-family:var(--display);font-weight:900;font-size:20px;letter-spacing:.01em;border:0;border-radius:16px;padding:16px;background:var(--red);color:#fff;cursor:pointer}
+.send:disabled{opacity:.6;cursor:wait}
+.err{color:var(--bad);font-size:14px;font-weight:600;margin:10px 0 0;min-height:1em}
+.done{display:none;background:var(--ok-t);border-radius:18px;padding:22px 20px;margin:26px 0}
+.done h2{font-family:var(--display);font-weight:900;font-size:28px;margin:0 0 8px;color:var(--ok)}
+.done p{margin:0 0 10px}
+.proto{font-family:ui-monospace,Consolas,monospace;font-size:18px;font-weight:700;background:#fff;border-radius:10px;padding:8px 12px;display:inline-block}
+.again{font:inherit;font-weight:700;background:var(--ink);color:#fff;border:0;border-radius:12px;padding:12px 16px;cursor:pointer}
+.test{background:#fff6dd;border:1px solid #f0d58a;border-radius:12px;padding:10px 14px;font-size:14px;margin:16px 0 0}
+footer{color:var(--mute);font-size:13.5px;padding:26px 16px 40px;border-top:1px solid var(--hair);margin-top:30px}
+@media (max-width:520px){.tipos,.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top wrap">
+  <a class="back" href="../">← Voltar ao Radar</a>
+  <a class="logo" href="../" aria-label="Radar Bragança">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#e5322d"/><path d="M19 17a21 21 0 000 30M45 17a21 21 0 010 30M10 9a33 33 0 000 46M54 9a33 33 0 010 46" stroke="#111a24" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+    <span><b>RADAR</b><b>BRAGANÇA</b></span>
+  </a>
+</header>
+
+<main class="wrap">
+  <p class="tag">Voz do Bairro</p>
+  <h1>Qual é o problema do seu bairro?</h1>
+  <p class="lead">Rua esburacada, poste apagado, mato alto, falta de atendimento ou algo errado que precisa ser apurado? <b>Conte aqui em poucas linhas.</b> Nós encaminhamos o seu relato aos vereadores e à Câmara Municipal de Bragança Paulista.</p>
+  <ol class="steps">
+    <li><b class="n">1</b><span>Você conta o que acontece e onde.</span></li>
+    <li><b class="n">2</b><span>A equipe do Bragança Terra Querida recebe.</span></li>
+    <li><b class="n">3</b><span>Encaminhamos aos vereadores ou à Câmara, <b>sem os seus dados pessoais</b>, a não ser que você autorize.</span></li>
+  </ol>
+  <div class="test" id="testmode" hidden><b>Modo de teste:</b> esta página ainda não está ligada à planilha. O envio só é simulado.</div>
+
+  <form id="f" novalidate>
+    <fieldset>
+      <legend>O que você quer enviar?</legend>
+      <div class="tipos">
+        <label><input type="radio" name="tipo" value="Pedido para o bairro" required>Pedido para o bairro<small>Buraco, iluminação, limpeza…</small></label>
+        <label><input type="radio" name="tipo" value="Denúncia">Denúncia<small>Algo errado que precisa ser apurado</small></label>
+        <label><input type="radio" name="tipo" value="Sugestão">Sugestão<small>Uma ideia para a cidade</small></label>
+        <label><input type="radio" name="tipo" value="Outro">Outro assunto<small>Dúvida, elogio, etc.</small></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <label class="lab" for="tema">Assunto</label>
+      <select id="tema" name="tema" required>
+        <option value="">Escolha…</option>
+        <option>Buraco, asfalto ou calçada</option>
+        <option>Iluminação pública</option>
+        <option>Lixo, entulho ou limpeza</option>
+        <option>Água, esgoto ou enchente</option>
+        <option>Saúde</option>
+        <option>Educação ou creche</option>
+        <option>Trânsito, ônibus ou sinalização</option>
+        <option>Segurança</option>
+        <option>Praças, mato ou árvores</option>
+        <option>Animais</option>
+        <option>Uso de dinheiro público</option>
+        <option>Outro</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <label class="lab" for="bairro">Bairro</label>
+      <input type="text" id="bairro" name="bairro" list="bairros" autocomplete="off" required placeholder="Comece a digitar o nome do bairro">
+      <datalist id="bairros"></datalist>
+      <label class="lab" for="local" style="margin-top:14px">Rua ou ponto de referência <span class="opt">(opcional)</span></label>
+      <input type="text" id="local" name="local" maxlength="200" placeholder="Ex.: Rua X, em frente à escola Y">
+    </fieldset>
+
+    <fieldset>
+      <label class="lab" for="msg">Conte o que está acontecendo <span class="count" id="cnt">0 / 2000</span></label>
+      <textarea id="msg" name="mensagem" maxlength="2000" required placeholder="Descreva o problema: o que é, desde quando, quem é afetado."></textarea>
+      <p class="hint">Não escreva o nome de outras pessoas nem acusações sem prova. Descreva os fatos.</p>
+    </fieldset>
+
+    <fieldset>
+      <label class="lab" for="ver">Para quem encaminhar?</label>
+      <select id="ver" name="destino">
+        <option value="Câmara (qualquer vereador)">Câmara Municipal (não sei qual vereador)</option>
+      </select>
+      <p class="hint">Se você escolher um vereador, a mensagem vai para o gabinete dele. Todos recebem o mesmo tratamento.</p>
+    </fieldset>
+
+    <fieldset class="box">
+      <legend>Seus dados <span class="opt">(opcional)</span></legend>
+      <p class="hint" style="margin:0 0 12px">Deixe em branco se quiser enviar sem se identificar. Preencha só se quiser uma resposta sobre o encaminhamento.</p>
+      <div class="row">
+        <div><label class="lab" for="nome">Nome</label><input type="text" id="nome" name="nome" maxlength="100" autocomplete="name"></div>
+        <div><label class="lab" for="contato">WhatsApp ou e-mail</label><input type="text" id="contato" name="contato" maxlength="120" autocomplete="tel"></div>
+      </div>
+      <label class="check"><input type="checkbox" id="mostrar" name="autoriza_nome"><span>Autorizo enviar meu nome e contato junto com a mensagem para o vereador ou a Câmara.</span></label>
+    </fieldset>
+
+    <div class="privacy">
+      <p><b>Como cuidamos da sua mensagem</b></p>
+      <p>Ela fica guardada só com a equipe do Bragança Terra Querida e não é publicada. Seu nome e contato não são repassados sem a sua autorização. Para apagar uma mensagem enviada, escreva para <a href="mailto:bragancaterraquerida@gmail.com">bragancaterraquerida@gmail.com</a> com o número do protocolo.</p>
+      <p>Encaminhar não garante que o problema será resolvido.</p>
+      <p><b>Denúncia grave</b> (corrupção, crime, risco à vida)? Procure também os canais oficiais: <a href="https://camarabp.sp.gov.br/fale-conosco" target="_blank" rel="noopener">Fale Conosco da Câmara</a> ou o <a href="https://www.mpsp.mp.br/" target="_blank" rel="noopener">Ministério Público de São Paulo</a>.</p>
+    </div>
+
+    <label class="check"><input type="checkbox" id="aceite" required><span>Li o texto acima e concordo que minha mensagem seja encaminhada.</span></label>
+
+    <div class="hp" aria-hidden="true"><label>Não preencha<input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
+
+    <button class="send" type="submit" id="btn">Enviar</button>
+    <p class="err" id="err" role="alert"></p>
+  </form>
+
+  <div class="done" id="done" role="status" tabindex="-1">
+    <h2>Recebido! ✓</h2>
+    <p>Sua mensagem chegou para a equipe do Bragança Terra Querida. Guarde o número do protocolo:</p>
+    <p><span class="proto" id="proto"></span></p>
+    <p id="donemsg"></p>
+    <button class="again" type="button" id="again">Enviar outra mensagem</button>
+  </div>
+</main>
+
+<footer class="wrap">Projeto independente do Bragança Terra Querida, sem ligação com a Câmara, a Prefeitura ou partidos. Mesmo tratamento para todos os vereadores.</footer>
+
+<script src="../dados.js"></script>
+<script>
+// ENDERECO: cole aqui o link do "App da Web" do Google Apps Script (ver demandas-receptor/COMO-LIGAR.md).
+// Vazio = modo de teste (nada é enviado).
+const ENDERECO = 'https://script.google.com/macros/s/AKfycbx0kbVSCYo3pb3Xj8LdKBKomcxVt-quGMtMc9zs2XYX26IxU4zHliCuPp41OJla03UcGA/exec';
+
+const $ = id => document.getElementById(id);
+const RB = window.RB || {v:[], bairros:[]};
+
+// Vereadores em ordem alfabética, todos iguais.
+[...RB.v].sort((a,b)=>a.ap.localeCompare(b.ap,'pt-BR')).forEach(v=>{
+  const o=document.createElement('option'); o.value=v.ap; o.textContent=v.ap+(v.part?' ('+v.part+')':''); $('ver').appendChild(o);
+});
+// Sugestões de bairros.
+const dl=$('bairros'); [...new Set(RB.bairros||[])].sort((a,b)=>a.localeCompare(b,'pt-BR')).forEach(b=>{const o=document.createElement('option');o.value=b;dl.appendChild(o);});
+
+// Escolha de vereador vinda do link (ex.: /demandas/?vereador=Bruno%20Leme).
+const pv=new URLSearchParams(location.search).get('vereador'); if(pv && [...$('ver').options].some(o=>o.value===pv)) $('ver').value=pv;
+
+if(!ENDERECO) $('testmode').hidden=false;
+$('msg').addEventListener('input',()=>{$('cnt').textContent=$('msg').value.length+' / 2000';});
+
+function protocolo(){
+  const d=new Date(), p=n=>String(n).padStart(2,'0');
+  const r=Math.random().toString(36).slice(2,6).toUpperCase();
+  return 'RB-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+r;
+}
+
+$('f').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const f=e.target, err=$('err'); err.textContent='';
+  const falta=(el,t)=>{err.textContent=t; el.scrollIntoView({block:'center',behavior:'smooth'}); el.focus({preventScroll:true});};
+  if(!f.tipo.value) return falta(f.tipo[0],'Escolha o que você quer enviar.');
+  if(!$('tema').value) return falta($('tema'),'Escolha o assunto.');
+  if($('bairro').value.trim().length<2) return falta($('bairro'),'Informe o bairro.');
+  if($('msg').value.trim().length<15) return falta($('msg'),'Conte um pouco mais sobre o problema (pelo menos uma frase).');
+  if(!$('aceite').checked) return falta($('aceite'),'Marque que você concorda com o encaminhamento.');
+  if(f.site_web.value) return; // robô de spam
+
+  const dados={
+    protocolo:protocolo(), tipo:f.tipo.value, tema:$('tema').value,
+    bairro:$('bairro').value.trim(), local:$('local').value.trim(),
+    mensagem:$('msg').value.trim(), destino:$('ver').value,
+    nome:$('nome').value.trim(), contato:$('contato').value.trim(),
+    autoriza_nome:$('mostrar').checked?'Sim':'Não', pagina:location.href
+  };
+  const btn=$('btn'); btn.disabled=true; btn.textContent='Enviando…';
+  try{
+    if(ENDERECO){
+      // text/plain evita bloqueio de segurança do navegador com o Google.
+      const r=await fetch(ENDERECO,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(dados)});
+      const j=await r.json().catch(()=>({ok:false}));
+      if(!j.ok) throw new Error(j.erro||'falha');
+      if(j.protocolo) dados.protocolo=j.protocolo; // número em sequência criado pela planilha
+    } else {
+      if(!/^(localhost|127.0.0.1)$/.test(location.hostname)) throw new Error('sem receptor');
+      await new Promise(r=>setTimeout(r,700));
+      console.log('[demandas] modo de teste, nada enviado:',dados);
+    }
+    $('proto').textContent=dados.protocolo;
+    $('donemsg').textContent = dados.contato ? 'Se precisarmos de mais detalhes, entramos em contato pelo que você informou.' : 'Você enviou sem contato, então não teremos como dar retorno. Acompanhe as novidades no Instagram @bragancaterraqueridaoficial.';
+    f.style.display='none'; $('done').style.display='block'; $('done').focus(); window.scrollTo({top:$('done').offsetTop-20,behavior:'smooth'});
+  }catch(x){
+    err.textContent='Não foi possível enviar agora. Verifique sua internet e tente de novo em alguns minutos.';
+  }finally{ btn.disabled=false; btn.textContent='Enviar'; }
+});
+
+$('again').addEventListener('click',()=>{ $('f').reset(); $('cnt').textContent='0 / 2000'; $('done').style.display='none'; $('f').style.display='block'; window.scrollTo({top:0}); });
+</script>
+</body>
+</html>

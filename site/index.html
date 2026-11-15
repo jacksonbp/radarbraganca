@@ -71,6 +71,11 @@ section{padding-top:44px;padding-bottom:8px}
 .stat span{font-size:13.5px;color:var(--mute)}
 .upd{font-size:13px;color:var(--mute);margin:10px 0 0;max-width:560px}
 
+.voz{display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:560px;margin:16px 0 0;padding:14px 16px;border:2px solid var(--ink);border-radius:18px;color:var(--ink);text-decoration:none;font-size:14.5px;line-height:1.35}
+.voz b{display:block;font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.01em;margin-bottom:2px}
+.voz i{flex:none;font-style:normal;font-size:22px;width:38px;height:38px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center}
+.voz:hover{background:var(--soft)}
+
 /* busca por bairro */
 .search{position:relative;max-width:560px}
 .search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--mute)}
@@ -250,6 +255,7 @@ footer{border-top:1px solid var(--hair);margin-top:48px;padding-top:22px;padding
   </div>
   <div class="stats" id="stats"></div>
   <p class="upd" id="upd"></p>
+  <a class="voz" href="demandas/"><span><b>Voz do Bairro</b>Tem um problema no seu bairro? Conte aqui e nós encaminhamos aos vereadores.</span><i aria-hidden="true">→</i></a>
 </header>
 
 <main>
