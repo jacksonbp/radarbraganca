@@ -272,7 +272,10 @@ for v in V:
 </section>
 <section class="wrap" id="s-voto24">
   <p class="eyebrow">Eleição de 2024 × pedidos</p><h2>Onde foi votado e onde pede</h2>
-  <div class="box"><div id="loc"></div></div>
+  <div class="cols">
+    <div class="box"><h3>Voto concentrado ou espalhado?</h3><div id="locc"></div></div>
+    <div class="box"><h3>Onde foi mais votado</h3><div id="loc"></div></div>
+  </div>
 </section>
 <section class="wrap" id="s-propostas">
   <p class="eyebrow">Proposta por proposta</p><h2>Tudo o que apresentou desde a posse</h2>
