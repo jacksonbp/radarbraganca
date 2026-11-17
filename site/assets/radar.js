@@ -289,7 +289,7 @@ P.comparar=function(){
     ['Propostas desde a posse',[['Total de propostas',v=>[v.tot,''],0],['Pedidos de melhoria no bairro',v=>[v.cat.b,''],0,'tapar buraco, podar árvore, trocar lâmpada'],
       ['Cobranças à Prefeitura',v=>[v.cat.c,''],0,'perguntas e pedidos de explicação'],['Projetos de lei',v=>[v.cat.l,''],0,'propostas de novas regras para a cidade'],['Homenagens',v=>[v.cat.h,''],0,'parabéns, títulos, nomes de rua']]],
     ['Na contagem oficial da Câmara',TIPOS.map(([k,pl,,,ex])=>[pl,v=>[v.tp[k],''],0,ex])],
-    ['Votos e gastos',[['Votos “não”',v=>[v.vn,''],0,'vezes em que votou contra'],['Apoio aos projetos da Prefeitura',gov,1,'votou “sim” nos projetos enviados pelo prefeito'],
+    ['Votos e gastos',[['Vezes que votou “não”',v=>[v.vn,`de ${nf(v.vs+v.vn+v.va)} votações`],0,'quantas vezes votou contra um projeto'],['Apoio aos projetos da Prefeitura',gov,1,'votou “sim” nos projetos enviados pelo prefeito'],
       ['Viagens oficiais',v=>[(v.vg||[]).length,(v.vg||[]).length?brl.format(v.vgt||0):''],0],['Votos na eleição de 2024',v=>[v.vot||0,''],0]]]];
   const fmt=(n,pc)=>n==null?'–':pc?n+'%':nf(n);
   const card=(v,lado)=>`<div class="vs-c" style="--h:${hue(v.i)}">${v.foto?`<img src="/fotos/${v.id}.jpg" alt="Foto de ${esc(v.ap)}">`:`<span class="vs-ph">${esc(v.in)}</span>`}
@@ -299,7 +299,8 @@ P.comparar=function(){
     $('vs').innerHTML=card(a,'a')+'<span class="vs-x" aria-hidden="true">×</span>'+card(b,'b');
     const j=(a.jt||[]).find(x=>x[0]===b.id);
     $('cmp').style.cssText=`--ha:${hue(a.i)};--hb:${hue(b.i)}`;
-    $('cmp').innerHTML=G.map(([tit,L])=>`<div class="cg"><h2>${tit}</h2>${L.map(([n,f,pc,ex])=>{
+    const hd=`<div class="cg-hd" aria-hidden="true"><span class="a">${esc(a.ap)}</span><span class="b">${esc(b.ap)}</span></div>`;
+    $('cmp').innerHTML=G.map(([tit,L])=>`<div class="cg"><h2>${tit}</h2>${hd}${L.map(([n,f,pc,ex])=>{
       const [x,dx]=f(a), [y,dy]=f(b), max=pc?100:Math.max(1,x||0,y||0);
       const w=n=>n==null?0:Math.max(2,Math.round(n/max*100));
       return `<div class="cr"><div class="cr-l">${n}${ex?`<small>${ex}</small>`:''}</div>
