@@ -443,6 +443,36 @@ def montar():
     for i, v in enumerate(V):
         v["cat"] = {c: sum(1 for it in IT if it[4] == c and i in it[6]) for c in "bchlo"}
 
+    # onde foi votado em 2024 (TSE, por local de votação) x onde pede
+    locm = None
+    caminho_tse = os.path.join(RAIZ, "coletor", "tse_locais.json")
+    if os.path.exists(caminho_tse):
+        with open(caminho_tse, encoding="utf-8") as arquivo:
+            tse = json.load(arquivo)
+        def chave_b(b):
+            b = norm(b)
+            for _ in range(3):
+                b = re.sub(r"^(bairro|jardim|jd|vila|vl|parque|pq|residencial|res|recanto|loteamento|chacaras?|estancia|condominio|conjunto|nucleo|cidade|do|da|dos|das|de)\s+", "", b)
+            return b.strip()
+        todos_b = {chave_b(it[10]) for it in IT if it[4] == "b" and it[10]}
+        por_nome = {norm(n): c for n, c in tse["votos"].items()}
+        concs = []
+        for i, v in enumerate(V):
+            c = por_nome.get(norm(v["nome"]))
+            if not c:
+                v["loc"] = None
+                continue
+            total = sum(c.values())
+            meus = Counter(chave_b(it[10]) for it in IT if it[4] == "b" and it[10] and i in it[6])
+            top = list(c.items())[:5]
+            v["loc"] = [[tse["locais"].get(k, {}).get("nome", "?"), tse["locais"].get(k, {}).get("bairro", ""), n,
+                         round(n / total * 100, 1),
+                         meus.get(chave_b(tse["locais"].get(k, {}).get("bairro", ""))) or (0 if chave_b(tse["locais"].get(k, {}).get("bairro", "")) in todos_b else None)]
+                        for k, n in top]
+            v["lc"] = round(sum(n for _, n in top) / total * 100)
+            concs.append(v["lc"])
+        locm = round(sum(concs) / len(concs)) if concs else None
+
     # bairros mais citados
     cont_b = Counter()
     nome_b = {}
@@ -542,8 +572,8 @@ def montar():
         "sess": len(sess_ok), "ult": max((d for _, d in sess_ok), default=""), "pri": min((d for _, d in sess_ok), default=""), "semreg": len(semreg),
         "ncom": ncom, "pricom": pricom, "comissoes": COMISSOES,
         "bairros": [b for b, _ in bairros], "bairrosn": [n for _, n in bairros],
-        "rep": rep, "ndiv": len(div), "nexe": len(exe),
-        "v": [{k: v.get(k) for k in ("id", "ap", "nome", "part", "mesa", "foto", "email", "url", "ficha", "cat", "vs", "vn", "va", "P", "A", "F", "naos", "vot", "ant", "vg", "vgt", "cm", "jt", "gov")} for v in V],
+        "rep": rep, "ndiv": len(div), "nexe": len(exe), "locm": locm,
+        "v": [{k: v.get(k) for k in ("id", "ap", "nome", "part", "mesa", "foto", "email", "url", "ficha", "cat", "vs", "vn", "va", "P", "A", "F", "naos", "vot", "ant", "vg", "vgt", "cm", "jt", "gov", "loc", "lc")} for v in V],
         "items": IT,
     }
     conferir(dados)

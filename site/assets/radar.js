@@ -269,6 +269,16 @@ P.vereador=function(id){
   $('reps-v').innerHTML=''; listaReps($('reps-v'),meusReps,3);
   $('reps-n').textContent=meusReps.length?`${nf(meusReps.length)} ruas com pedidos repetidos têm pelo menos um pedido de ${v.ap}.`:'';
   // votos
+  if($('loc')){
+    const L=v.loc;
+    if(!L||!L.length){$('s-voto24').hidden=true}else{
+      const lc=v.lc, m=D.locm, tipo=m==null?'':lc>=m+5?'mais concentrado que a média':lc<=m-5?'mais espalhado pela cidade que a média':'perto da média';
+      $('loc').innerHTML=`<p class="lead" style="margin-top:0"><b class="num">${lc}%</b> dos votos de ${esc(v.ap)} em 2024 vieram de 5 locais de votação: um voto ${tipo}${m!=null?` da Câmara (${m}%)`:''}.</p>
+      <div class="loc"><div class="lh"><span>Onde foi mais votado</span><span>Votos</span><span>Pedidos dele no bairro</span></div>
+      ${L.map(r=>`<div class="lr"><div><b>${esc(r[1]||'—')}</b><small>${esc(r[0])}</small></div><div class="num"><b>${String(r[3]).replace('.',',')}%</b><small>${nf(r[2])} votos</small><i style="--p:${Math.min(100,r[3]/L[0][3]*100)}%"></i></div><div class="num">${r[4]==null?'<span class="mute" title="Nenhum vereador fez pedido com esse nome de bairro">—</span>':`<b class="${r[4]?'':'zero'}">${nf(r[4])}</b>`}</div></div>`).join('')}</div>
+      <p class="mute small">O local de votação é onde o eleitor vota, que nem sempre é onde mora. “—” quer dizer que nenhum vereador fez pedido com o nome desse bairro; os nomes da Justiça Eleitoral e da Câmara às vezes não batem.</p>`;
+    }
+  }
   if($('jt')){
     const lin=x=>{const w=V.find(y=>y.id===x[0]);return w?`<li><a href="${urlV(w)}">${esc(w.ap)}</a><span class="pill">${esc(w.part)}</span><b class="num">${x[1]}%</b><i style="--p:${x[1]}%"></i></li>`:''};
     const jt=v.jt||[];
@@ -353,6 +363,7 @@ P.sobre=function(){
   $('m-pres').innerHTML=`Presença inferida pelos registros de votação. As listas oficiais de frequência registram momentos específicos e podem apresentar contagens diferentes. Conta a presença na hora das votações nominais do plenário: quem votou (sim, não, abstenção, ou o presidente que não vota) estava lá; quem aparece como “ausente” em todas as votações da sessão teve falta. Foram ${D.sess} sessões${D.pri?' de '+dt(D.pri):''} até ${D.ult?dt(D.ult):'agora'}. <b>A Câmara só passou a registrar no sistema o voto de cada vereador em ${D.pri?mesAno(D.pri.replace(/-/g,'')):'2026'}</b>; antes disso, desde a posse, não há registro nominal, e o site não acusa ninguém por esse período. Sessões só com votação simbólica (sem lista de nomes) não entram.`;
   $('m-sal').innerHTML=`O valor é o mesmo para os ${V.length} e foi fixado pela <a href="${esc(D.sal.u)}" target="_blank" rel="noopener">${esc(D.sal.lei)}</a>. É o valor bruto. O contador da página inicial é uma estimativa: ${V.length} salários por mês, proporcional ao tempo desde a posse, sem 13º nem outros pagamentos.`+(D.sal.confirmado?'':' <b>O valor de R$ '+nf(D.sal.v)+' foi publicado pela imprensa local e ainda precisa ser conferido no texto oficial.</b>');
   $('m-com').textContent=`As comissões (Finanças e Orçamento, Justiça e Redação, Educação e Cultura e Socioeconômica) analisam os projetos e dão parecer antes de irem ao plenário. Contamos as ${nf(D.ncom||0)} sessões de comissão${D.pricom?' desde '+dt(D.pricom):''} em que a Câmara registrou a lista de presença no sistema. Cada vereador só é contado nas comissões de que é membro. Sessões sem lista registrada não entram: dado ausente não é falta.`;
+  if($('m-loc'))$('m-loc').textContent=`Os votos de 2024 vêm dos dados abertos do TSE, seção por seção, somados por local de votação; o bairro é o que a Justiça Eleitoral registra para cada local. Mostramos os 5 locais onde cada vereador teve mais votos e quantos pedidos de melhoria ele fez para um bairro com o mesmo nome. A concentração é a parte dos votos que veio desses 5 locais; na média dos ${V.length} vereadores, ${D.locm??'–'}%. O local de votação nem sempre é onde o eleitor mora, então o cruzamento mostra uma tendência, não uma regra.`;
   if($('m-blo'))$('m-blo').textContent=`“Com quem vota” usa só as ${nf(D.ndiv||0)} votações nominais em que a Câmara se dividiu (pelo menos um vereador votou diferente dos outros); nas unânimes todos concordam e a comparação não diria nada. Para cada par, contamos em quantas dessas votações os dois votaram igual, e só comparamos pares que votaram juntos ao menos 8 vezes. “Projetos da Prefeitura” são as ${nf(D.nexe||0)} votações nominais de projetos de autoria do Executivo Municipal; a porcentagem é dos votos “sim” entre os votos dados. Ausências não contam.`;
   $('m-vot').textContent=`Só entram as votações nominais, em que o sistema registra o voto de cada um: ${nf(D.nvot)}${D.pri?' desde '+dt(D.pri):''}. Em ${nf(D.unan)} delas, todos votaram igual.`;
   $('m-erro').innerHTML=`Escreva para <b>${esc(CONFIG.contato)}</b> com o link da proposta ou da página. A correção é feita rápido.`;

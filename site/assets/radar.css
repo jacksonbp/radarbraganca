@@ -379,3 +379,15 @@ section[id]{scroll-margin-top:118px}
 .gbar i.me{width:18px;height:18px;margin:-9px 0 0 -9px;background:var(--red);z-index:1}
 .gleg{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin:2px 0 0}
 .jt li{isolation:isolate}
+/* onde foi votado */
+.loc{display:grid;gap:0;margin-top:6px}
+.lh,.lr{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) 92px;gap:12px;align-items:center}
+.lh{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);padding:0 0 8px;border-bottom:1px solid var(--hair)}
+.lh span:last-child,.lr>div:last-child{text-align:right}
+.lr{padding:12px 0;border-bottom:1px solid var(--hair)}
+.lr small{display:block;color:var(--mute);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lr>div:nth-child(2){position:relative;padding-bottom:8px}
+.lr i{position:absolute;left:0;bottom:0;height:4px;width:var(--p);background:var(--b);border-radius:4px}
+.lr>div:last-child b{font-size:20px}
+.lr b.zero{color:var(--red)}
+@media(max-width:559px){.lh,.lr{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 64px;gap:8px}.lh{font-size:10.5px}}
