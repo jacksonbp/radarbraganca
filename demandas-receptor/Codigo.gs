@@ -2,7 +2,7 @@
  * Receptor das mensagens da página "Voz do Bairro" (site/demandas/).
  * Fica num projeto do Apps Script (script.google.com) da conta bragancaterraquerida@gmail.com
  * e grava na planilha "Voz do Bairro - Demandas" da mesma conta. Cada envio vira uma linha na aba "Demandas"
- * e manda um e-mail de aviso. Passo a passo em COMO-LIGAR.md.
+ * e manda aviso por e-mail e pelo Telegram. Passo a passo em COMO-LIGAR.md.
  */
 
 const AVISAR = 'bragancaterraquerida@gmail.com'; // quem recebe o e-mail de aviso
@@ -38,10 +38,12 @@ function doPost(e) {
       props.setProperty('contador', String(num));
       v.protocolo = 'RB-' + String(num).padStart(4, '0');
       const aba = pegarAba();
+      v.repetidas = contarParecidas(aba, v.bairro, v.tema);
       aba.appendRow([new Date(), v.protocolo, v.tipo, v.tema, v.bairro, v.local, v.mensagem,
         v.destino, v.nome, v.contato, v.autoriza_nome, 'Nova', '']);
     } finally { lock.releaseLock(); }
 
+    avisarTelegram(v);
     MailApp.sendEmail({
       to: AVISAR,
       subject: '[Voz do Bairro] ' + v.tipo + ' – ' + v.tema + ' – ' + v.bairro,
@@ -134,6 +136,72 @@ function pegarAba() {
 
 function resposta(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+
+// ------------------------------------------------------------------ Telegram
+// O token do robô fica nas Propriedades do script (Configurações do projeto → Propriedades do script),
+// com o nome TELEGRAM_TOKEN. Ele nunca vai para o código nem para o GitHub.
+
+/** Avisa no Telegram. Se o Telegram falhar, a mensagem continua gravada na planilha e o e-mail sai igual. */
+function avisarTelegram(v) {
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const token = props.getProperty('TELEGRAM_TOKEN'), chat = props.getProperty('TELEGRAM_CHAT');
+    if (!token || !chat) return;
+    const linhas = [
+      '📣 Voz do Bairro · ' + v.protocolo,
+      v.tipo + ' · ' + v.tema,
+      '📍 ' + v.bairro + (v.local ? ' · ' + v.local : ''),
+      v.repetidas ? '🔁 Já são ' + (v.repetidas + 1) + ' mensagens sobre "' + v.tema + '" neste bairro nos últimos 90 dias' : '',
+      '',
+      v.mensagem,
+      '',
+      'Encaminhar para: ' + (v.destino || '–'),
+      '👤 ' + (v.nome || 'sem nome') + (v.contato ? ' · ' + v.contato : '') +
+        (v.autoriza_nome === 'Sim' ? ' (autoriza enviar o nome)' : ' (NÃO autoriza enviar o nome)'),
+      '',
+      'Planilha: ' + SpreadsheetApp.openById(PLANILHA_ID).getUrl()
+    ].filter((x, i, a) => x !== '' || (a[i - 1] !== '' && i > 0));
+    enviarTelegram(token, chat, linhas.join(BR).slice(0, 4000));
+  } catch (_) { /* aviso é extra: nunca impede a gravação */ }
+}
+
+const BR = String.fromCharCode(10);
+
+function enviarTelegram(token, chat, texto) {
+  const r = UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+    method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+    payload: JSON.stringify({ chat_id: chat, text: texto, disable_web_page_preview: true })
+  });
+  return JSON.parse(r.getContentText());
+}
+
+/** Conta mensagens anteriores do mesmo bairro e assunto nos últimos 90 dias (para avisar repetição). */
+function contarParecidas(aba, bairro, tema) {
+  const n = aba.getLastRow() - 1;
+  if (n < 1 || !bairro || !tema) return 0;
+  const norm = x => String(x || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const b = norm(bairro), t = norm(tema), desde = Date.now() - 90 * 864e5;
+  return aba.getRange(2, 1, n, 5).getValues()
+    .filter(r => r[0] instanceof Date && r[0].getTime() >= desde && norm(r[4]) === b && norm(r[3]) === t).length;
+}
+
+/**
+ * Rode esta função uma vez pelo editor, DEPOIS de mandar qualquer mensagem (ex.: "oi") para o seu robô no Telegram.
+ * Ela descobre o seu chat, guarda e manda uma mensagem de teste.
+ */
+function ligarTelegram() {
+  const props = PropertiesService.getScriptProperties();
+  const token = props.getProperty('TELEGRAM_TOKEN');
+  if (!token) throw new Error('Falta a propriedade TELEGRAM_TOKEN (Configurações do projeto → Propriedades do script).');
+  const r = JSON.parse(UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/getUpdates', { muteHttpExceptions: true }).getContentText());
+  if (!r.ok) throw new Error('O Telegram recusou o token. Confira se copiou inteiro do BotFather.');
+  const ultimas = (r.result || []).map(u => u.message || u.channel_post).filter(Boolean);
+  if (!ultimas.length) throw new Error('Mande "oi" para o seu robô no Telegram e rode de novo.');
+  const chat = String(ultimas[ultimas.length - 1].chat.id);
+  props.setProperty('TELEGRAM_CHAT', chat);
+  const t = enviarTelegram(token, chat, '✅ Pronto! A partir de agora cada mensagem da Voz do Bairro chega aqui.');
+  Logger.log(t.ok ? 'Telegram ligado.' : 'Falhou: ' + JSON.stringify(t));
 }
 
 /** Rode esta função uma vez pelo editor para criar a aba e autorizar o e-mail. */

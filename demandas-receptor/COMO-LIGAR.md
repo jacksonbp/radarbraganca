@@ -47,3 +47,20 @@ As colunas dessa aba são públicas quando a caixa está marcada. Mantenha
 nomes, contatos, protocolos e relatos originais apenas na aba privada Demandas.
 A prévia local usa exemplos fictícios. No domínio publicado, o painel consulta
 o Apps Script e os dados marcados para publicação.
+
+## Aviso no Telegram
+
+Cada mensagem nova também chega no Telegram, com protocolo, assunto, bairro, texto e contato.
+Se o mesmo assunto já chegou do mesmo bairro nos últimos 90 dias, o aviso diz quantas vezes ("🔁 Já são 3 mensagens…").
+Se o Telegram falhar, nada se perde: a linha é gravada e o e-mail sai igual.
+
+Para ligar (uma vez):
+1. No Telegram, abra **@BotFather**, mande `/newbot`, escolha um nome e um usuário terminado em `bot`. Ele responde com um **token**.
+2. Abra o seu robô novo no Telegram e mande **oi**.
+3. No Apps Script: **Configurações do projeto (engrenagem) → Propriedades do script → Adicionar**,
+   nome `TELEGRAM_TOKEN`, valor = o token. (O token nunca vai no código nem no GitHub.)
+4. No editor, escolha a função **ligarTelegram** e clique em **Executar**. Autorize o acesso a "serviços externos".
+   Chega no Telegram: "✅ Pronto!".
+5. **Implantar → Gerenciar implantações → Editar → Nova versão → Implantar.**
+
+Para desligar: apague a propriedade `TELEGRAM_CHAT`.
