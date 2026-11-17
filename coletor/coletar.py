@@ -219,7 +219,7 @@ def coletar_documentos(V):
 def classificar(doc):
     """Mesma regra para todos. Devolve o grupo: b pedido no bairro, c pergunta/cobrança, h homenagem, l lei, o outros."""
     t, tipo = norm(doc["txt"]), norm(doc["tipo"])
-    homen = re.search(r"congratula|aplauso|parabeniz|parabens|louvor|homenag|pesar|falecimento|condolenc|titulo de cidadao|cidadao bragantino|cidada bragantina|cidadania bragantina|"
+    homen = re.search(r"congratula|aplauso|parabeniz|parabens|cumpriment|felicita|enaltec|agradec|louvor|homenag|pesar|falecimento|condolenc|titulo de cidadao|cidadao bragantino|cidada bragantina|cidadania bragantina|"
                       r"medalha|diploma|honra ao merito|denomina|da nome|da denominacao|institui o dia|institui a semana|institui o mes|dia municipal|semana municipal|calendario oficial|data comemorativa|reconhecimento", t)
     if tipo.startswith("indicac"):
         return "b"

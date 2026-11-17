@@ -5,626 +5,105 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Radar Bragança</title>
 <meta name="description" content="O que cada vereador de Bragança Paulista fez desde a posse: presença, propostas e votos. Só dados oficiais da Câmara, atualizados todo dia.">
-<!-- Prévia do link no WhatsApp, Instagram, Facebook e X. -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Radar Bragança">
 <meta property="og:title" content="Radar Bragança: o que cada vereador fez desde a posse">
-<meta property="og:description" content="Presença, propostas e votos dos 19 vereadores de Bragança Paulista. Busque o que pediram para o seu bairro. Só dados oficiais da Câmara, atualizados todo dia.">
+<meta property="og:description" content="O que cada vereador de Bragança Paulista fez desde a posse: presença, propostas e votos. Só dados oficiais da Câmara, atualizados todo dia.">
 <meta property="og:url" content="https://www.bragancaterraquerida.com.br/">
 <meta property="og:image" content="https://www.bragancaterraquerida.com.br/capa.jpg">
-<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Radar Bragança: o que cada vereador de Bragança Paulista fez desde a posse">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#e5322d">
+<link rel="canonical" href="https://www.bragancaterraquerida.com.br/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='5' fill='%23e5322d'/%3E%3Cpath d='M8 8a11 11 0 000 16M24 8a11 11 0 010 16' stroke='%230f1720' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  /* Cada cor tem uma função fixa: azul = pedido no bairro, laranja = cobrança, rosa = homenagem, verde = lei, cinza = outros. */
-  --paper:#fff; --ink:#111a24; --mute:#5d6976; --hair:#e4e8ec; --soft:#f4f6f8;
-  --b:#1f5fd6; --b-t:#e9f0ff; --c:#d2570f; --c-t:#fff0e5; --h:#c42a6e; --h-t:#ffe9f2; --l:#0b8758; --l-t:#e3f6ee; --o:#5d6976; --o-t:#eef1f4;
-  --red:#e5322d; --bad:#cf3a2e; --warn:#d99a2b;
-  --shadow:0 1px 2px rgba(17,26,36,.05),0 10px 26px -14px rgba(17,26,36,.18);
-  --display:"Archivo","Inter",system-ui,sans-serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  color-scheme:light;
-}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
-a{color:var(--b);text-underline-offset:3px}
-button{font:inherit;color:inherit;cursor:pointer}
-:focus-visible{outline:2.5px solid var(--b);outline-offset:2px;border-radius:8px}
-svg{display:block}
-.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
-.num{font-variant-numeric:tabular-nums}
-.mute{color:var(--mute)}
-.k-b{--k:var(--b);--kt:var(--b-t)}.k-c{--k:var(--c);--kt:var(--c-t)}.k-h{--k:var(--h);--kt:var(--h-t)}.k-l{--k:var(--l);--kt:var(--l-t)}.k-o{--k:var(--o);--kt:var(--o-t)}
-h2{font-family:var(--display);font-weight:900;font-size:clamp(26px,6vw,38px);line-height:1.08;letter-spacing:-.02em;margin:4px 0 10px}
-.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin:0}
-.lead{color:var(--mute);max-width:640px;margin:0 0 20px}
-section{padding-top:44px;padding-bottom:8px}
-.h3{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:18px 0 10px}
-
-/* topo */
-.top{padding-top:22px;padding-bottom:4px}
-.live{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;background:var(--soft);border-radius:999px;padding:6px 12px}
-.live i{width:9px;height:9px;border-radius:50%;background:var(--red);animation:pulse 1.8s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(229,50,45,.55)}70%{box-shadow:0 0 0 9px rgba(229,50,45,0)}100%{box-shadow:0 0 0 0 rgba(229,50,45,0)}}
-.logo{display:flex;align-items:center;gap:12px;margin:18px 0 10px;font-family:var(--display);font-weight:900;line-height:.86;letter-spacing:-.03em}
-.logo svg{flex:none;width:clamp(52px,13vw,76px);height:auto}
-.logo b{display:block;font-size:clamp(44px,13vw,78px)}
-.logo b+b{color:var(--red)}
-.intro{font-size:18px;max-width:560px;margin:0 0 18px}
-.meter{background:var(--ink);color:#fff;border-radius:22px;padding:18px 20px 16px;max-width:560px}
-.meter p{margin:0}
-.meter .t{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff8f8b}
-.meter .v{font-family:var(--display);font-weight:900;font-size:clamp(30px,8.5vw,46px);letter-spacing:-.02em;margin:4px 0}
-.meter small{display:block;color:#b8c2cc;font-size:13px}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 6px;max-width:560px}
-.stat{background:var(--soft);border-radius:18px;padding:14px 16px}
-.stat b{display:block;font-family:var(--display);font-weight:900;font-size:30px;letter-spacing:-.02em;line-height:1.1;color:var(--k,var(--ink))}
-.stat span{font-size:13.5px;color:var(--mute)}
-.upd{font-size:13px;color:var(--mute);margin:10px 0 0;max-width:560px}
-
-.voz{display:flex;align-items:center;justify-content:space-between;gap:14px;max-width:560px;margin:16px 0 0;padding:14px 16px;border:2px solid var(--ink);border-radius:18px;color:var(--ink);text-decoration:none;font-size:14.5px;line-height:1.35}
-.voz b{display:block;font-family:var(--display);font-weight:900;font-size:19px;letter-spacing:-.01em;margin-bottom:2px}
-.voz i{flex:none;font-style:normal;font-size:22px;width:38px;height:38px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center}
-.voz:hover{background:var(--soft)}
-
-/* busca por bairro */
-.search{position:relative;max-width:560px}
-.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--mute)}
-.search input{width:100%;font:inherit;font-size:17px;padding:14px 16px 14px 44px;border:2px solid var(--ink);border-radius:16px;background:#fff}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;margin:0;list-style:none;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.chip{white-space:nowrap;border:1px solid var(--hair);background:#fff;border-radius:999px;padding:7px 13px;font-size:14px}
-.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.chip small{margin-left:6px;opacity:.7}
-.panel{background:#fff;border:1px solid var(--hair);border-radius:22px;padding:20px;margin-top:14px;box-shadow:var(--shadow)}
-.ph{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.big{font-family:var(--display);font-weight:900;font-size:44px;color:var(--b);letter-spacing:-.02em;line-height:1}
-.ph p{margin:0;color:var(--mute)}
-.two{display:grid;gap:22px;margin-top:16px}
-@media(min-width:760px){.two{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}}
-.two h3{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:0 0 10px}
-.rank{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.rank li{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:4px 10px}
-.rank .nm{font-weight:600;font-size:14.5px}
-.rank .br{grid-column:2/-1;height:6px;background:var(--soft);border-radius:9px;overflow:hidden}
-.rank .br i{display:block;height:100%;background:var(--b);border-radius:9px}
-.themes{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.themes li{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:10px;font-size:14.5px}
-.ti{width:30px;height:30px;border-radius:9px;background:var(--soft);display:grid;place-items:center;color:var(--ink)}
-.av{width:30px;height:30px;border-radius:50%;object-fit:cover;display:inline-grid;place-items:center;font-size:12px;font-weight:700;flex:none;background:var(--soft)}
-.lnk{background:none;border:0;padding:0;color:var(--b);text-decoration:underline;text-underline-offset:3px;text-align:left}
-
-/* problemas repetidos */
-.reps{display:grid;gap:12px}
-@media(min-width:760px){.reps{grid-template-columns:repeat(3,1fr)}}
-.rp{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;text-align:left;background:#fff;border:1px solid var(--hair);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow)}
-.rp:hover{border-color:var(--ink)}
-.rn{grid-row:1/3;font-family:var(--display);font-weight:900;font-size:40px;line-height:.95;color:var(--red);text-align:center}
-.rn small{display:block;font-size:10.5px;letter-spacing:.12em;color:var(--mute);font-family:var(--body);font-weight:700;margin-top:4px}
-.rr{font-weight:700;font-size:16px;line-height:1.25}
-.rb{color:var(--mute);font-size:14px}
-.rm{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 8px;font-size:13px;color:var(--mute);margin-top:8px}
-.go{grid-column:1/-1;color:var(--red);font-weight:700;font-size:14px;margin-top:6px}
-.lab{background:var(--b-t);color:var(--b);font-weight:700;font-size:12px;border-radius:7px;padding:2px 8px}
-.warn{background:#fff8e8;border:1px solid #f1dfb4;border-radius:14px;padding:12px 14px;font-size:14px;max-width:640px;margin:0 0 16px}
-
-/* categorias */
-.split{display:flex;height:12px;border-radius:9px;overflow:hidden;gap:2px;margin:0 0 16px;max-width:640px}
-.split i{background:var(--k);min-width:3px}
-.cats{display:grid;gap:12px}
-@media(min-width:760px){.cats{grid-template-columns:repeat(3,1fr)}}
-.cat{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;text-align:left;background:var(--kt);border:0;border-radius:22px;padding:18px}
-.ci{grid-row:1/3;width:44px;height:44px;border-radius:14px;background:#fff;color:var(--k);display:grid;place-items:center}
-.cv{font-family:var(--display);font-weight:900;font-size:34px;line-height:1;color:var(--k)}
-.cn{font-weight:700}
-.now{font-weight:400;color:var(--mute);font-size:14px}
-.cd{grid-column:1/-1;font-size:14px;color:var(--mute);margin-top:6px}
-.cat .go{color:var(--k)}
-
-/* crachás */
-.filters{display:grid;gap:10px;grid-template-columns:1fr;margin:0 0 6px;max-width:760px}
-@media(min-width:640px){.filters{grid-template-columns:2fr 1fr 1fr}}
-.field{display:grid;gap:4px;font-size:13px;font-weight:600;color:var(--mute)}
-.field input,.field select,.field textarea{font:inherit;font-size:16px;color:var(--ink);padding:11px 12px;border:1px solid var(--hair);border-radius:12px;background:var(--soft);width:100%}
-.field textarea{min-height:150px;resize:vertical;background:#fff}
-.grid{display:grid;gap:16px;margin-top:14px}
-@media(min-width:720px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:1020px){.grid{grid-template-columns:repeat(3,1fr)}}
-.badge{border-radius:24px;overflow:hidden;background:#fff;border:1px solid var(--hair);box-shadow:var(--shadow);display:flex;flex-direction:column}
-.bh{background:var(--tint);padding:14px 18px 16px}
-.slot{width:54px;height:8px;border-radius:9px;background:rgba(17,26,36,.12);margin:0 auto 14px}
-.idr{display:flex;gap:14px;align-items:center}
-.pho{width:64px;height:64px;border-radius:50%;object-fit:cover;object-position:center 20%;border:3px solid #fff;flex:none;background:#fff;display:grid;place-items:center;font-weight:700;color:var(--deep)}
-.badge h3{font-family:var(--display);font-weight:900;font-size:23px;line-height:1.05;margin:0;color:var(--deep);letter-spacing:-.01em}
-.civil{margin:3px 0 0;font-size:13px;color:var(--mute)}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.pill{background:var(--ink);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.04em;border-radius:7px;padding:3px 8px;text-transform:uppercase}
-.pill.r{background:#fff;color:var(--ink)}
-.bb{padding:14px 18px 16px;display:grid;gap:12px;flex:1}
-.bb2{display:grid;gap:14px;padding-top:12px}
-.vg{margin:0;font-size:14.5px}.vg b{font-size:17px}
-.cmp{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.cmp div{background:var(--soft);border-radius:14px;padding:10px 12px}
-.cmp b{display:block;font-size:19px}.cmp span{font-size:12px;color:var(--mute)}
-.cmp .up b{color:var(--l)}.cmp .down b{color:var(--bad)}
-.sum{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14.5px;color:var(--mute)}
-.sum b{color:var(--ink);font-size:17px}.sum .ok b{color:var(--l)}.sum .no b{color:var(--bad)}
-.more-d summary{cursor:pointer;font-weight:700;font-size:14.5px;color:var(--b);list-style:none;padding:4px 0}
-.more-d summary::-webkit-details-marker{display:none}
-.more-d summary::after{content:" ↓"}.more-d[open] summary::after{content:" ↑"}
-@media(max-width:759px){.badge .slot{display:none}.bh{padding:16px 18px 14px}}
-@media(min-width:760px){.more-d summary{display:none}.bb2{padding-top:0}.method summary{cursor:default}.method summary::after{display:none}}
-.pres{display:flex;gap:14px;align-items:center}
-.pres p{margin:0;font-size:14.5px}
-.com{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:baseline;font-size:14px;background:var(--soft);border-radius:12px;padding:8px 12px}
-.com .cl{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
-.com small{grid-column:1/-1;font-size:12px}
-.pres small{display:block;color:var(--mute);font-size:13px;margin-top:2px}
-.bad{color:var(--bad)}
-.ring{position:relative;flex:none}
-.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:16px}
-.mini,.vote{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.mini div,.vote div{background:var(--soft);border-radius:14px;padding:10px 12px}
-.mini b,.vote b{display:block;font-size:19px}
-.mini span,.vote span{font-size:12.5px;color:var(--mute)}
-.vote div{background:#e3f6ee}.vote b{color:var(--l)}
-.vote .n{background:#fde9e7}.vote .n b{color:var(--bad)}
-.bar5{display:flex;height:8px;border-radius:9px;overflow:hidden;gap:2px;margin-bottom:6px;background:var(--soft)}
-.bar5 i{background:var(--k)}
-.pick{display:grid;grid-template-columns:12px 1fr auto 14px;align-items:center;gap:10px;width:100%;background:none;border:0;border-bottom:1px solid var(--hair);padding:9px 0;text-align:left;font-size:14.5px}
-.pick i{width:10px;height:10px;border-radius:3px;background:var(--k)}
-.pick:disabled{opacity:.45;cursor:default}
-.pick .ar{color:var(--mute)}
-.bb .h3{margin:0 0 6px}
-.foot{margin:auto 0 0;font-size:14px}
-
-/* lista de propostas */
-.items{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.it{display:grid;grid-template-columns:38px 1fr;gap:12px;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:12px 14px}
-.it .ic{width:38px;height:38px;border-radius:12px;background:var(--kt);color:var(--k);display:grid;place-items:center}
-.tx{margin:0 0 6px;font-size:15px}
-.mt,.ft{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:12.5px;color:var(--mute)}
-.mt .lab{background:var(--kt);color:var(--k)}
-.ft{justify-content:space-between;margin-top:8px}
-.who{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
-.who .av{width:22px;height:22px;font-size:10px}
-.who .n{font-weight:600;color:var(--ink);margin-right:4px}
-.stt{font-weight:700;border-radius:6px;padding:1px 7px;background:var(--soft);color:var(--ink)}
-.stt.ok{background:#e3f6ee;color:var(--l)}.stt.no{background:#fde9e7;color:var(--bad)}
-.ext{font-weight:600;font-size:13px}
-.more{display:block;width:100%;margin-top:12px;padding:12px;border-radius:14px;border:1px solid var(--hair);background:var(--soft);font-weight:700}
-
-/* painel lateral */
-.veil{position:fixed;inset:0;background:rgba(17,26,36,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
-.veil.on{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;max-height:92vh;background:#fff;border-radius:24px 24px 0 0;transform:translateY(105%);transition:transform .25s;z-index:21;display:flex;flex-direction:column}
-@media(min-width:760px){.sheet{left:auto;top:0;bottom:0;width:560px;max-height:none;border-radius:0;transform:translateX(105%)}}
-.sheet.on{transform:none}
-.sh-top{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:16px 18px;background:var(--kt);border-radius:24px 24px 0 0}
-@media(min-width:760px){.sh-top{border-radius:0}}
-.sh-top .ci{grid-row:auto;width:44px;height:44px}
-.sh-top h2{font-size:21px;margin:0;line-height:1.15}
-.sh-top p{margin:2px 0 0;font-size:13.5px;color:var(--mute)}
-.x{width:40px;height:40px;border-radius:50%;border:0;background:#fff;font-size:22px;line-height:1}
-#sh-f{padding:4px 18px 0;border-bottom:1px solid var(--hair)}
-#sh-b{overflow:auto;padding:16px 18px 28px;flex:1}
-.cob{background:var(--soft);border-radius:18px;padding:16px;margin-bottom:18px}
-.cob h3{margin:0 0 4px;font-family:var(--display);font-size:20px}
-.cob p{margin:0 0 12px;font-size:14px;color:var(--mute)}
-.cob .field{margin-bottom:10px}
-.acts{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 8px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:12px;padding:11px 14px;font-weight:700;font-size:14.5px;background:var(--ink);color:#fff;text-decoration:none;border:0}
-.btn.wa{background:#128c4a}.btn.gh{background:#fff;color:var(--ink);border:1px solid var(--hair)}
-.ct{font-size:13px;color:var(--mute)}
-
-/* método */
-.method{display:grid;gap:12px}
-@media(min-width:760px){.method{grid-template-columns:repeat(2,1fr)}}
-.method{gap:8px}
-.method details{background:var(--soft);border-radius:14px;padding:12px 16px}
-.method summary{cursor:pointer;font-weight:700;font-size:15.5px;list-style:none;display:flex;justify-content:space-between;gap:10px}
-.method summary::-webkit-details-marker{display:none}
-.method summary::after{content:"+";color:var(--mute);font-weight:400}.method details[open] summary::after{content:"–"}
-.method p{margin:8px 0 2px;font-size:14.5px;color:var(--mute)}
-footer{border-top:1px solid var(--hair);margin-top:48px;padding-top:22px;padding-bottom:40px;font-size:13.5px;color:var(--mute)}
-@media (prefers-reduced-motion:reduce){.live i{animation:none}.sheet,.veil{transition:none}}
-</style>
+<link rel="stylesheet" href="/assets/radar.css?v=1794883931">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Radar Bragança", "url": "https://www.bragancaterraquerida.com.br/", "inLanguage": "pt-BR", "description": "O que cada vereador de Bragança Paulista fez desde a posse, com dados oficiais."}</script>
 </head>
 <body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<header class="nav"><div class="wrap">
+  <a class="brand" href="/" aria-label="Radar Bragança, página inicial"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#e5322d"/><path d="M19 17a21 21 0 000 30M45 17a21 21 0 010 30M10 9a33 33 0 000 46M54 9a33 33 0 010 46" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/></svg><span><b>RADAR</b><b>BRAGANÇA</b></span></a>
+  <nav aria-label="Menu principal"><ul class="menu"><li><a href="/" aria-current=page>Início</a></li><li><a href="/vereadores/">Vereadores</a></li><li><a href="/bairros/">Seu bairro</a></li><li><a href="/propostas/">Propostas</a></li><li><a href="/sobre/">Sobre</a></li><li class=cta><a href="/demandas/">Voz do Bairro</a></li></ul></nav>
+</div></header>
+<main id="conteudo">
+<noscript><p class="wrap warn" style="margin-top:20px">Este site precisa do JavaScript ligado no navegador para mostrar os dados.</p></noscript>
 
-<header class="top wrap">
-  <span class="live"><i></i><span id="livet">Ao vivo</span></span>
-  <h1 class="logo" aria-label="Radar Bragança">
-    <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#e5322d"/><path d="M19 17a21 21 0 000 30M45 17a21 21 0 010 30M10 9a33 33 0 000 46M54 9a33 33 0 010 46" stroke="#111a24" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
-    <span><b>RADAR</b><b>BRAGANÇA</b></span>
-  </h1>
-  <p class="intro"><b>Raio-X de Bragança Paulista-SP.</b> O que cada vereador fez desde a posse, contado todo dia com os dados oficiais da Câmara.</p>
-  <div class="meter">
-    <p class="t">Salário pago aos <span id="nver">19</span> vereadores desde a posse</p>
-    <p class="v num" id="tick">R$ 0,00</p>
-    <small id="msal"></small>
+<section class="wrap hero">
+  <div>
+    <span class="live"><i></i><span id="livet">Ao vivo</span></span>
+    <h1 class="logo" aria-label="Radar Bragança"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#e5322d"/><path d="M19 17a21 21 0 000 30M45 17a21 21 0 010 30M10 9a33 33 0 000 46M54 9a33 33 0 010 46" stroke="#111a24" stroke-width="5" fill="none" stroke-linecap="round"/></svg><span><b>RADAR</b><b>BRAGANÇA</b></span></h1>
+    <p class="intro"><b>Raio-X de Bragança Paulista-SP.</b> O que cada vereador fez desde a posse, contado todo dia com os dados oficiais da Câmara.</p>
+    <form class="search" id="fbq" role="search" style="max-width:none"><label for="hq" class="eyebrow" style="display:block;margin-bottom:8px">O que pediram pelo seu bairro?</label>
+      <div style="position:relative"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hq" type="search" placeholder="Digite seu bairro ou sua rua" autocomplete="off"></div></form>
+    <ul class="chips" id="bairros-chips"></ul>
   </div>
-  <div class="stats" id="stats"></div>
-  <p class="upd" id="upd"></p>
-  <a class="voz" href="demandas/"><span><b>Voz do Bairro</b>Tem um problema no seu bairro? Conte aqui e nós encaminhamos aos vereadores.</span><i aria-hidden="true">→</i></a>
-</header>
+  <div>
+    <div class="meter"><p class="t">Salário pago aos 19 vereadores desde a posse</p><p class="v num" id="tick">R$ 0,00</p><small id="msal"></small></div>
+    <div class="stats" id="stats"></div>
+    <p class="upd" data-atualizado></p>
+  </div>
+</section>
 
-<main>
-<section class="wrap" id="bairro">
-  <p class="eyebrow">Na sua rua</p>
-  <h2>O que pediram pelo seu bairro?</h2>
-  <p class="lead">Digite o bairro ou a rua. Sem nada digitado, você vê a cidade inteira.</p>
-  <div class="search">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-    <input id="bq" type="search" list="bl" placeholder="Digite seu bairro ou sua rua" autocomplete="off" aria-label="Bairro ou rua">
-    <datalist id="bl"></datalist>
+<section class="wrap" style="padding-top:26px">
+  <ul class="trust">
+    <li><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><b>Só dados oficiais</b><span>Câmara, TSE e Portal da Transparência</span></li>
+    <li><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><b>Atualizado todo dia</b><span>Um robô confere tudo de madrugada</span></li>
+    <li><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><b>Mesma régua</b><span>Os 19 vereadores, sem nota nem opinião</span></li>
+    <li><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><b>Fonte em cada número</b><span>Cada proposta abre na página da Câmara</span></li>
+  </ul>
+</section>
+
+<section class="wrap">
+  <p class="eyebrow">Explore</p>
+  <h2>Escolha por onde começar</h2>
+  <div class="tiles">
+    <a class="tile k-o" href="/vereadores/"><span class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0M16 4.5a3.5 3.5 0 010 7M18 14a6 6 0 013.5 6"/></svg></span><b>Os 19 vereadores</b><span>Presença, propostas, votos e viagens de cada um, com a mesma régua.</span><span class="go">Abrir →</span></a>
+    <a class="tile k-b" href="/bairros/"><span class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><b>Seu bairro</b><span>Tudo o que pediram para a sua rua, e por quem.</span><span class="go">Abrir →</span></a>
+    <a class="tile k-l" href="/propostas/"><span class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 16h6"/></svg></span><b>Propostas</b><span>Homenagem ou trabalho? Leia proposta por proposta.</span><span class="go">Abrir →</span></a>
+    <a class="tile k-h" href="/demandas/"><span class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v3a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M15 9a4 4 0 010 6M18 6a8 8 0 010 12"/></svg></span><b>Voz do Bairro</b><span>Tem um problema no seu bairro? Conte aqui e nós encaminhamos.</span><span class="go">Abrir →</span></a>
   </div>
-  <ul class="chips" id="chips"></ul>
-  <div id="bres"></div>
+</section>
+
+<section class="wrap">
+  <p class="eyebrow">Um por um</p>
+  <h2>Os vereadores</h2>
+  <p class="lead">Toque em um rosto para ver tudo o que ele fez desde a posse.</p>
+  <ul class="faces" id="faces"></ul>
+</section>
+
+<section class="wrap">
+  <p class="eyebrow">Em números</p>
+  <h2>O retrato da Câmara</h2>
+  <div class="cols">
+    <div class="box"><p class="eyebrow">Votações com voto de cada um</p><p class="bign num" id="pct">–</p><p style="margin:0;font-weight:700">das votações: todos votaram igual</p><p class="mute" id="pctd" style="margin:6px 0 0;font-size:14px"></p></div>
+    <div class="box"><p class="eyebrow">Pedido ou lei?</p><p class="bign num" id="rz" style="color:var(--b)">–</p><p style="margin:0;font-weight:700">pedidos de bairro para cada proposta de lei</p><p class="mute" id="rzd" style="margin:6px 0 0;font-size:14px"></p></div>
+  </div>
 </section>
 
 <section class="wrap" id="repetidos">
   <p class="eyebrow">Só aqui</p>
   <h2>O problema que não some</h2>
-  <p class="lead">Quando o mesmo pedido volta várias vezes para a mesma rua, é sinal de que o problema continua lá. O site da Câmara mostra os pedidos um por um; aqui eles são cruzados.</p>
-  <p class="warn"><b>Atenção:</b> pedido repetido não prova que a Prefeitura ignorou. Às vezes o serviço foi feito e o problema voltou, ou o pedido é sobre um trecho diferente da mesma rua.</p>
+  <p class="lead">Quando o mesmo pedido volta várias vezes para a mesma rua, é sinal de que o problema continua lá. <a href="/bairros/#repetidos">Ver todas as ruas →</a></p>
   <div class="reps" id="reps"></div>
 </section>
 
-<section class="wrap" id="tipos">
-  <p class="eyebrow">Tudo o que entrou na Câmara</p>
-  <h2>Homenagem ou trabalho?</h2>
-  <p class="lead" id="hsub"></p>
-  <div class="split" id="split" aria-hidden="true"></div>
-  <div class="cats" id="cats"></div>
-</section>
-
-<section class="wrap" id="vereadores">
-  <p class="eyebrow">Um por um</p>
-  <h2>Os <span id="nver2">19</span> vereadores</h2>
-  <p class="lead" id="vsub"></p>
-  <div class="filters">
-    <label class="field">Buscar por nome<input id="q" type="search" placeholder="Ex.: Fabiana, Coxinha" autocomplete="off"></label>
-    <label class="field">Partido<select id="partido"><option value="">Todos</option></select></label>
-    <label class="field">Ordenar por<select id="ordem">
-      <option value="nome">Nome (A–Z)</option><option value="faltas">Mais faltas</option><option value="b">Mais pedidos no bairro</option>
-      <option value="l">Mais propostas de lei</option><option value="h">Mais homenagens</option><option value="nao">Mais votos “não”</option><option value="vot">Mais votos em 2024</option><option value="vg">Mais gasto em viagens</option><option value="cf">Mais faltas em comissões</option></select></label>
-  </div>
-  <p class="mute" id="conta" style="font-size:14px;margin:4px 0 0"></p>
-  <div class="grid" id="grid"></div>
-</section>
-
-<section class="wrap" id="metodo">
-  <p class="eyebrow">Transparência</p>
-  <h2>Como contamos</h2>
-  <div class="method">
-    <details><summary>De onde vêm os dados</summary><p>Do sistema oficial da Câmara Municipal de Bragança Paulista (braganca.siscam.com.br) e do site camarabp.sp.gov.br. Um robô volta lá todo dia de madrugada. Cada proposta tem um link para a página oficial.</p></details>
-    <details><summary>Presença</summary><p id="m-pres"></p></details>
-    <details><summary>Os grupos de propostas</summary><p>A mesma regra vale para todos. <b>Indicação</b> é pedido de melhoria. <b>Pedido de informação</b>, <b>requerimento</b> e moção de <b>apelo</b> são cobranças. Moções, requerimentos e projetos que dão parabéns, votos de pesar, título, medalha, nome de rua ou criam data comemorativa são <b>homenagens</b>. Os demais projetos são <b>propostas de lei</b>. Moções de apoio ou repúdio e regras internas da Câmara ficam em <b>outros</b>.</p></details>
-    <details><summary>Votos</summary><p id="m-vot"></p></details>
-    <details><summary>Salário</summary><p id="m-sal"></p></details>
-    <details><summary>Bairros e ruas</summary><p>O bairro e a rua são lidos do texto oficial de cada pedido (o trecho “Rua tal – Bairro tal”). Quando o texto não segue esse formato, o pedido não entra no cruzamento por rua, mas continua aparecendo na busca por palavra.</p></details>
-    <details><summary>Viagens oficiais</summary><p>Do Portal da Transparência da Câmara (Despesas de Viagens). O valor de cada viagem é lido da prestação de contas oficial (PDF). Ele soma alimentação e hospedagem de todos que foram na viagem, inclusive motorista e servidores, e não inclui combustível nem pedágio. Viagem com mais de um vereador aparece no crachá de cada um.</p></details>
-    <details><summary>Votos em 2024 e comparação com 2021–2024</summary><p>Os votos são o resultado oficial do TSE na eleição de 2024. A comparação usa as propostas que cada vereador apresentou na legislatura 2021–2024, com a mesma regra de grupos, divididas por 4 anos; o “agora” divide as propostas atuais pelo tempo desde a posse. Presença e votos da legislatura anterior não podem ser comparados: a Câmara só passou a registrar o voto de cada vereador em 2026.</p></details>
-    <details><summary>Presença nas comissões</summary><p id="m-com"></p></details>
-    <details><summary>O que não é falta</summary><p>Se o sistema não registrou ninguém numa sessão, ela não conta. Ausência justificada e licença médica aparecem separadas e não contam como falta.</p></details>
-    <details open><summary>Achou um erro?</summary><p id="m-erro"></p></details>
-  </div>
-</section>
 </main>
-
-<footer class="wrap"><p id="rod"></p><p>Projeto independente, sem ligação com a Câmara, a Prefeitura ou partidos. Mostra todos os vereadores com a mesma régua. Não dá nota nem opinião: só mostra o dado.</p></footer>
-
-<div class="veil" id="veil"></div>
-<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-t">
-  <div class="sh-top" id="sh-top"><span class="ci" id="sh-i"></span><div><h2 id="sh-t"></h2><p id="sh-s"></p></div><button class="x" id="sh-x" type="button" aria-label="Fechar">×</button></div>
-  <div id="sh-f"></div>
-  <div id="sh-b"></div>
-</aside>
-
-<script src="dados.js"></script>
-<script>
-/* ============ CONFIGURAÇÃO: troque aqui ============ */
-const CONFIG={
-  cidade:'Bragança Paulista',
-  contato:'bragancaterraquerida@gmail.com', // e-mail ou @ do Instagram para receber avisos de erro
-  site:'https://www.bragancaterraquerida.com.br/' // endereço público do site (usado na mensagem de cobrança)
-};
-/* =================================================== */
-
-const D=window.RB, V=D.v, IT=D.items; // item: [id,codigo,texto,aaaammdd,grupo,resultado,autores,grupoSiscam,tema,rua,bairro]
-const SISCAM='https://braganca.siscam.com.br';
-const nf=n=>Number(n).toLocaleString('pt-BR');
-const MES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-const dt=s=>{s=String(s).replace(/-/g,'');return `${+s.slice(6,8)} ${MES[+s.slice(4,6)-1]} ${s.slice(0,4)}`};
-const mesAno=s=>`${MES[+s.slice(4,6)-1]} ${s.slice(0,4)}`;
-const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const norm=s=>String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
-const $=id=>document.getElementById(id);
-const svg=(p,s=22)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
-const ICON={
- pin:'<path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
- ask:'<path d="M21 12a8 8 0 01-11.8 7L4 20l1.2-4.4A8 8 0 1121 12z"/><path d="M9.8 9.5a2.3 2.3 0 114 1.6c-.7.6-1.3 1-1.3 1.9"/><path d="M12.5 16h.01"/>',
- medal:'<circle cx="12" cy="14" r="5"/><path d="M9 9.5L6.5 3h4L12 6.5 13.5 3h4L15 9.5"/>',
- law:'<path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 16h6"/>',
- dots:'<circle cx="6" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18" cy="12" r="1.4"/>',
- road:'<path d="M8 3L4 21M16 3l4 18M12 4v3M12 11v3M12 18v3"/>',
- leaf:'<path d="M5 19c0-9 5-14 15-14 0 10-5 15-14 14z"/><path d="M5 19c3-4 6-7 10-9"/>',
- bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0012 3z"/>',
- sign:'<path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',
- walk:'<path d="M4 20h16M6 20v-5h4v5M10 15V9h4v11M14 9V4h4v16"/>',
- tree:'<path d="M12 21v-7"/><path d="M12 14a5 5 0 01-4-8 4.5 4.5 0 018 0 5 5 0 01-4 8z"/><path d="M6 21h12"/>',
- cross:'<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/>',
- book:'<path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 21V5M9 7h6"/>',
- shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
- drop:'<path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/>',
- bus:'<rect x="4" y="4" width="16" height="13" rx="2"/><path d="M4 11h16M8 17v3M16 17v3M8 14h.01M16 14h.01"/>',
- heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 10-7 10z"/>',
- star:'<path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.2 6-5.5-3-5.5 3 1.2-6L3.2 9.4l6.1-.8z"/>',
- cal:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/>',
- flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>'
-};
-const CAT={
- b:['Pedidos de melhoria nos bairros','Tapar buraco, podar árvore, trocar lâmpada, limpar terreno. É um pedido: a Prefeitura decide se faz.','pin','Pedido'],
- c:['Perguntas e cobranças','Pedidos de explicação à Prefeitura e requerimentos a outros órgãos.','ask','Cobrança'],
- h:['Homenagens','Parabéns, votos de pesar, título de cidadão, medalhas, nome de rua e datas comemorativas.','medal','Homenagem'],
- l:['Propostas de lei','Projetos que criam regra, programa ou obrigação na cidade.','law','Proposta de lei'],
- o:['Outros','Moções de apoio ou repúdio e regras internas da Câmara.','dots','Outro']};
-const ORDER=['b','c','h','l','o'];
-const TH={luz:['Iluminação','bulb'],asf:['Asfalto e buracos','road'],tra:['Trânsito','sign'],agu:['Água e esgoto','drop'],lim:['Limpeza e poda','leaf'],cal:['Calçadas','walk'],
- laz:['Praças e lazer','tree'],sau:['Saúde','cross'],edu:['Escolas','book'],seg:['Segurança','shield'],bus:['Ônibus','bus'],
- pes:['Votos de pesar','heart'],tit:['Títulos e medalhas','star'],nom:['Nomes de rua e prédio','flag'],dat:['Datas comemorativas','cal'],par:['Parabéns e aplausos','medal']};
-const TEMA={luz:'iluminação',asf:'conserto de asfalto',tra:'melhoria no trânsito',agu:'água, esgoto e drenagem',lim:'limpeza e poda',cal:'conserto de calçada',laz:'melhoria em praça e área de lazer',sau:'melhoria na saúde',edu:'melhoria em escola',seg:'segurança',bus:'melhoria no ônibus'};
-
-function clean(it){
-  let t=it[2].trim();
-  t=t.replace(/^(solicitando|solicita|requer(?:endo)?|indicando|indica)\s+(?:ao\s+(?:poder\s+)?executivo(?:\s+municipal)?\s*,?\s*)?(?:a\s+|o\s+)?/i,'');
-  return t.charAt(0).toUpperCase()+t.slice(1);
-}
-IT.forEach(it=>{it.n=norm(it[2]+' '+it[9]+' '+it[10]);it.tx=clean(it)});
-const hue=i=>(i*47+200)%360;
-V.forEach((v,i)=>{const w=v.ap.split(/\s+/).filter(x=>!/^(da|de|do|dos|das)$/i.test(x));v.in=(w[0][0]+(w.length>1?w[w.length-1][0]:'')).toUpperCase()});
-const av=i=>V[i].foto?`<img class="av" src="fotos/${V[i].id}.jpg" alt="" loading="lazy">`:`<span class="av" style="background:hsl(${hue(i)} 80% 92%);color:hsl(${hue(i)} 55% 28%)" aria-hidden="true">${V[i].in}</span>`;
-
-/* ---------- cartão de proposta ---------- */
-function stt(r){if(!r)return'';const k=/^aprovad/i.test(r)?'ok':/rejeit|vetad/i.test(r)?'no':'';return `<span class="stt ${k}">${esc(r)}</span>`}
-function itemHTML(it,showAut){
-  const c=it[4], t=TH[it[8]], icon=t?t[1]:CAT[c][2];
-  const who=showAut?`<span class="who">${it[6].slice(0,3).map(a=>av(a)+`<span class="n">${esc(V[a].ap)}</span>`).join('')}${it[6].length>3?`<span>+${it[6].length-3}</span>`:''}</span>`:'<span></span>';
-  return `<li class="it k-${c}"><span class="ic">${svg(ICON[icon])}</span><div>
-    <p class="tx">${esc(it.tx)}</p>
-    <div class="mt"><span class="lab">${t?esc(t[0]):CAT[c][3]}</span>${stt(it[5])}<span>${dt(it[3])}</span><span>·</span><span>${esc(it[1])}</span></div>
-    <div class="ft">${who}<a class="ext" href="${SISCAM}/Documentos/Details?id=${it[0]}" target="_blank" rel="noopener">Abrir na Câmara ↗</a></div></div></li>`;
-}
-function pager(host,items,showAut,step){
-  let n=0; host.innerHTML='<ul class="items"></ul>';
-  const ul=host.firstChild, btn=document.createElement('button');
-  btn.className='more'; btn.type='button';
-  const add=()=>{ul.insertAdjacentHTML('beforeend',items.slice(n,n+step).map(i=>itemHTML(i,showAut)).join(''));n+=step;
-    if(n>=items.length)btn.remove();else btn.textContent=`Mostrar mais ${Math.min(step,items.length-n)} de ${nf(items.length-n)}`};
-  btn.addEventListener('click',add); if(items.length>step)host.appendChild(btn); add();
-}
-function themeCount(items){const m=new Map();items.forEach(it=>{if(it[8])m.set(it[8],(m.get(it[8])||0)+1)});return [...m.entries()].sort((a,b)=>b[1]-a[1])}
-
-/* ---------- painel ---------- */
-const sheet=$('sheet'), veil=$('veil'); let lastFocus=null;
-function openSheet(k,icon,title,sub){
-  lastFocus=document.activeElement; $('sh-top').className='sh-top k-'+k; $('sh-i').innerHTML=svg(ICON[icon],24);
-  $('sh-t').textContent=title; $('sh-s').textContent=sub||''; $('sh-f').innerHTML=''; $('sh-f').style.display='none'; $('sh-b').innerHTML=''; $('sh-b').scrollTop=0;
-  sheet.classList.add('on'); veil.classList.add('on'); document.body.style.overflow='hidden'; $('sh-x').focus();
-}
-function closeSheet(){sheet.classList.remove('on');veil.classList.remove('on');document.body.style.overflow='';if(lastFocus)lastFocus.focus()}
-$('sh-x').addEventListener('click',closeSheet); veil.addEventListener('click',closeSheet);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheet.classList.contains('on'))closeSheet()});
-function openCat(c,vi){
-  const all=IT.filter(it=>it[4]===c&&(vi==null||it[6].includes(vi)));
-  openSheet(c,CAT[c][2],CAT[c][0],`${nf(all.length)} ${vi==null?'de todos os vereadores':'de '+V[vi].ap} até agora`);
-  const th=themeCount(all); let cur='';
-  const draw=()=>pager($('sh-b'),cur?all.filter(it=>it[8]===cur):all,vi==null,20);
-  if(th.length>1){
-    $('sh-f').style.display='';
-    $('sh-f').innerHTML=`<ul class="chips"><li><button class="chip on" type="button" data-t="">Tudo<small>${nf(all.length)}</small></button></li>${th.map(([k,n])=>`<li><button class="chip" type="button" data-t="${k}">${esc(TH[k][0])}<small>${nf(n)}</small></button></li>`).join('')}</ul>`;
-    $('sh-f').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;cur=b.dataset.t;$('sh-f').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));$('sh-b').scrollTop=0;draw()};
-  }
-  draw();
-}
-function openNaos(vi){
-  const v=V[vi];
-  openSheet('o','sign',`Quando ${v.ap} não votou “sim”`,`${v.naos.length} ${v.naos.length===1?'votação':'votações'} até agora`);
-  $('sh-b').innerHTML='<ul class="items">'+v.naos.slice().sort((a,b)=>b.d.localeCompare(a.d)).map(n=>`<li class="it k-o"><span class="ic">${svg(ICON.sign)}</span><div><p class="tx">${esc(n.e)}</p>
-    <div class="mt"><span class="stt ${n.v==='nao'?'no':''}">${n.v==='nao'?'Votou não':'Absteve-se'}</span><span>${dt(n.d)}</span><span>·</span><span>${esc(n.t)}</span></div>
-    <div class="ft"><span>${n.a?'Proposta de: '+esc(n.a):''}</span><a class="ext" href="${esc(n.u)}" target="_blank" rel="noopener">Abrir na Câmara ↗</a></div></div></li>`).join('')+'</ul>';
-}
-
-/* ---------- topo vivo ---------- */
-const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-const CEL=!matchMedia('(min-width:760px)').matches; // versão compacta só no celular
-function countUp(el,to){ if(reduce){el.textContent=nf(to);return} const t0=performance.now(),from=Math.round(to*.82);
-  const step=t=>{const p=Math.min(1,(t-t0)/900),e=1-Math.pow(1-p,3);el.textContent=nf(Math.round(from+(to-from)*e));if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)}
-const STATS=[['',IT.length,'propostas até agora'],['k-b',D.catot.b||0,'pedidos nos bairros até agora'],['k-h',D.catot.h||0,'homenagens até agora'],['k-l',D.catot.l||0,'propostas de lei até agora']];
-$('stats').innerHTML=STATS.map(([k,n,l],i)=>`<div class="stat ${k}"><b class="num" id="st${i}">${nf(n)}</b><span>${l}</span></div>`).join('');
-STATS.forEach(([k,n],i)=>countUp($('st'+i),n));
-$('nver').textContent=$('nver2').textContent=V.length;
-const POSSE=new Date(D.posse+'T00:00:00-03:00').getTime(), POR_MS=V.length*D.sal.v*12/(365.25*864e5);
-const brl=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
-function tick(){$('tick').textContent=brl.format((Date.now()-POSSE)*POR_MS)}
-tick(); if(!reduce)setInterval(tick,120);
-$('msal').textContent=`e subindo agora · estimativa: ${V.length} salários de ${brl.format(D.sal.v)} por mês desde ${dt(D.posse)}`+(D.sal.confirmado?'':' · valor a confirmar no texto oficial');
-const GER=new Date(D.gerh);
-function ago(){const m=Math.max(0,Math.round((Date.now()-GER.getTime())/6e4));
-  const q=m<2?'agora mesmo':m<60?`há ${m} minutos`:m<120?'há 1 hora':m<1440?`há ${Math.floor(m/60)} horas`:m<2880?'ontem':`há ${Math.floor(m/1440)} dias`;
-  $('livet').textContent=`Ao vivo · dados conferidos ${q}`;
-  $('upd').textContent=`Última conferência na Câmara: ${GER.toLocaleDateString('pt-BR',{day:'numeric',month:'long'})} às ${GER.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}. O robô volta lá todo dia de madrugada.`}
-ago(); setInterval(ago,6e4);
-
-/* ---------- pedidos repetidos ---------- */
-D.rep.forEach(g=>{g.items=g.ids.map(n=>IT[n])});
-const repHTML=g=>`<button class="rp" type="button" data-g="${D.rep.indexOf(g)}"><span class="rn num">${g.n}<small>VEZES</small></span>
-  <span class="rr">${esc(g.r)}</span><span class="rb">${esc(g.b||CONFIG.cidade)}</span>
-  <span class="rm"><span class="lab">${esc(TH[g.th][0])}</span><span>${g.a} ${g.a===1?'vereador pediu':'vereadores pediram'}</span><span>·</span><span>de ${mesAno(g.d0)} a ${mesAno(g.d1)}</span></span><span class="go">Ver pedidos e cobrar →</span></button>`;
-const SITE=/^https?:/.test(location.protocol)&&!/claude|localhost|127\./.test(location.hostname)?location.origin+location.pathname:CONFIG.site;
-function openRep(g){
-  openSheet('b',TH[g.th][1],g.r,`${TH[g.th][0]} · pedido ${g.n} vezes até agora${g.b?' · '+g.b:''}`);
-  const cnt=new Map(); g.items.forEach(it=>it[6].forEach(a=>cnt.set(a,(cnt.get(a)||0)+1)));
-  const who=[...cnt.entries()].sort((a,b)=>b[1]-a[1]);
-  const msg=a=>`Olá, ${V[a].ap}. Moro em ${CONFIG.cidade}. A Câmara já recebeu ${g.n} pedidos de ${TEMA[g.th]||'melhoria'} na ${g.r}${g.b?', '+g.b:''}, desde ${mesAno(g.d0)}. ${cnt.get(a)===1?'Um deles saiu':cnt.get(a)+' deles saíram'} do seu gabinete, e o problema continua. O que a Prefeitura respondeu? O que ainda dá para fazer?\n\nFonte: ${SITE}`;
-  $('sh-b').innerHTML=`<div class="cob"><h3>Cobre uma resposta</h3>
-    <p>A mensagem já vem pronta. Escolha o vereador, ajuste o texto se quiser e envie.</p>
-    <label class="field">Para quem<select id="cob-v">${who.map(([a,n])=>`<option value="${a}">${esc(V[a].ap)} (${n} ${n===1?'pedido':'pedidos'} para esta rua)</option>`).join('')}</select></label>
-    <label class="field">Mensagem<textarea id="cob-t"></textarea></label>
-    <div class="acts" id="cob-a"></div><div class="ct" id="cob-c"></div></div>
-    <p class="h3">Os ${g.n} pedidos, do mais recente ao mais antigo</p><div id="replist"></div>`;
-  const sel=$('cob-v'), ta=$('cob-t');
-  const links=()=>{const v=V[+sel.value], t=encodeURIComponent(ta.value);
-    $('cob-a').innerHTML=(v.email?`<a class="btn" href="mailto:${esc(v.email)}?subject=${encodeURIComponent(g.r+': o problema continua')}&body=${t}">Enviar por e-mail</a>`:'')
-      +`<a class="btn wa" href="https://wa.me/?text=${t}" target="_blank" rel="noopener">Mandar no grupo do bairro</a><button class="btn gh" type="button" id="cob-cp">Copiar mensagem</button>`;
-    $('cob-c').innerHTML=(v.email?`E-mail oficial do gabinete: <b>${esc(v.email)}</b> · `:'')+'Telefone da Câmara: <b>(11) 4892-6200</b>';
-    $('cob-cp').onclick=async e=>{try{await navigator.clipboard.writeText(ta.value);e.target.textContent='Copiado'}catch(_){ta.focus();ta.select();e.target.textContent='Selecionado: copie com o dedo'}}};
-  const fill=()=>{ta.value=msg(+sel.value);links()};
-  sel.addEventListener('change',fill); ta.addEventListener('input',links); fill();
-  pager($('replist'),g.items,true,20);
-}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(b)openRep(D.rep[+b.dataset.g])});
-(function(){let n=0; const host=$('reps'), btn=document.createElement('button'); btn.className='more'; btn.type='button'; btn.style.gridColumn='1/-1';
-  if(!D.rep.length){host.innerHTML='<p class="mute">Ainda não há pedidos repetidos para a mesma rua.</p>';return}
-  const step=matchMedia('(min-width:760px)').matches?9:3;
-  const add=()=>{host.insertAdjacentHTML('beforeend',D.rep.slice(n,n+step).map(repHTML).join(''));n+=step;host.appendChild(btn);
-    if(n>=D.rep.length)btn.remove();else btn.textContent=`Mostrar mais ruas (${D.rep.length-n} na fila)`};
-  btn.addEventListener('click',()=>{btn.remove();add()}); add();})();
-
-/* ---------- bairro ---------- */
-$('bl').innerHTML=D.bairros.slice(0,300).map(b=>`<option value="${esc(b)}"></option>`).join('');
-$('chips').innerHTML=D.bairros.slice(0,12).map(b=>`<li><button class="chip" type="button" data-b="${esc(b)}">${esc(b)}</button></li>`).join('');
-let bTimer;
-function bairro(q){
-  const host=$('bres'), k=norm(q.trim()), city=k.length===0;
-  $('chips').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',norm(x.dataset.b)===k));
-  if(!city&&k.length<3){host.innerHTML='<div class="panel"><p class="mute" style="margin:0">Continue digitando: preciso de pelo menos 3 letras.</p></div>';return}
-  const items=city?IT:IT.filter(it=>it.n.includes(k));
-  if(!items.length){host.innerHTML=`<div class="panel"><p class="mute" style="margin:0">Nada encontrado para “${esc(q)}”. Confira a grafia ou tente só uma parte do nome.</p></div>`;return}
-  const cnt=new Map(); items.forEach(it=>it[6].forEach(a=>cnt.set(a,(cnt.get(a)||0)+1)));
-  const top=[...cnt.entries()].sort((a,b)=>b[1]-a[1]), mx=top[0][1];
-  const th=themeCount(items.filter(it=>it[4]==='b'||it[4]==='c')).slice(0,city&&CEL?3:5);
-  const reps=city?[]:D.rep.filter(g=>g.items.some(it=>it.n.includes(k))).slice(0,3);
-  host.innerHTML=`<div class="panel">
-   <div class="ph"><span class="big num">${nf(items.length)}</span><p>${city?'propostas para <b>a cidade inteira</b> até agora':`${items.length===1?'proposta cita':'propostas citam'} <b>${esc(q.trim())}</b> até agora`}</p></div>
-   <div class="two">
-     ${city?'':`<div><h3>Quem mais pediu</h3><ol class="rank">${top.slice(0,5).map(([a,n])=>`<li>${av(a)}<span class="nm">${esc(V[a].ap)} <span class="mute" style="font-weight:400">· ${esc(V[a].part)}</span></span><b class="num">${nf(n)}</b><span class="br"><i style="width:${n/mx*100}%"></i></span></li>`).join('')}</ol>
-       ${top.length>5?`<p class="mute" style="font-size:13.5px;margin:10px 0 0">Mais ${top.length-5} vereadores também citaram.</p>`:''}</div>`}
-     ${th.length?`<div><h3>O que mais pedem</h3><ul class="themes">${th.map(([t,n])=>`<li><span class="ti">${svg(ICON[TH[t][1]],18)}</span><span>${esc(TH[t][0])}</span><b class="num">${nf(n)}</b></li>`).join('')}</ul></div>`:''}
-     ${city&&!CEL?`<div><h3>Bairros mais citados</h3><ul class="themes">${D.bairros.slice(0,5).map((b,i)=>`<li><span class="ti">${svg(ICON.pin,18)}</span><button class="lnk" type="button" data-b="${esc(b)}">${esc(b)}</button><b class="num">${nf(D.bairrosn[i])}</b></li>`).join('')}</ul></div>`:''}
-   </div>
-   ${reps.length?`<p class="h3" style="margin-top:24px">Problemas que voltam aqui</p><div class="reps">${reps.map(repHTML).join('')}</div>`:''}
-   <p class="h3" style="margin-top:24px">${city?'As propostas mais recentes da cidade':'Os pedidos mais recentes'}</p><div id="blist"></div></div>`;
-  pager($('blist'),items,true,city&&CEL?2:4);
-}
-$('bq').addEventListener('input',e=>{clearTimeout(bTimer);bTimer=setTimeout(()=>bairro(e.target.value),150)});
-document.addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b){$('bq').value=b.dataset.b;bairro(b.dataset.b);$('bairro').scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'})}});
-bairro('');
-
-/* ---------- homenagem ou trabalho ---------- */
-const tot=ORDER.reduce((s,c)=>s+(D.catot[c]||0),0);
-const lei=D.catot.l||0, hom=D.catot.h||0;
-$('hsub').textContent=`São ${nf(tot)} propostas desde a posse. `+(lei?`Para cada proposta de lei, ${(hom/lei).toLocaleString('pt-BR',{maximumFractionDigits:1})} homenagens. `:'')+'Toque em um grupo para ler cada uma.';
-$('split').innerHTML=ORDER.map(c=>`<i class="k-${c}" style="flex:${D.catot[c]||0} 1 0"></i>`).join('');
-$('cats').innerHTML=ORDER.map(c=>`<button class="cat k-${c}" type="button" data-c="${c}"><span class="ci">${svg(ICON[CAT[c][2]],26)}</span><span class="cv num">${nf(D.catot[c]||0)}</span><span class="cn">${CAT[c][0]} <span class="now">até agora</span></span><span class="cd">${CAT[c][1]}</span><span class="go">Ver todas →</span></button>`).join('');
-$('cats').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(b)openCat(b.dataset.c,null)});
-
-/* ---------- crachás ---------- */
-const pct=D.nvot?Math.floor(D.unan/D.nvot*100):0;
-$('vsub').textContent=`Até agora, em ${pct} de cada 100 votações nominais todos votaram igual. Toque nos números do crachá para ver os detalhes.`;
-[...new Set(V.map(v=>v.part))].sort((a,b)=>a.localeCompare(b,'pt')).forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=`${p} (${V.filter(v=>v.part===p).length})`;$('partido').appendChild(o)});
-function ring(v){
-  const t=v.P+v.A+v.F; if(!t)return '<div class="ring"><svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="30" fill="none" stroke="#eef1f4" stroke-width="9"/></svg><b>–</b></div>';
-  const C=2*Math.PI*30, seg=(n,col,off)=>n?`<circle cx="38" cy="38" r="30" fill="none" stroke="${col}" stroke-width="9" stroke-dasharray="${n/t*C} ${C}" stroke-dashoffset="${-off/t*C}" transform="rotate(-90 38 38)"/>`:'';
-  return `<div class="ring"><svg width="76" height="76" viewBox="0 0 76 76" role="img" aria-label="${v.P} presenças em ${t} sessões"><circle cx="38" cy="38" r="30" fill="none" stroke="#eef1f4" stroke-width="9"/>${seg(v.P,'#111a24',0)}${seg(v.A,'#d99a2b',v.P)}${seg(v.F,'#cf3a2e',v.P+v.A)}</svg><b class="num">${Math.round(v.P/t*100)}%</b></div>`;
-}
-function badge(v){
-  const i=V.indexOf(v), t=v.P+v.A+v.F, h=hue(i), tot=ORDER.reduce((s,c)=>s+v.cat[c],0);
-  return `<article class="badge" style="--tint:hsl(${h} 85% 94%);--deep:hsl(${h} 55% 26%)">
-   <div class="bh"><div class="slot" aria-hidden="true"></div>
-     <div class="idr">${v.foto?`<img class="pho" src="fotos/${v.id}.jpg" alt="Foto de ${esc(v.ap)}" loading="lazy">`:`<div class="pho" aria-hidden="true">${v.in}</div>`}<div><h3>${esc(v.ap)}</h3><p class="civil">${esc(v.nome)}</p></div></div>
-     <div class="tags"><span class="pill">${esc(v.part)}</span>${v.mesa?`<span class="pill r">${esc(v.mesa)} da Câmara</span>`:''}</div></div>
-   <div class="bb">
-     <div class="pres">${ring(v)}<p><b class="num">${v.P} de ${t}</b> sessões do plenário ${D.pri?'desde '+mesAno(D.pri.replace(/-/g,'')):''}<small class="num">${v.A} ${v.A===1?'ausência justificada':'ausências justificadas'} · <b class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</b></small></p></div>
-     ${comHTML(v)}
-     ${CEL?`<div class="sum num"><span><b>${nf(tot)}</b> propostas</span><span class="ok"><b>${nf(v.vs)}</b> sim</span><span class="no"><b>${nf(v.vn+v.va)}</b> ${v.va?'não/abst.':'não'}</span></div>
-     <div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>`
-     :`<div class="mini num"><div><b>${brl.format(D.sal.v).replace(/,\d\d$/,'')}</b><span>salário por mês${D.sal.confirmado?'':' (a confirmar)'}</span></div><div><b>${v.vot!=null?nf(v.vot):'–'}</b><span>votos em 2024</span></div></div>`}
-     <details class="more-d" ${CEL?'':'open'}><summary>Ver o que propôs e como votou</summary><div class="bb2">
-     <div><p class="h3">O que propôs até agora</p>
-       ${CEL?'':`<div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>`}
-       ${ORDER.map(c=>`<button class="pick k-${c} num" type="button" data-v="${i}" data-c="${c}" ${v.cat[c]?'':'disabled'}><i></i><span>${CAT[c][0]}</span><b>${nf(v.cat[c])}</b><span class="ar" aria-hidden="true">›</span></button>`).join('')}</div>
-     <div><p class="h3">Como votou até agora</p>
-       <div class="vote num"><div><b>${nf(v.vs)}</b><span>vezes sim</span></div><div class="n"><b>${nf(v.vn+v.va)}</b><span>${v.va?'não ou abstenção':'vezes não'}</span></div></div>
-       ${v.naos.length?`<p style="margin:10px 0 0"><button class="lnk" type="button" data-n="${i}">Ver quando não votou sim →</button></p>`:''}</div>
-     ${antHTML(v,tot)}
-     <div><p class="h3">Viagens oficiais desde a posse</p>${v.vg&&v.vg.length
-       ?`<p class="vg num"><b>${nf(v.vg.length)}</b> ${v.vg.length===1?'viagem':'viagens'} · <b>${brl.format(v.vgt||0)}</b> em despesas</p><p style="margin:6px 0 0"><button class="lnk" type="button" data-vg="${i}">Ver destinos e motivos →</button></p>`
-       :`<p class="vg mute">${v.vg?'Nenhuma viagem oficial registrada no Portal da Transparência.':'Dado ainda não coletado.'}</p>`}</div>
-     <p class="foot">${CEL&&v.vot!=null?`<span class="mute">${nf(v.vot)} votos em 2024 (TSE)</span><br>`:''}<a href="${esc(v.ficha||v.url)}" target="_blank" rel="noopener">Ficha oficial na Câmara ↗</a>${v.email?` · <a href="mailto:${esc(v.email)}">${esc(v.email)}</a>`:''}</p>
-   </div></details></div></article>`;
-}
-/* presença nas comissões (só sessões com lista de presença registrada) */
-function comHTML(v){
-  const c=v.cm; if(!c)return '';
-  const t=c.P+c.A+c.F;
-  if(!t)return `<div class="com"><span class="cl">Comissões</span><span class="mute">Não aparece em nenhuma lista de presença de comissão registrada no sistema.</span></div>`;
-  const pc=Math.round(c.P/t*100);
-  const por=Object.entries(c.por).map(([s,x])=>`${esc((D.comissoes||{})[s]||s)}: ${x.P} de ${x.P+x.A+x.F}`).join(' · ');
-  return `<div class="com num"><span class="cl">Comissões</span><span><b>${c.P} de ${t}</b> sessões (${pc}%) · <b class="${c.F?'bad':''}">${c.F} ${c.F===1?'falta':'faltas'}</b>${c.A?` · ${c.A} justificada${c.A>1?'s':''}`:''}</span><small class="mute">${por}</small></div>`;
-}
-/* comparação com a legislatura 2021–2024: propostas por ano, mesma regra de grupos */
-const ANOS_ATUAL=Math.max(.25,(Date.now()-new Date(D.posse+'T00:00:00-03:00').getTime())/(365.25*864e5));
-function antHTML(v,tot){
-  if(!v.ant)return '';
-  if(!v.ant.tot)return `<div><p class="h3">Comparado com 2021–2024</p><p class="vg mute">Não apresentou propostas em 2021–2024: é o primeiro mandato ou era suplente.</p></div>`;
-  const a=v.ant.tot/4, b=tot/ANOS_ATUAL, d=a?Math.round((b-a)/a*100):0;
-  const f=x=>x.toLocaleString('pt-BR',{maximumFractionDigits:0});
-  return `<div><p class="h3">Comparado com 2021–2024</p>
-    <div class="cmp num"><div><b>${f(a)}</b><span>propostas por ano antes</span></div><div><b>${f(b)}</b><span>propostas por ano agora</span></div><div class="${d>=0?'up':'down'}"><b>${d>0?'+':''}${d}%</b><span>${d>=0?'a mais':'a menos'}</span></div></div>
-    <p class="mute" style="font-size:12.5px;margin:6px 0 0">Antes: ${nf(v.ant.cat.b)} pedidos, ${nf(v.ant.cat.l)} propostas de lei, ${nf(v.ant.cat.h)} homenagens (4 anos).</p></div>`;
-}
-function openVg(vi){
-  const v=V[vi];
-  openSheet('o','bus',`Viagens oficiais de ${v.ap}`,`${v.vg.length} ${v.vg.length===1?'viagem':'viagens'} · ${brl.format(v.vgt||0)} desde a posse`);
-  $('sh-b').innerHTML=`<p class="warn" style="margin-bottom:14px">O valor é o que a Câmara registrou na prestação de contas de cada viagem: alimentação e hospedagem de <b>todos os participantes</b> (inclusive motorista e servidores). <b>Não inclui combustível e pedágio.</b></p><ul class="items">`+v.vg.map(t=>`<li class="it k-o"><span class="ic">${svg(ICON.bus)}</span><div><p class="tx"><b>${esc(t.de)}</b><br>${esc(t.mo)}</p>
-    <div class="mt">${t.v!=null?`<span class="stt">${brl.format(t.v)}</span>`:'<span class="stt">valor não lido</span>'}${t.dt?`<span>${esc(t.dt)}</span>`:''}<span>·</span><span>Despesa ${esc(t.k.split('-')[1])}/${esc(t.k.split('-')[0])}</span></div>
-    <div class="ft"><span></span>${t.u?`<a class="ext" href="${esc(t.u)}" target="_blank" rel="noopener">Prestação de contas ↗</a>`:''}</div></div></li>`).join('')+'</ul>';
-}
-const ORD={nome:(a,b)=>a.ap.localeCompare(b.ap,'pt'),faltas:(a,b)=>(b.F-a.F)||(b.A-a.A),l:(a,b)=>b.cat.l-a.cat.l,h:(a,b)=>b.cat.h-a.cat.h,b:(a,b)=>b.cat.b-a.cat.b,nao:(a,b)=>(b.vn+b.va)-(a.vn+a.va),vot:(a,b)=>(b.vot||0)-(a.vot||0),vg:(a,b)=>(b.vgt||0)-(a.vgt||0),cf:(a,b)=>((b.cm||{}).F||0)-((a.cm||{}).F||0)};
-function render(){
-  const q=norm($('q').value.trim()),p=$('partido').value,o=$('ordem').value;
-  const L=V.filter(v=>(!p||v.part===p)&&(!q||norm(v.ap+' '+v.nome).includes(q))).sort((a,b)=>ORD[o](a,b)||ORD.nome(a,b));
-  $('grid').innerHTML=L.length?L.map(badge).join(''):'<p class="mute">Nenhum vereador com esse nome. Apague a busca ou escolha “Todos”.</p>';
-  $('conta').textContent=L.length===V.length?`Mostrando os ${V.length} vereadores.`:`Mostrando ${L.length} de ${V.length} vereadores.`;
-}
-['q','partido','ordem'].forEach(id=>$(id).addEventListener('input',render));
-$('grid').addEventListener('click',e=>{
-  const p=e.target.closest('.pick'); if(p&&!p.disabled){openCat(p.dataset.c,+p.dataset.v);return}
-  const g=e.target.closest('[data-vg]'); if(g){openVg(+g.dataset.vg);return}
-  const n=e.target.closest('[data-n]'); if(n)openNaos(+n.dataset.n)});
-render();
-
-/* ---------- método ---------- */
-$('m-pres').innerHTML=`Conta a presença na hora das votações nominais do plenário: quem votou (sim, não, abstenção, ou o presidente que não vota) estava lá; quem aparece como “ausente” em todas as votações da sessão teve falta. Foram ${D.sess} sessões${D.pri?' de '+dt(D.pri):''} até ${D.ult?dt(D.ult):'agora'}. <b>A Câmara só passou a registrar no sistema o voto de cada vereador em ${D.pri?mesAno(D.pri.replace(/-/g,'')):'2026'}</b>; antes disso, desde a posse, não há registro nominal, e o site não acusa ninguém por esse período. Sessões só com votação simbólica (sem lista de nomes) não entram.`;
-$('m-sal').innerHTML=`O valor é o mesmo para os ${V.length} e foi fixado pela <a href="${esc(D.sal.u)}" target="_blank" rel="noopener">${esc(D.sal.lei)}</a>. É o valor bruto. O contador do topo é uma estimativa: ${V.length} salários por mês, proporcional ao tempo desde a posse, sem 13º nem outros pagamentos.`+(D.sal.confirmado?'':' <b>O valor de R$ '+nf(D.sal.v)+' foi publicado pela imprensa local e ainda precisa ser conferido no texto oficial.</b>');
-$('m-com').textContent=`As comissões (Finanças e Orçamento, Justiça e Redação, Educação e Cultura e Socioeconômica) analisam os projetos e dão parecer antes de irem ao plenário. Contamos as ${nf(D.ncom||0)} sessões de comissão${D.pricom?' desde '+dt(D.pricom):''} em que a Câmara registrou a lista de presença no sistema. Cada vereador só é contado nas comissões de que é membro. Sessões sem lista registrada não entram: dado ausente não é falta.`;
-$('m-vot').textContent=`Só entram as votações nominais, em que o sistema registra o voto de cada um: ${nf(D.nvot)}${D.pri?' desde '+dt(D.pri):''}. Em ${nf(D.unan)} delas, todos votaram igual.`;
-if(!CEL)document.querySelectorAll('.method details').forEach(d=>{d.open=true;d.querySelector('summary').addEventListener('click',e=>e.preventDefault())});
-$('m-erro').innerHTML=CONFIG.contato?`Escreva para <b>${esc(CONFIG.contato)}</b> com o link da proposta. A correção é feita rápido.`:'Avise pelo contato do projeto com o link da proposta. A correção é feita rápido.';
-$('rod').textContent=`Fonte: sistema legislativo da Câmara Municipal de Bragança Paulista (braganca.siscam.com.br). Coleta de ${dt(D.ger)}.`;
-</script>
-<!-- Contador de visitas (GoatCounter): sem cookies, não identifica ninguém. Painel: https://radarbraganca.goatcounter.com -->
+<footer class="foot2"><div class="wrap">
+  <div><a class="brand" href="/"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#e5322d"/><path d="M19 17a21 21 0 000 30M45 17a21 21 0 010 30M10 9a33 33 0 000 46M54 9a33 33 0 010 46" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/></svg><span><b>RADAR</b><b>BRAGANÇA</b></span></a>
+    <p>O que cada vereador de Bragança Paulista fez desde a posse, com os dados oficiais da Câmara, do TSE e do Portal da Transparência. Mesma régua para todos, sem nota nem opinião.</p></div>
+  <div><h4>Páginas</h4><ul><li><a href="/">Início</a></li><li><a href="/vereadores/">Vereadores</a></li><li><a href="/bairros/">Seu bairro</a></li><li><a href="/propostas/">Propostas</a></li><li><a href="/sobre/">Sobre</a></li><li><a href="/demandas/">Voz do Bairro</a></li></ul></div>
+  <div><h4>Contato</h4><ul><li>Achou um erro? Escreva para<br><b>bragancaterraquerida@gmail.com</b></li><li><a href="/sobre/">Como contamos os números</a></li></ul></div>
+  <p class="fine"><span data-atualizado></span> Projeto independente, sem ligação com a Câmara, a Prefeitura ou partidos.</p>
+</div></footer>
+<script src="/dados.js?v=2026-11-16T20:12:21-03:00"></script>
+<script src="/assets/radar.js?v=1794870385"></script>
+<script>Radar.inicio()</script>
+<!-- Contador de visitas (GoatCounter): sem cookies, não identifica ninguém. -->
 <script data-goatcounter="https://radarbraganca.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

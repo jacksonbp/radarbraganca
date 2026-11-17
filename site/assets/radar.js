@@ -1,0 +1,343 @@
+/* Radar Bragança: código comum a todas as páginas. Os dados vêm de /dados.js (window.RB). */
+(function(){
+/* ============ CONFIGURAÇÃO ============ */
+const CONFIG={
+  cidade:'Bragança Paulista',
+  contato:'bragancaterraquerida@gmail.com',
+  site:'https://www.bragancaterraquerida.com.br/'
+};
+/* ===================================== */
+const D=window.RB, V=D.v, IT=D.items; // item: [id,codigo,texto,aaaammdd,grupo,resultado,autores,grupoSiscam,tema,rua,bairro]
+const SISCAM='https://braganca.siscam.com.br';
+const nf=n=>Number(n).toLocaleString('pt-BR');
+const MES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const dt=s=>{s=String(s).replace(/-/g,'');return `${+s.slice(6,8)} ${MES[+s.slice(4,6)-1]} ${s.slice(0,4)}`};
+const mesAno=s=>`${MES[+s.slice(4,6)-1]} ${s.slice(0,4)}`;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=s=>String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const $=id=>document.getElementById(id);
+const brl=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const CEL=!matchMedia('(min-width:760px)').matches;
+const slug=s=>norm(s).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const urlV=v=>`/vereador/${slug(v.ap)}/`;
+const svg=(p,s=22)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const ICON={
+ pin:'<path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+ ask:'<path d="M21 12a8 8 0 01-11.8 7L4 20l1.2-4.4A8 8 0 1121 12z"/><path d="M9.8 9.5a2.3 2.3 0 114 1.6c-.7.6-1.3 1-1.3 1.9"/><path d="M12.5 16h.01"/>',
+ medal:'<circle cx="12" cy="14" r="5"/><path d="M9 9.5L6.5 3h4L12 6.5 13.5 3h4L15 9.5"/>',
+ law:'<path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 16h6"/>',
+ dots:'<circle cx="6" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18" cy="12" r="1.4"/>',
+ road:'<path d="M8 3L4 21M16 3l4 18M12 4v3M12 11v3M12 18v3"/>',
+ leaf:'<path d="M5 19c0-9 5-14 15-14 0 10-5 15-14 14z"/><path d="M5 19c3-4 6-7 10-9"/>',
+ bulb:'<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 00-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0012 3z"/>',
+ sign:'<path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',
+ walk:'<path d="M4 20h16M6 20v-5h4v5M10 15V9h4v11M14 9V4h4v16"/>',
+ tree:'<path d="M12 21v-7"/><path d="M12 14a5 5 0 01-4-8 4.5 4.5 0 018 0 5 5 0 01-4 8z"/><path d="M6 21h12"/>',
+ cross:'<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/>',
+ book:'<path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 21V5M9 7h6"/>',
+ shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+ drop:'<path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/>',
+ bus:'<rect x="4" y="4" width="16" height="13" rx="2"/><path d="M4 11h16M8 17v3M16 17v3M8 14h.01M16 14h.01"/>',
+ heart:'<path d="M12 20s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 10-7 10z"/>',
+ star:'<path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.2 6-5.5-3-5.5 3 1.2-6L3.2 9.4l6.1-.8z"/>',
+ cal:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8 3v4M16 3v4"/>',
+ flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+ users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0M16 4.5a3.5 3.5 0 010 7M18 14a6 6 0 013.5 6"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>',
+ mega:'<path d="M3 11v3a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M15 9a4 4 0 010 6M18 6a8 8 0 010 12"/>'
+};
+const CAT={
+ b:['Pedidos de melhoria nos bairros','Tapar buraco, podar árvore, trocar lâmpada, limpar terreno. É um pedido: a Prefeitura decide se faz.','pin','Pedido'],
+ c:['Perguntas e cobranças','Pedidos de explicação à Prefeitura e requerimentos a outros órgãos.','ask','Cobrança'],
+ h:['Homenagens','Parabéns, votos de pesar, título de cidadão, medalhas, nome de rua e datas comemorativas.','medal','Homenagem'],
+ l:['Propostas de lei','Projetos que criam regra, programa ou obrigação na cidade.','law','Proposta de lei'],
+ o:['Outros','Moções de apoio ou repúdio e regras internas da Câmara.','dots','Outro']};
+const ORDER=['b','c','h','l','o'];
+const TH={luz:['Iluminação','bulb'],asf:['Asfalto e buracos','road'],tra:['Trânsito','sign'],agu:['Água e esgoto','drop'],lim:['Limpeza e poda','leaf'],cal:['Calçadas','walk'],
+ laz:['Praças e lazer','tree'],sau:['Saúde','cross'],edu:['Escolas','book'],seg:['Segurança','shield'],bus:['Ônibus','bus'],
+ pes:['Votos de pesar','heart'],tit:['Títulos e medalhas','star'],nom:['Nomes de rua e prédio','flag'],dat:['Datas comemorativas','cal'],par:['Parabéns e aplausos','medal']};
+const TEMA={luz:'iluminação',asf:'conserto de asfalto',tra:'melhoria no trânsito',agu:'água, esgoto e drenagem',lim:'limpeza e poda',cal:'conserto de calçada',laz:'melhoria em praça e área de lazer',sau:'melhoria na saúde',edu:'melhoria em escola',seg:'segurança',bus:'melhoria no ônibus'};
+
+function clean(it){
+  let t=it[2].trim();
+  t=t.replace(/^(solicitando|solicita|requer(?:endo)?|indicando|indica)\s+(?:ao\s+(?:poder\s+)?executivo(?:\s+municipal)?\s*,?\s*)?(?:a\s+|o\s+)?/i,'');
+  return t.charAt(0).toUpperCase()+t.slice(1);
+}
+IT.forEach(it=>{it.n=norm(it[2]+' '+it[9]+' '+it[10]);it.tx=clean(it)});
+const hue=i=>(i*47+200)%360;
+V.forEach((v,i)=>{const w=v.ap.split(/\s+/).filter(x=>!/^(da|de|do|dos|das)$/i.test(x));v.in=(w[0][0]+(w.length>1?w[w.length-1][0]:'')).toUpperCase();v.i=i;v.tot=ORDER.reduce((s,c)=>s+v.cat[c],0)});
+const foto=(v,cls='av')=>v.foto?`<img class="${cls}" src="/fotos/${v.id}.jpg" alt="" loading="lazy">`:`<span class="${cls} ph0" style="background:hsl(${hue(v.i)} 80% 92%);color:hsl(${hue(v.i)} 55% 28%);display:grid;place-items:center;font-weight:700" aria-hidden="true">${v.in}</span>`;
+const av=i=>foto(V[i]);
+D.rep.forEach(g=>{g.items=g.ids.map(n=>IT[n])});
+const pctPres=v=>{const t=v.P+v.A+v.F;return t?Math.round(v.P/t*100):null};
+
+/* ---------- cartão de proposta ---------- */
+function stt(r){if(!r)return'';const k=/^aprovad/i.test(r)?'ok':/rejeit|vetad/i.test(r)?'no':'';return `<span class="stt ${k}">${esc(r)}</span>`}
+function itemHTML(it,showAut){
+  const c=it[4], t=TH[it[8]], icon=t?t[1]:CAT[c][2];
+  const who=showAut?`<span class="who">${it[6].slice(0,3).map(a=>`<a href="${urlV(V[a])}" style="display:contents;color:inherit;text-decoration:none">${av(a)}<span class="n">${esc(V[a].ap)}</span></a>`).join('')}${it[6].length>3?`<span>+${it[6].length-3}</span>`:''}</span>`:'<span></span>';
+  return `<li class="it k-${c}"><span class="ic">${svg(ICON[icon])}</span><div>
+    <p class="tx">${esc(it.tx)}</p>
+    <div class="mt"><span class="lab">${t?esc(t[0]):CAT[c][3]}</span>${stt(it[5])}<span>${dt(it[3])}</span><span>·</span><span>${esc(it[1])}</span></div>
+    <div class="ft">${who}<a class="ext" href="${SISCAM}/Documentos/Details?id=${it[0]}" target="_blank" rel="noopener">Abrir na Câmara ↗</a></div></div></li>`;
+}
+function pager(host,items,showAut,step){
+  let n=0; host.innerHTML='<ul class="items"></ul>';
+  const ul=host.firstChild, btn=document.createElement('button');
+  btn.className='more'; btn.type='button';
+  const add=()=>{ul.insertAdjacentHTML('beforeend',items.slice(n,n+step).map(i=>itemHTML(i,showAut)).join(''));n+=step;
+    if(n>=items.length)btn.remove();else btn.textContent=`Mostrar mais ${Math.min(step,items.length-n)} de ${nf(items.length-n)}`};
+  btn.addEventListener('click',add); if(items.length>step)host.appendChild(btn); add();
+  if(!items.length)host.innerHTML='<p class="mute">Nada por aqui ainda.</p>';
+}
+function themeCount(items){const m=new Map();items.forEach(it=>{if(it[8])m.set(it[8],(m.get(it[8])||0)+1)});return [...m.entries()].sort((a,b)=>b[1]-a[1])}
+
+/* ---------- painel lateral (criado em toda página) ---------- */
+document.body.insertAdjacentHTML('beforeend',`<div class="veil" id="veil"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-t">
+  <div class="sh-top" id="sh-top"><span class="ci" id="sh-i"></span><div><h2 id="sh-t"></h2><p id="sh-s"></p></div><button class="x" id="sh-x" type="button" aria-label="Fechar">×</button></div>
+  <div id="sh-f"></div><div id="sh-b"></div></aside>`);
+const sheet=$('sheet'), veil=$('veil'); let lastFocus=null;
+function openSheet(k,icon,title,sub){
+  lastFocus=document.activeElement; $('sh-top').className='sh-top k-'+k; $('sh-i').innerHTML=svg(ICON[icon],24);
+  $('sh-t').textContent=title; $('sh-s').textContent=sub||''; $('sh-f').innerHTML=''; $('sh-f').style.display='none'; $('sh-b').innerHTML=''; $('sh-b').scrollTop=0;
+  sheet.classList.add('on'); veil.classList.add('on'); document.body.style.overflow='hidden'; $('sh-x').focus();
+}
+function closeSheet(){sheet.classList.remove('on');veil.classList.remove('on');document.body.style.overflow='';if(lastFocus)lastFocus.focus()}
+$('sh-x').addEventListener('click',closeSheet); veil.addEventListener('click',closeSheet);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&sheet.classList.contains('on'))closeSheet()});
+function openCat(c,vi){
+  const all=IT.filter(it=>it[4]===c&&(vi==null||it[6].includes(vi)));
+  openSheet(c,CAT[c][2],CAT[c][0],`${nf(all.length)} ${vi==null?'de todos os vereadores':'de '+V[vi].ap} até agora`);
+  const th=themeCount(all); let cur='';
+  const draw=()=>pager($('sh-b'),cur?all.filter(it=>it[8]===cur):all,vi==null,20);
+  if(th.length>1){
+    $('sh-f').style.display='';
+    $('sh-f').innerHTML=`<ul class="chips"><li><button class="chip on" type="button" data-t="">Tudo<small>${nf(all.length)}</small></button></li>${th.map(([k,n])=>`<li><button class="chip" type="button" data-t="${k}">${esc(TH[k][0])}<small>${nf(n)}</small></button></li>`).join('')}</ul>`;
+    $('sh-f').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;cur=b.dataset.t;$('sh-f').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));$('sh-b').scrollTop=0;draw()};
+  }
+  draw();
+}
+const naosHTML=v=>'<ul class="items">'+v.naos.slice().sort((a,b)=>b.d.localeCompare(a.d)).map(n=>`<li class="it k-o"><span class="ic">${svg(ICON.sign)}</span><div><p class="tx">${esc(n.e)}</p>
+    <div class="mt"><span class="stt ${n.v==='nao'?'no':''}">${n.v==='nao'?'Votou não':'Absteve-se'}</span><span>${dt(n.d)}</span><span>·</span><span>${esc(n.t)}</span></div>
+    <div class="ft"><span>${n.a?'Proposta de: '+esc(n.a):''}</span><a class="ext" href="${esc(n.u)}" target="_blank" rel="noopener">Abrir na Câmara ↗</a></div></div></li>`).join('')+'</ul>';
+function openNaos(vi){const v=V[vi];openSheet('o','sign',`Quando ${v.ap} não votou “sim”`,`${v.naos.length} ${v.naos.length===1?'votação':'votações'} até agora`);$('sh-b').innerHTML=naosHTML(v)}
+const AVISO_VG=`<p class="warn" style="margin-bottom:14px">O valor é o que a Câmara registrou na prestação de contas de cada viagem: alimentação e hospedagem de <b>todos os participantes</b> (inclusive motorista e servidores). <b>Não inclui combustível e pedágio.</b></p>`;
+const vgHTML=v=>'<ul class="items">'+(v.vg||[]).map(t=>`<li class="it k-o"><span class="ic">${svg(ICON.bus)}</span><div><p class="tx"><b>${esc(t.de)}</b><br>${esc(t.mo)}</p>
+    <div class="mt">${t.v!=null?`<span class="stt">${brl.format(t.v)}</span>`:'<span class="stt">valor não lido</span>'}${t.dt?`<span>${esc(t.dt)}</span>`:''}<span>·</span><span>Despesa ${esc(t.k.split('-')[1])}/${esc(t.k.split('-')[0])}</span></div>
+    <div class="ft"><span></span>${t.u?`<a class="ext" href="${esc(t.u)}" target="_blank" rel="noopener">Prestação de contas ↗</a>`:''}</div></div></li>`).join('')+'</ul>';
+function openVg(vi){const v=V[vi];openSheet('o','bus',`Viagens oficiais de ${v.ap}`,`${v.vg.length} ${v.vg.length===1?'viagem':'viagens'} · ${brl.format(v.vgt||0)} desde a posse`);$('sh-b').innerHTML=AVISO_VG+vgHTML(v)}
+
+/* ---------- pedidos repetidos + cobrar ---------- */
+const repHTML=g=>`<button class="rp" type="button" data-g="${D.rep.indexOf(g)}"><span class="rn num">${g.n}<small>VEZES</small></span>
+  <span class="rr">${esc(g.r)}</span><span class="rb">${esc(g.b||CONFIG.cidade)}</span>
+  <span class="rm"><span class="lab">${esc(TH[g.th][0])}</span><span>${g.a} ${g.a===1?'vereador pediu':'vereadores pediram'}</span><span>·</span><span>de ${mesAno(g.d0)} a ${mesAno(g.d1)}</span></span><span class="go">Ver pedidos e cobrar →</span></button>`;
+const SITE=/^https?:/.test(location.protocol)&&!/claude|localhost|127\./.test(location.hostname)?location.origin+'/':CONFIG.site;
+function openRep(g){
+  openSheet('b',TH[g.th][1],g.r,`${TH[g.th][0]} · pedido ${g.n} vezes até agora${g.b?' · '+g.b:''}`);
+  const cnt=new Map(); g.items.forEach(it=>it[6].forEach(a=>cnt.set(a,(cnt.get(a)||0)+1)));
+  const who=[...cnt.entries()].sort((a,b)=>b[1]-a[1]);
+  const msg=a=>`Olá, ${V[a].ap}. Moro em ${CONFIG.cidade}. A Câmara já recebeu ${g.n} pedidos de ${TEMA[g.th]||'melhoria'} na ${g.r}${g.b?', '+g.b:''}, desde ${mesAno(g.d0)}. ${cnt.get(a)===1?'Um deles saiu':cnt.get(a)+' deles saíram'} do seu gabinete, e o problema continua. O que a Prefeitura respondeu? O que ainda dá para fazer?\n\nFonte: ${SITE}`;
+  $('sh-b').innerHTML=`<div class="cob"><h3>Cobre uma resposta</h3>
+    <p>A mensagem já vem pronta. Escolha o vereador, ajuste o texto se quiser e envie.</p>
+    <label class="field">Para quem<select id="cob-v">${who.map(([a,n])=>`<option value="${a}">${esc(V[a].ap)} (${n} ${n===1?'pedido':'pedidos'} para esta rua)</option>`).join('')}</select></label>
+    <label class="field">Mensagem<textarea id="cob-t"></textarea></label>
+    <div class="acts" id="cob-a"></div><div class="ct" id="cob-c"></div></div>
+    <p class="h3">Os ${g.n} pedidos, do mais recente ao mais antigo</p><div id="replist"></div>`;
+  const sel=$('cob-v'), ta=$('cob-t');
+  const links=()=>{const v=V[+sel.value], t=encodeURIComponent(ta.value);
+    $('cob-a').innerHTML=(v.email?`<a class="btn" href="mailto:${esc(v.email)}?subject=${encodeURIComponent(g.r+': o problema continua')}&body=${t}">Enviar por e-mail</a>`:'')
+      +`<a class="btn wa" href="https://wa.me/?text=${t}" target="_blank" rel="noopener">Mandar no grupo do bairro</a><button class="btn gh" type="button" id="cob-cp">Copiar mensagem</button>`;
+    $('cob-c').innerHTML=(v.email?`E-mail oficial do gabinete: <b>${esc(v.email)}</b> · `:'')+'Telefone da Câmara: <b>(11) 4892-6200</b>';
+    $('cob-cp').onclick=async e=>{try{await navigator.clipboard.writeText(ta.value);e.target.textContent='Copiado'}catch(_){ta.focus();ta.select();e.target.textContent='Selecionado: copie com o dedo'}}};
+  const fill=()=>{ta.value=msg(+sel.value);links()};
+  sel.addEventListener('change',fill); ta.addEventListener('input',links); fill();
+  pager($('replist'),g.items,true,20);
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(b)openRep(D.rep[+b.dataset.g])});
+function listaReps(host,lista,passo){
+  let n=0; const btn=document.createElement('button'); btn.className='more'; btn.type='button'; btn.style.gridColumn='1/-1';
+  if(!lista.length){host.innerHTML='<p class="mute">Ainda não há pedidos repetidos para a mesma rua.</p>';return}
+  const add=()=>{host.insertAdjacentHTML('beforeend',lista.slice(n,n+passo).map(repHTML).join(''));n+=passo;host.appendChild(btn);
+    if(n>=lista.length)btn.remove();else btn.textContent=`Mostrar mais ruas (${lista.length-n} na fila)`};
+  btn.addEventListener('click',()=>{btn.remove();add()}); add();
+}
+
+/* ---------- peças do vereador ---------- */
+function ring(v,s=76){
+  const t=v.P+v.A+v.F, r=s*.395, sw=s*.118, c=s/2;
+  if(!t)return `<div class="ring"><svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}"><circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#eef1f4" stroke-width="${sw}"/></svg><b>–</b></div>`;
+  const C=2*Math.PI*r, seg=(n,col,off)=>n?`<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-dasharray="${n/t*C} ${C}" stroke-dashoffset="${-off/t*C}" transform="rotate(-90 ${c} ${c})"/>`:'';
+  return `<div class="ring"><svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" role="img" aria-label="${v.P} presenças em ${t} sessões"><circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#eef1f4" stroke-width="${sw}"/>${seg(v.P,'#111a24',0)}${seg(v.A,'#d99a2b',v.P)}${seg(v.F,'#cf3a2e',v.P+v.A)}</svg><b class="num">${Math.round(v.P/t*100)}%</b></div>`;
+}
+function comHTML(v){
+  const c=v.cm; if(!c)return '';
+  const t=c.P+c.A+c.F;
+  if(!t)return `<div class="com"><span class="cl">Comissões</span><span class="mute">Não aparece em nenhuma lista de presença de comissão registrada no sistema.</span></div>`;
+  const por=Object.entries(c.por).map(([s,x])=>`${esc((D.comissoes||{})[s]||s)}: ${x.P} de ${x.P+x.A+x.F}`).join(' · ');
+  return `<div class="com num"><span class="cl">Comissões</span><span><b>${c.P} de ${t}</b> sessões (${Math.round(c.P/t*100)}%) · <b class="${c.F?'bad':''}">${c.F} ${c.F===1?'falta':'faltas'}</b>${c.A?` · ${c.A} justificada${c.A>1?'s':''}`:''}</span><small class="mute">${por}</small></div>`;
+}
+const ANOS_ATUAL=Math.max(.25,(Date.now()-new Date(D.posse+'T00:00:00-03:00').getTime())/(365.25*864e5));
+function antHTML(v){
+  if(!v.ant)return '';
+  if(!v.ant.tot)return `<p class="vg mute">Não apresentou propostas em 2021–2024: é o primeiro mandato ou era suplente.</p>`;
+  const a=v.ant.tot/4, b=v.tot/ANOS_ATUAL, d=a?Math.round((b-a)/a*100):0;
+  const f=x=>x.toLocaleString('pt-BR',{maximumFractionDigits:0});
+  return `<div class="cmp num"><div><b>${f(a)}</b><span>propostas por ano antes</span></div><div><b>${f(b)}</b><span>propostas por ano agora</span></div><div class="${d>=0?'up':'down'}"><b>${d>0?'+':''}${d}%</b><span>${d>=0?'a mais':'a menos'}</span></div></div>
+    <p class="mute" style="font-size:12.5px;margin:6px 0 0">Antes: ${nf(v.ant.cat.b)} pedidos, ${nf(v.ant.cat.l)} propostas de lei, ${nf(v.ant.cat.h)} homenagens (4 anos).</p>`;
+}
+const bar5=v=>`<div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>`;
+function vcard(v){
+  const p=pctPres(v), cm=v.cm||{P:0,A:0,F:0}, tc=cm.P+cm.A+cm.F;
+  return `<a class="vcard" href="${urlV(v)}" style="--tint:hsl(${hue(v.i)} 85% 94%)">${foto(v,'')}
+    <h3>${esc(v.ap)}</h3><span class="pill">${esc(v.part)}${v.mesa?' · '+esc(v.mesa):''}</span>
+    <div class="kp num"><div><b>${p==null?'–':p+'%'}</b><span>presença</span></div><div><b>${tc?Math.round(cm.P/tc*100)+'%':'–'}</b><span>comissões</span></div><div><b>${nf(v.tot)}</b><span>propostas</span></div></div>
+    ${bar5(v)}<span class="go">Ver tudo sobre ${esc(v.ap.split(' ')[0])} →</span></a>`;
+}
+const ORD={nome:(a,b)=>a.ap.localeCompare(b.ap,'pt'),faltas:(a,b)=>(b.F-a.F)||(b.A-a.A),l:(a,b)=>b.cat.l-a.cat.l,h:(a,b)=>b.cat.h-a.cat.h,b:(a,b)=>b.cat.b-a.cat.b,tot:(a,b)=>b.tot-a.tot,nao:(a,b)=>(b.vn+b.va)-(a.vn+a.va),vot:(a,b)=>(b.vot||0)-(a.vot||0),vg:(a,b)=>(b.vgt||0)-(a.vgt||0),cf:(a,b)=>((b.cm||{}).F||0)-((a.cm||{}).F||0)};
+
+/* ---------- partes comuns ---------- */
+function countUp(el,to){ if(!el)return; if(reduce){el.textContent=nf(to);return} const t0=performance.now(),from=Math.round(to*.82);
+  const step=t=>{const p=Math.min(1,(t-t0)/900),e=1-Math.pow(1-p,3);el.textContent=nf(Math.round(from+(to-from)*e));if(p<1)requestAnimationFrame(step)};requestAnimationFrame(step)}
+const GER=new Date(D.gerh);
+function ago(){const m=Math.max(0,Math.round((Date.now()-GER.getTime())/6e4));
+  return m<2?'agora mesmo':m<60?`há ${m} minutos`:m<120?'há 1 hora':m<1440?`há ${Math.floor(m/60)} horas`:m<2880?'ontem':`há ${Math.floor(m/1440)} dias`}
+document.querySelectorAll('.phead>.eyebrow').forEach(el=>{el.insertAdjacentText('beforeend',` · atualizado em ${GER.toLocaleDateString('pt-BR',{day:'numeric',month:'long'})}`)});
+document.querySelectorAll('[data-atualizado]').forEach(el=>{el.textContent=`Dados conferidos na Câmara em ${GER.toLocaleDateString('pt-BR',{day:'numeric',month:'long'})}, às ${GER.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}. O robô volta lá todo dia de madrugada.`});
+
+/* ================= PÁGINAS ================= */
+const P={};
+
+P.inicio=function(){
+  $('livet').textContent=`Ao vivo · dados conferidos ${ago()}`; setInterval(()=>{$('livet').textContent=`Ao vivo · dados conferidos ${ago()}`},6e4);
+  const STATS=[['',IT.length,'propostas até agora'],['k-b',D.catot.b||0,'pedidos nos bairros'],['k-h',D.catot.h||0,'homenagens'],['k-l',D.catot.l||0,'propostas de lei']];
+  $('stats').innerHTML=STATS.map(([k,n,l],i)=>`<div class="stat ${k}"><b class="num" id="st${i}">${nf(n)}</b><span>${l}</span></div>`).join('');
+  STATS.forEach(([k,n],i)=>countUp($('st'+i),n));
+  const POSSE=new Date(D.posse+'T00:00:00-03:00').getTime(), POR_MS=V.length*D.sal.v*12/(365.25*864e5);
+  const tick=()=>{$('tick').textContent=brl.format((Date.now()-POSSE)*POR_MS)}; tick(); if(!reduce)setInterval(tick,120);
+  $('msal').textContent=`e subindo agora · estimativa: ${V.length} salários de ${brl.format(D.sal.v)} por mês desde ${dt(D.posse)}`+(D.sal.confirmado?'':' · valor a confirmar no texto oficial');
+  $('faces').innerHTML=V.slice().sort(ORD.nome).map(v=>`<li><a href="${urlV(v)}">${foto(v,'')}<span>${esc(v.ap)}</span></a></li>`).join('');
+  $('pct').textContent=D.nvot?Math.round(D.unan/D.nvot*100)+'%':'–';
+  $('pctd').textContent=`${nf(D.unan)} de ${nf(D.nvot)} votações nominais desde ${dt(D.pri)}`;
+  const lei0=D.catot.l||0, ped0=D.catot.b||0;
+  $('rz').textContent=lei0?nf(Math.round(ped0/lei0)):'–';
+  $('rzd').textContent=`${nf(ped0)} pedidos de melhoria e ${nf(lei0)} propostas de lei desde a posse`;
+  $('bairros-chips').innerHTML=D.bairros.slice(0,8).map(b=>`<li><a class="chip" href="/bairros/?q=${encodeURIComponent(b)}">${esc(b)}</a></li>`).join('');
+  $('fbq').addEventListener('submit',e=>{e.preventDefault();location.href='/bairros/?q='+encodeURIComponent($('hq').value.trim())});
+  listaReps($('reps'),D.rep.slice(0,CEL?3:6),CEL?3:6);
+};
+
+P.vereadores=function(){
+  const pct=D.nvot?Math.floor(D.unan/D.nvot*100):0;
+  $('vsub').textContent=`Os ${V.length} vereadores da legislatura 2025–2028, com a mesma régua. Em ${pct} de cada 100 votações nominais, todos votaram igual. Toque em um vereador para ver tudo o que ele fez.`;
+  [...new Set(V.map(v=>v.part))].sort((a,b)=>a.localeCompare(b,'pt')).forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=`${p} (${V.filter(v=>v.part===p).length})`;$('partido').appendChild(o)});
+  const render=()=>{
+    const q=norm($('q').value.trim()),p=$('partido').value,o=$('ordem').value;
+    const L=V.filter(v=>(!p||v.part===p)&&(!q||norm(v.ap+' '+v.nome).includes(q))).sort((a,b)=>ORD[o](a,b)||ORD.nome(a,b));
+    $('grid').innerHTML=L.length?L.map(vcard).join(''):'<p class="mute">Nenhum vereador com esse nome. Apague a busca ou escolha “Todos”.</p>';
+    $('conta').textContent=L.length===V.length?`Mostrando os ${V.length} vereadores.`:`Mostrando ${L.length} de ${V.length} vereadores.`;
+  };
+  ['q','partido','ordem'].forEach(id=>$(id).addEventListener('input',render)); render();
+};
+
+P.vereador=function(id){
+  const v=V.find(x=>x.id===id); if(!v)return; const i=v.i;
+  document.documentElement.style.setProperty('--tint',`hsl(${hue(i)} 85% 94%)`);
+  document.documentElement.style.setProperty('--deep',`hsl(${hue(i)} 55% 26%)`);
+  const t=v.P+v.A+v.F, cm=v.cm||{P:0,A:0,F:0}, tc=cm.P+cm.A+cm.F;
+  $('kpis').innerHTML=`
+    <div class="kpi"><span class="eyebrow">Presença no plenário</span><div class="pres">${ring(v,64)}<p><b class="num" style="font-size:22px">${v.P} de ${t}</b><small class="num">sessões desde ${mesAno(D.pri.replace(/-/g,''))} · <span class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</span></small></p></div></div>
+    <div class="kpi"><span class="eyebrow">Presença nas comissões</span><b class="num">${tc?Math.round(cm.P/tc*100)+'%':'–'}</b><span>${tc?`${cm.P} de ${tc} sessões · ${cm.F} ${cm.F===1?'falta':'faltas'}`:'sem lista de presença registrada'}</span></div>
+    <div class="kpi"><span class="eyebrow">Propostas desde a posse</span><b class="num" style="color:var(--b)">${nf(v.tot)}</b><span>${nf(v.cat.b)} pedidos · ${nf(v.cat.c)} cobranças · ${nf(v.cat.l)} de lei</span></div>
+    <div class="kpi"><span class="eyebrow">Viagens oficiais</span><b class="num" style="color:var(--c)">${nf((v.vg||[]).length)}</b><span>${(v.vg||[]).length?brl.format(v.vgt||0)+' em despesas':'nenhuma registrada'}</span></div>`;
+  // o que propôs
+  $('picks').innerHTML=bar5(v)+ORDER.map(c=>`<button class="pick k-${c} num" type="button" data-c="${c}" ${v.cat[c]?'':'disabled'}><i></i><span>${CAT[c][0]}</span><b>${nf(v.cat[c])}</b><span class="ar" aria-hidden="true">›</span></button>`).join('');
+  $('picks').addEventListener('click',e=>{const p=e.target.closest('.pick');if(p&&!p.disabled)openCat(p.dataset.c,i)});
+  // lista com abas
+  const minhas=IT.filter(it=>it[6].includes(i)); let cat='';
+  $('tabs').innerHTML=`<li><button class="chip on" type="button" data-k="">Todas<small>${nf(minhas.length)}</small></button></li>`+ORDER.filter(c=>v.cat[c]).map(c=>`<li><button class="chip" type="button" data-k="${c}">${CAT[c][3]}s<small>${nf(v.cat[c])}</small></button></li>`).join('').replace('Proposta de leis','Propostas de lei');
+  const draw=()=>pager($('lista'),cat?minhas.filter(it=>it[4]===cat):minhas,false,CEL?5:10);
+  $('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;cat=b.dataset.k;$('tabs').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));draw()}); draw();
+  // onde pediu
+  const b=minhas.filter(it=>it[4]==='b');
+  const bai=[...b.reduce((m,it)=>it[10]?m.set(it[10],(m.get(it[10])||0)+1):m,new Map())].sort((a,b)=>b[1]-a[1]).filter(x=>x[1]>=2).slice(0,6);
+  const th=themeCount(b).slice(0,6), mx=bai.length?bai[0][1]:1;
+  $('onde').innerHTML=(bai.length?`<p class="h3" style="margin-top:0">Bairros com mais pedidos</p><ol class="rank">${bai.map(([n,c])=>`<li><span class="ti">${svg(ICON.pin,16)}</span><span class="nm"><a href="/bairros/?q=${encodeURIComponent(n)}">${esc(n)}</a></span><b class="num">${nf(c)}</b><span class="br"><i style="width:${c/mx*100}%"></i></span></li>`).join('')}</ol>`:`<p class="mute">${b.length?'Poucos pedidos com bairro identificado no texto.':'Nenhum pedido de melhoria em bairro desde a posse.'}</p>`)
+    +(th.length?`<p class="h3">Assuntos mais pedidos</p><ul class="themes">${th.map(([k,n])=>`<li><span class="ti">${svg(ICON[TH[k][1]],18)}</span><span>${esc(TH[k][0])}</span><b class="num">${nf(n)}</b></li>`).join('')}</ul>`:'');
+  const meusReps=D.rep.filter(g=>g.items.some(it=>it[6].includes(i)));
+  $('reps-v').innerHTML=''; listaReps($('reps-v'),meusReps,3);
+  $('reps-n').textContent=meusReps.length?`${nf(meusReps.length)} ruas com pedidos repetidos têm pelo menos um pedido de ${v.ap}.`:'';
+  // votos
+  $('votos').innerHTML=`<div class="vote num"><div><b>${nf(v.vs)}</b><span>vezes sim</span></div><div class="n"><b>${nf(v.vn+v.va)}</b><span>${v.va?'não ou abstenção':'vezes não'}</span></div></div>
+    ${v.naos.length?`<p class="h3">Quando não votou “sim”</p>${naosHTML(v)}`:`<p class="mute" style="margin:12px 0 0">Votou “sim” em todas as votações nominais registradas.</p>`}`;
+  $('com').innerHTML=comHTML(v);
+  $('ant').innerHTML=antHTML(v);
+  $('vgs').innerHTML=(v.vg&&v.vg.length)?AVISO_VG+vgHTML(v):`<p class="mute">${v.vg?'Nenhuma viagem oficial registrada no Portal da Transparência.':'Dado ainda não coletado.'}</p>`;
+  // compartilhar
+  const link=SITE+urlV(v).slice(1), txt=`${v.ap} desde a posse: ${pctPres(v)??'–'}% de presença, ${nf(v.tot)} propostas. Veja tudo no Radar Bragança: ${link}`;
+  $('wa').href='https://wa.me/?text='+encodeURIComponent(txt);
+  $('cp').onclick=async e=>{try{await navigator.clipboard.writeText(link);e.target.textContent='Link copiado'}catch(_){e.target.textContent=link}};
+  // anterior / próximo
+  const S=V.slice().sort(ORD.nome), k=S.indexOf(v), ant=S[(k+S.length-1)%S.length], prox=S[(k+1)%S.length];
+  $('pn').innerHTML=`<a href="${urlV(ant)}">← ${esc(ant.ap)}</a><a href="/vereadores/">Todos os vereadores</a><a href="${urlV(prox)}">${esc(prox.ap)} →</a>`;
+};
+
+P.bairros=function(){
+  $('bl').innerHTML=D.bairros.slice(0,300).map(b=>`<option value="${esc(b)}"></option>`).join('');
+  $('chips').innerHTML=D.bairros.slice(0,14).map(b=>`<li><button class="chip" type="button" data-b="${esc(b)}">${esc(b)}</button></li>`).join('');
+  let tm;
+  function bairro(q){
+    const host=$('bres'), k=norm(q.trim()), city=k.length===0;
+    $('chips').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',norm(x.dataset.b)===k));
+    try{history.replaceState(null,'',city?location.pathname:'?q='+encodeURIComponent(q.trim()))}catch(_){}
+    if(!city&&k.length<3){host.innerHTML='<div class="panel"><p class="mute" style="margin:0">Continue digitando: preciso de pelo menos 3 letras.</p></div>';return}
+    const items=city?IT:IT.filter(it=>it.n.includes(k));
+    if(!items.length){host.innerHTML=`<div class="panel"><p class="mute" style="margin:0">Nada encontrado para “${esc(q)}”. Confira a grafia ou tente só uma parte do nome.</p></div>`;return}
+    const cnt=new Map(); items.forEach(it=>it[6].forEach(a=>cnt.set(a,(cnt.get(a)||0)+1)));
+    const top=[...cnt.entries()].sort((a,b)=>b[1]-a[1]), mx=top[0][1];
+    const th=themeCount(items.filter(it=>it[4]==='b'||it[4]==='c')).slice(0,city&&CEL?3:5);
+    const reps=city?[]:D.rep.filter(g=>g.items.some(it=>it.n.includes(k))).slice(0,3);
+    host.innerHTML=`<div class="panel">
+     <div class="ph"><span class="big num">${nf(items.length)}</span><p>${city?'propostas para <b>a cidade inteira</b> até agora':`${items.length===1?'proposta cita':'propostas citam'} <b>${esc(q.trim())}</b> até agora`}</p></div>
+     <div class="two">
+       ${city?'':`<div><h3>Quem mais pediu</h3><ol class="rank">${top.slice(0,5).map(([a,n])=>`<li>${av(a)}<span class="nm"><a href="${urlV(V[a])}">${esc(V[a].ap)}</a> <span class="mute" style="font-weight:400">· ${esc(V[a].part)}</span></span><b class="num">${nf(n)}</b><span class="br"><i style="width:${n/mx*100}%"></i></span></li>`).join('')}</ol>
+         ${top.length>5?`<p class="mute" style="font-size:13.5px;margin:10px 0 0">Mais ${top.length-5} vereadores também citaram.</p>`:''}</div>`}
+       ${th.length?`<div><h3>O que mais pedem</h3><ul class="themes">${th.map(([t,n])=>`<li><span class="ti">${svg(ICON[TH[t][1]],18)}</span><span>${esc(TH[t][0])}</span><b class="num">${nf(n)}</b></li>`).join('')}</ul></div>`:''}
+       ${city&&!CEL?`<div><h3>Bairros mais citados</h3><ul class="themes">${D.bairros.slice(0,5).map((b,i)=>`<li><span class="ti">${svg(ICON.pin,18)}</span><button class="lnk" type="button" data-b="${esc(b)}">${esc(b)}</button><b class="num">${nf(D.bairrosn[i])}</b></li>`).join('')}</ul></div>`:''}
+     </div>
+     ${reps.length?`<p class="h3" style="margin-top:24px">Problemas que voltam aqui</p><div class="reps">${reps.map(repHTML).join('')}</div>`:''}
+     <p class="h3" style="margin-top:24px">${city?'As propostas mais recentes da cidade':'Os pedidos mais recentes'}</p><div id="blist"></div></div>`;
+    pager($('blist'),items,true,city&&CEL?2:4);
+  }
+  $('bq').addEventListener('input',e=>{clearTimeout(tm);tm=setTimeout(()=>bairro(e.target.value),150)});
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b){$('bq').value=b.dataset.b;bairro(b.dataset.b);$('busca').scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'})}});
+  const q0=new URLSearchParams(location.search).get('q')||''; $('bq').value=q0; bairro(q0);
+  listaReps($('reps'),D.rep,CEL?4:9);
+};
+
+P.propostas=function(){
+  const tot=ORDER.reduce((s,c)=>s+(D.catot[c]||0),0), lei=D.catot.l||0, hom=D.catot.h||0;
+  $('hsub').textContent=`São ${nf(tot)} propostas desde a posse. `+(lei?`Para cada proposta de lei, ${(hom/lei).toLocaleString('pt-BR',{maximumFractionDigits:1})} homenagens. `:'')+'Toque em um grupo para ler cada uma.';
+  $('split').innerHTML=ORDER.map(c=>`<i class="k-${c}" style="flex:${D.catot[c]||0} 1 0"></i>`).join('');
+  $('cats').innerHTML=ORDER.map(c=>`<button class="cat k-${c}" type="button" data-c="${c}"><span class="ci">${svg(ICON[CAT[c][2]],26)}</span><span class="cv num">${nf(D.catot[c]||0)}</span><span class="cn">${CAT[c][0]} <span class="now">até agora</span></span><span class="cd">${CAT[c][1]}</span><span class="go">Ver todas →</span></button>`).join('');
+  $('cats').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(b)openCat(b.dataset.c,null)});
+  // busca livre em todas as propostas
+  let tm, cat='';
+  $('ptabs').innerHTML=`<li><button class="chip on" type="button" data-k="">Todas</button></li>`+ORDER.map(c=>`<li><button class="chip" type="button" data-k="${c}">${CAT[c][0]}</button></li>`).join('');
+  const draw=()=>{const k=norm($('pq').value.trim());const L=IT.filter(it=>(!cat||it[4]===cat)&&(!k||it.n.includes(k)));
+    $('pcount').textContent=`${nf(L.length)} ${L.length===1?'proposta':'propostas'}`;pager($('plista'),L,true,CEL?6:12)};
+  $('ptabs').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;cat=b.dataset.k;$('ptabs').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));draw()});
+  $('pq').addEventListener('input',()=>{clearTimeout(tm);tm=setTimeout(draw,180)}); draw();
+};
+
+P.sobre=function(){
+  $('m-pres').innerHTML=`Conta a presença na hora das votações nominais do plenário: quem votou (sim, não, abstenção, ou o presidente que não vota) estava lá; quem aparece como “ausente” em todas as votações da sessão teve falta. Foram ${D.sess} sessões${D.pri?' de '+dt(D.pri):''} até ${D.ult?dt(D.ult):'agora'}. <b>A Câmara só passou a registrar no sistema o voto de cada vereador em ${D.pri?mesAno(D.pri.replace(/-/g,'')):'2026'}</b>; antes disso, desde a posse, não há registro nominal, e o site não acusa ninguém por esse período. Sessões só com votação simbólica (sem lista de nomes) não entram.`;
+  $('m-sal').innerHTML=`O valor é o mesmo para os ${V.length} e foi fixado pela <a href="${esc(D.sal.u)}" target="_blank" rel="noopener">${esc(D.sal.lei)}</a>. É o valor bruto. O contador da página inicial é uma estimativa: ${V.length} salários por mês, proporcional ao tempo desde a posse, sem 13º nem outros pagamentos.`+(D.sal.confirmado?'':' <b>O valor de R$ '+nf(D.sal.v)+' foi publicado pela imprensa local e ainda precisa ser conferido no texto oficial.</b>');
+  $('m-com').textContent=`As comissões (Finanças e Orçamento, Justiça e Redação, Educação e Cultura e Socioeconômica) analisam os projetos e dão parecer antes de irem ao plenário. Contamos as ${nf(D.ncom||0)} sessões de comissão${D.pricom?' desde '+dt(D.pricom):''} em que a Câmara registrou a lista de presença no sistema. Cada vereador só é contado nas comissões de que é membro. Sessões sem lista registrada não entram: dado ausente não é falta.`;
+  $('m-vot').textContent=`Só entram as votações nominais, em que o sistema registra o voto de cada um: ${nf(D.nvot)}${D.pri?' desde '+dt(D.pri):''}. Em ${nf(D.unan)} delas, todos votaram igual.`;
+  $('m-erro').innerHTML=`Escreva para <b>${esc(CONFIG.contato)}</b> com o link da proposta ou da página. A correção é feita rápido.`;
+};
+
+window.Radar=P;
+})();

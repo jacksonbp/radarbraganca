@@ -34,12 +34,13 @@ jobs:
         run: |
           pip install pillow pypdf
           python coletor/coletar.py
+          python coletor/paginas.py
       - name: Guardar os dados novos no repositório
         if: github.event_name != 'push'
         run: |
           git config user.name "radar-robo"
           git config user.email "radar-robo@users.noreply.github.com"
-          git add site/dados.js site/fotos coletor/cache_viagens.json
+          git add site coletor/cache_viagens.json
           git diff --cached --quiet || git commit -m "Dados atualizados em $(date -u +%Y-%m-%d)"
           git pull --rebase -X theirs origin main
           git push
