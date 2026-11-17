@@ -18,7 +18,8 @@ sobrescreve os dados antigos: o site continua com a última versão boa.
 """
 import csv, html, io, json, os, re, sys, time, unicodedata, urllib.parse, urllib.request
 from collections import Counter, defaultdict
-from datetime import datetime, date, timezone, timedelta
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
 
 BASE = "https://braganca.siscam.com.br"
 SITE_CAMARA = "https://camarabp.sp.gov.br"
@@ -160,12 +161,18 @@ def coletar_vereadores():
         if me:
             v["email"] = me.group(0)
         mf = re.search(r'src="(https://camarabp\.sp\.gov\.br/files/vereador/[^"]+)"', s)
+        destino = Path(FOTOS) / f"{v['sid']}.jpg"
         if mf:
             try:
-                open(os.path.join(FOTOS, f"{v['sid']}.jpg"), "wb").write(reduzir_foto(baixar_bin(mf.group(1))))
-                v["foto"] = 1
+                foto = reduzir_foto(baixar_bin(mf.group(1)))
             except Exception as e:  # noqa
-                print("  foto falhou:", e)
+                print("  foto falhou:", e, file=sys.stderr)
+            else:
+                temporario = destino.with_suffix(".tmp")
+                temporario.write_bytes(foto)
+                temporario.replace(destino)
+        if destino.is_file() and destino.stat().st_size > 0:
+            v["foto"] = 1
     V.sort(key=lambda v: norm(v["ap"]))
     for i, v in enumerate(V):
         v["id"] = v["sid"]
@@ -187,7 +194,7 @@ def csv_docs(params):
 
 def coletar_documentos(V):
     print("2/5 Proposituras e projetos de cada vereador (isso demora alguns minutos)…")
-    anos = list(range(2025, date.today().year + 1))
+    anos = range(int(POSSE[:4]), datetime.now(BRT).year + 1)
     docs = {}
     for i, v in enumerate(V):
         for g in GRUPOS:
@@ -298,6 +305,7 @@ def coletar_votacoes(V):
     print("3/5 Votações nominais do plenário…")
     por_nome = {chave_nome(v["NOME"]): i for i, v in enumerate(V)}
     votos, pagina = [], 1
+    ids = set()
     while True:
         s = baixar(f"{BASE}/Votacoes?TipoId=1&TipoVotacaoId=3&ItemsPerPage=100&CurrentPage={pagina}")
         itens = s.split('<div class="data-list-item">')[1:]
@@ -312,6 +320,12 @@ def coletar_votacoes(V):
             if d and d < POSSE:
                 velho = True
                 continue
+            if not mid or not mr or not d:
+                raise ValueError(f"Votação sem ID, sessão ou data na página {pagina}")
+            vid = int(mid.group(1))
+            if vid in ids:
+                raise ValueError(f"Votação duplicada na paginação: {vid}")
+            ids.add(vid)
             grupos = {}
             for rot, nomes in re.findall(r"<strong>([^<]+?)\s*\(\d+\):</strong>(.*?)</p>", it, re.S):
                 rot = norm(limpa(rot))
@@ -407,24 +421,15 @@ def montar():
     docs = coletar_documentos(V)
     votos = coletar_votacoes(V)
     just = coletar_justificadas(V)
-    try:
-        ncom, pricom = coletar_comissoes(V)
-    except Exception as e:  # extra: se falhar, o resto continua
-        print("   ! comissões não coletadas:", e, file=sys.stderr)
-        ncom, pricom = 0, ""
-    try:
-        from viagens import coletar_viagens
-        coletar_viagens(V, baixar, baixar_bin)
-    except Exception as e:  # viagens são um extra: se falhar, o resto do site continua
-        print("   ! viagens não coletadas:", e, file=sys.stderr)
-    try:
-        est = json.load(open(os.path.join(RAIZ, "coletor", "estatico.json"), encoding="utf-8"))["v"]
-        for v in V:
-            e = est.get(str(v["sid"]), {})
-            v["vot"] = e.get("votos")
-            v["ant"] = e.get("ant")
-    except Exception as e:
-        print("   ! estatico.json não lido:", e, file=sys.stderr)
+    ncom, pricom = coletar_comissoes(V)
+    from viagens import coletar_viagens
+    coletar_viagens(V, baixar, baixar_bin)
+    with open(os.path.join(RAIZ, "coletor", "estatico.json"), encoding="utf-8") as arquivo:
+        est = json.load(arquivo)["v"]
+    for v in V:
+        e = est.get(str(v["sid"]), {})
+        v["vot"] = e.get("votos")
+        v["ant"] = e.get("ant")
 
     print("5/5 Cruzando os dados…")
     # itens: [id, codigo, texto, aaaammdd, grupo, resultado, autores, temGrupo(1=proposituras,3=projetos), tema, rua, bairro]
@@ -529,15 +534,38 @@ def conferir(D):
         erros.append(f"poucas votações: {D['nvot']}")
     if sum(1 for v in D["v"] if sum(v["cat"].values()) == 0) > 3:
         erros.append("muitos vereadores sem nenhuma proposta")
+    ids = {v["id"] for v in D["v"]}
+    if len(ids) != len(D["v"]):
+        erros.append("vereadores com IDs duplicados")
+    if not 0 <= D["unan"] <= D["nvot"]:
+        erros.append("total de votações unânimes fora dos limites")
     if os.path.exists(SAIDA):
-        try:
-            velho = json.loads(open(SAIDA, encoding="utf-8").read().split("=", 1)[1].rstrip().rstrip(";"))
-            if len(D["items"]) < 0.9 * len(velho["items"]):
-                erros.append(f"propostas caíram de {len(velho['items'])} para {len(D['items'])}")
-        except Exception:
-            pass
+        velho = ler_dados()
+        for chave, anterior, atual in (
+            ("propostas", len(velho["items"]), len(D["items"])),
+            ("votações", velho["nvot"], D["nvot"]),
+            ("sessões plenárias", velho["sess"], D["sess"]),
+            ("sessões de comissão", velho.get("ncom", 0), D["ncom"]),
+        ):
+            if atual * 10 < anterior * 9:
+                erros.append(f"{chave} caíram de {anterior} para {atual}")
+        anteriores = {v["id"]: v for v in velho["v"]}
+        for v in D["v"]:
+            anterior = anteriores.get(v["id"], {})
+            despesas = {t["u"]: t for t in (anterior.get("vg") or []) if t.get("u")}
+            atuais = {t["u"]: t for t in (v.get("vg") or []) if t.get("u")}
+            for url, viagem in despesas.items():
+                if url not in atuais or (viagem["v"] is not None and atuais[url]["v"] is None):
+                    erros.append(f"{v['ap']}: despesa {viagem['k']} sumiu ou perdeu o valor")
     if erros:
         raise SystemExit("COLETA RECUSADA, site mantido como estava:\n - " + "\n - ".join(erros))
+
+
+def ler_dados():
+    texto = Path(SAIDA).read_text(encoding="utf-8").strip()
+    if not texto.startswith("window.RB=") or not texto.endswith(";"):
+        raise ValueError(f"Formato inesperado: {SAIDA}")
+    return json.loads(texto[len("window.RB="):-1])
 
 
 if __name__ == "__main__":

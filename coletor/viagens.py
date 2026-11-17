@@ -13,6 +13,7 @@ e NÃO inclui combustível e pedágio.
 """
 import html, io, json, os, re, unicodedata
 from datetime import date
+from decimal import Decimal
 
 SITE = "https://camarabp.sp.gov.br"
 CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache_viagens.json")
@@ -39,18 +40,28 @@ def _casa(nome_viagem, V):
 
 
 def _valor_pdf(dado):
-    try:
-        from pypdf import PdfReader
-    except ImportError:
-        return None, ""
-    try:
-        txt = "\n".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(dado)).pages)
-    except Exception:
-        return None, ""
-    vals = DINHEIRO.findall(txt)
-    total = float(vals[-1].replace(".", "").replace(",", ".")) if vals else None
+    from pypdf import PdfReader
+    pages = list(PdfReader(io.BytesIO(dado)).pages)
+    totals = []
+    for page in pages:
+        lines = (page.extract_text(extraction_mode="layout") or "").splitlines()
+        header = next((i for i, line in enumerate(lines)
+                       if re.search(r"Fornecedor.+Valor", line, re.I)), None)
+        if header is None:
+            continue
+        values = []
+        for line in lines[header + 1:]:
+            match = re.search(r"(?<![\d.])(\d{1,3}(?:\.\d{3})*,\d{2})\s*$", line)
+            if match:
+                values.append(Decimal(match.group(1).replace(".", "").replace(",", ".")))
+        if len(values) < 2 or sum(values[:-1]) != values[-1]:
+            raise ValueError("Total do PDF diverge da soma dos comprovantes")
+        totals.append(values[-1])
+    if len(totals) != 1:
+        raise ValueError("PDF sem tabela ?nica de despesas verific?vel")
+    txt = "\n".join((page.extract_text() or "") for page in pages)
     m = re.search(r"\d{2}/\d{2}/\d{4}", txt)
-    return total, (m.group(0) if m else "")
+    return float(totals[0]), m.group(0) if m else ""
 
 
 def coletar_viagens(V, baixar, baixar_bin):
@@ -81,14 +92,14 @@ def coletar_viagens(V, baixar, baixar_bin):
                 # ATENÇÃO: o número da despesa se repete entre pessoas diferentes (cada servidor/vereador tem a
                 # sua "Despesa 47/2026"). A identidade única de cada viagem é o PDF da prestação de contas.
                 ident = doc or f"{url}#{chave}"
-                if ident not in cache or cache[ident].get("v") is None:
+                if ident not in cache or cache[ident].get("leitor") != 2 or cache[ident].get("v") is None:
                     valor, data = (None, "")
                     if doc:
                         try:
                             valor, data = _valor_pdf(baixar_bin(doc))
                         except Exception as e:  # noqa
-                            print("   PDF falhou:", chave, e)
-                    cache[ident] = {"v": valor, "dt": data, "k": chave}
+                            raise ValueError(f"PDF n?o validado: {chave}") from e
+                    cache[ident] = {"v": valor, "dt": data, "k": chave, "leitor": 2}
                 c = cache[ident]
                 if any(t.get("id") == ident for t in por_ver[i]):
                     continue
@@ -97,8 +108,9 @@ def coletar_viagens(V, baixar, baixar_bin):
         for t in lst:
             t.pop("id", None)
     cache = {k: c for k, c in cache.items() if k.startswith("http")}  # descarta chaves antigas (só número)
-    with open(CACHE, "w", encoding="utf-8") as f:
+    with open(CACHE + ".tmp", "w", encoding="utf-8") as f:
         json.dump(cache, f, ensure_ascii=False, indent=0, sort_keys=True)
+    os.replace(CACHE + ".tmp", CACHE)
     for i, lst in por_ver.items():
         lst.sort(key=lambda t: (t["dt"][6:] + t["dt"][3:5] + t["dt"][:2]) if t["dt"] else t["k"], reverse=True)
         V[i]["vg"] = lst
@@ -106,3 +118,4 @@ def coletar_viagens(V, baixar, baixar_bin):
     tot = sum(len(l) for l in por_ver.values())
     print(f"   {tot} viagens de vereadores")
     return tot
+
