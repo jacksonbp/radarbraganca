@@ -3,7 +3,7 @@
 /* ============ CONFIGURAÇÃO ============ */
 const CONFIG={
   cidade:'Bragança Paulista',
-  contato:'bragancaterraquerida@gmail.com',
+  contato:'contato@bragancaterraquerida.com.br',
   site:'https://www.bragancaterraquerida.com.br/'
 };
 /* ===================================== */

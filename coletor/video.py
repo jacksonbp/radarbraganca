@@ -362,7 +362,7 @@ def cena_final():
         texto(d, (W // 2, 860), "RADAR", F(BLACK, 160), INK, "mm")
         texto(d, (W // 2, 1030), "BRAGANÇA", F(BLACK, 140), RED, "mm")
         texto(d, (W // 2, 1230), "www.bragancaterraquerida.com.br", F(BOLD, 54), INK, "mm")
-        for k, l in enumerate(["Achou um erro? Escreva para", "bragancaterraquerida@gmail.com"]):
+        for k, l in enumerate(["Achou um erro? Escreva para", "contato@bragancaterraquerida.com.br"]):
             texto(d, (W // 2, 1420 + k * 60), l, F(REG, 42), MUTE, "mm")
         texto(d, (W // 2, 1640), "Compartilhe com quem mora em Bragança", F(BOLD, 46), RED, "mm")
         rodape(d, "Fontes: Câmara Municipal (SISCAM), Portal da Transparência e TSE")
