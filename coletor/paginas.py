@@ -162,8 +162,8 @@ inicio = f"""
   <p class="eyebrow">Em números</p>
   <h2>O retrato da Câmara</h2>
   <div class="cols">
-    <div class="box"><p class="eyebrow">Votações com voto de cada um</p><p class="bign num" id="pct">–</p><p style="margin:0;font-weight:700">das votações: todos votaram igual</p><p class="mute" id="pctd" style="margin:6px 0 0;font-size:14px"></p></div>
-    <div class="box"><p class="eyebrow">Pedido ou lei?</p><p class="bign num" id="rz" style="color:var(--b)">–</p><p style="margin:0;font-weight:700">pedidos de bairro para cada proposta de lei</p><p class="mute" id="rzd" style="margin:6px 0 0;font-size:14px"></p></div>
+    <div class="box rt"><p class="eyebrow">Como a Câmara vota</p><p class="bign num" id="pct">–</p><p class="rt-t">das votações terminaram com <b>todos votando igual</b></p><div class="sbar" id="pctb"></div><p class="rt-l num" id="pctl"></p><p class="mute rt-d" id="pctd"></p></div>
+    <div class="box rt"><p class="eyebrow">Pedidos ou leis?</p><p class="bign num" id="rz" style="color:var(--b)">–</p><p class="rt-t">pedidos de melhoria para cada <b>projeto de lei</b></p><div class="sbar" id="rzb"></div><p class="rt-l num" id="rzl"></p><p class="mute rt-d" id="rzd"></p></div>
   </div>
 </section>
 

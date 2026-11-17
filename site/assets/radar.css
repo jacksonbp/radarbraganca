@@ -395,3 +395,15 @@ section[id]{scroll-margin-top:118px}
 .lpd.ok{color:var(--b)}
 .lpd.no{color:var(--red)}
 .lpd.mute{font-weight:500}
+/* retrato da Câmara */
+.rt .rt-t{margin:4px 0 0;font-size:17px;line-height:1.35}
+.sbar{display:flex;gap:3px;height:12px;margin:18px 0 10px;border-radius:8px;overflow:hidden}
+.sbar i{display:block;min-width:4px}
+.sbar .a,.rt-l .a{background:var(--b)}
+.sbar .b,.rt-l .b{background:var(--red)}
+.sbar .p,.rt-l .p{background:var(--b)}
+.sbar .l,.rt-l .l{background:#16a34a}
+.rt-l{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0;font-size:13.5px;font-weight:600}
+.rt-l span{display:inline-flex;align-items:center;gap:6px}
+.rt-l span i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.rt .rt-d{margin:12px 0 0;font-size:13.5px;line-height:1.5}

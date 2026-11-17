@@ -219,10 +219,15 @@ P.inicio=function(){
   $('msal').textContent=`e subindo agora · estimativa: ${V.length} salários de ${brl.format(D.sal.v)} por mês desde ${dt(D.posse)}`+(D.sal.confirmado?'':' · valor a confirmar no texto oficial');
   $('faces').innerHTML=V.slice().sort(ORD.nome).map(v=>`<li><a href="${urlV(v)}">${foto(v,'')}<span>${esc(v.ap)}</span></a></li>`).join('');
   $('pct').textContent=D.nvot?Math.round(D.unan/D.nvot*100)+'%':'–';
-  $('pctd').textContent=`${nf(D.unan)} de ${nf(D.nvot)} votações nominais desde ${dt(D.pri)}`;
+  {const div=D.nvot-D.unan;
+  $('pctb').innerHTML=`<i class="a" style="flex:${D.unan}"></i><i class="b" style="flex:${div}"></i>`;
+  $('pctl').innerHTML=`<span><i class="a"></i>${nf(D.unan)} com todos de acordo</span><span><i class="b"></i>${nf(div)} com a Câmara dividida</span>`;
+  $('pctd').textContent=`São as ${nf(D.nvot)} votações desde ${dt(D.pri)} em que o sistema da Câmara registra o voto de cada vereador.`;}
   const lei0=D.catot.l||0, ped0=D.catot.b||0;
   $('rz').textContent=lei0?nf(Math.round(ped0/lei0)):'–';
-  $('rzd').textContent=`${nf(ped0)} pedidos de melhoria e ${nf(lei0)} propostas de lei desde a posse`;
+  $('rzb').innerHTML=`<i class="p" style="flex:${ped0}"></i><i class="l" style="flex:${lei0}"></i>`;
+  $('rzl').innerHTML=`<span><i class="p"></i>${nf(ped0)} pedidos de melhoria</span><span><i class="l"></i>${nf(lei0)} projetos de lei</span>`;
+  $('rzd').textContent=`Desde a posse. Pedido de melhoria é quando o vereador pede à Prefeitura um conserto na rua ou no bairro; projeto de lei cria ou muda uma regra da cidade.`;
   $('bairros-chips').innerHTML=D.bairros.slice(0,8).map(b=>`<li><a class="chip" href="/bairros/?q=${encodeURIComponent(b)}">${esc(b)}</a></li>`).join('');
   $('fbq').addEventListener('submit',e=>{e.preventDefault();location.href='/bairros/?q='+encodeURIComponent($('hq').value.trim())});
   listaReps($('reps'),D.rep.slice(0,CEL?3:6),CEL?3:6);
