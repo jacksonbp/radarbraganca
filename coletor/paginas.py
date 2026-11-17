@@ -30,7 +30,7 @@ LOGO = ('<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="
         '<path d="M19 17a21 21 0 000 30M45 17a21 21 0 010 30M10 9a33 33 0 000 46M54 9a33 33 0 010 46" '
         'stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/></svg>')
 MENU = [("inicio", "/", "Início"), ("vereadores", "/vereadores/", "Vereadores"), ("bairros", "/bairros/", "Seu bairro"),
-        ("propostas", "/propostas/", "Propostas"), ("sobre", "/sobre/", "Sobre"), ("voz", "/demandas/", "Voz do Bairro")]
+        ("propostas", "/propostas/", "Propostas"), ("prefeitura", "/prefeitura/", "Prefeitura"), ("sobre", "/sobre/", "Sobre"), ("voz", "/demandas/", "Voz do Bairro")]
 
 
 def pagina(ativa, titulo, descricao, url, corpo, init, imagem="/capa.jpg", titulo_og=None, extra_head=""):
@@ -347,6 +347,49 @@ escreve("comparar/index.html", pagina("vereadores", "Comparar vereadores · Rada
         "Compare dois vereadores de Bragança Paulista lado a lado: presença, propostas, votos e viagens, com dados oficiais.",
         "/comparar/", comparar, "Radar.comparar()"))
 
+prefeitura = """
+<section class="wrap phead">
+  <p class="eyebrow">Radar da Prefeitura</p>
+  <h1>O dinheiro da Prefeitura</h1>
+  <p class="lead" id="pf-lead">Quanto a Prefeitura de Bragança Paulista recebe, quanto paga e para quem. Os números são os que a própria Prefeitura envia ao Tribunal de Contas do Estado (TCE-SP).</p>
+  <ul class="chips" id="pf-anos" aria-label="Escolha o ano"></ul>
+  <div class="kpis" id="pf-kpis"></div>
+</section>
+<section class="wrap">
+  <p class="eyebrow">Mês a mês</p>
+  <h2>Quanto entrou e quanto foi pago</h2>
+  <p class="mute" id="pf-mes-sub" style="margin:0 0 6px"></p>
+  <div class="box"><ul class="pf-leg"><li><i class="e"></i>Entrou (receita)</li><li><i class="s"></i>Pago pela Prefeitura</li></ul><div class="pf-meses" id="pf-meses"></div></div>
+</section>
+<section class="wrap">
+  <div class="cols">
+    <div class="box"><h3>De onde vem o dinheiro</h3><p class="mute" style="margin:-4px 0 14px;font-size:14px">Impostos da cidade e repasses do Estado e do governo federal.</p><ol class="rank" id="pf-grp"></ol></div>
+    <div class="box"><h3>Quanto custa a Câmara</h3><div id="pf-cam"></div></div>
+  </div>
+</section>
+<section class="wrap">
+  <p class="eyebrow">Fornecedores</p>
+  <h2>Para quem a Prefeitura mais pagou</h2>
+  <p class="mute" id="pf-forn-sub" style="margin:0 0 12px"></p>
+  <div class="box"><ol class="pf-forn" id="pf-forn"></ol><button class="btn gh" type="button" id="pf-mais" hidden>Ver mais empresas</button>
+  <p class="mute" id="pf-pf" style="font-size:14px;margin:16px 0 0"></p></div>
+</section>
+<section class="wrap">
+  <p class="eyebrow">Como ler</p>
+  <h2>De onde vêm esses números</h2>
+  <div class="method">
+    <details open><summary>Fonte</summary><p>Portal da Transparência Municipal do Tribunal de Contas do Estado de São Paulo (TCE-SP), com os dados que a Prefeitura envia todo mês. O robô do site busca esses dados toda madrugada. Os números de um mês costumam aparecer no TCE uns 30 a 60 dias depois. Veja a fonte em <a href="https://transparencia.tce.sp.gov.br/municipio/braganca-paulista" target="_blank" rel="noopener">transparencia.tce.sp.gov.br</a>.</p></details>
+    <details open><summary>“Pago” e “entrou”</summary><p><b>Pago</b> é o dinheiro que de fato saiu do caixa da Prefeitura naquele mês. Pode incluir contas de meses ou anos anteriores. <b>Entrou</b> é o que a Prefeitura arrecadou: impostos, taxas e repasses do Estado e do governo federal. Os dois não se comparam como um “lucro” ou “prejuízo”: a Prefeitura também guarda dinheiro para pagar depois, e parte das receitas tem destino obrigatório, como saúde e educação.</p></details>
+    <details open><summary>Fornecedores</summary><p>A lista soma os pagamentos feitos a cada empresa (CNPJ) no ano. Aparecer na lista não indica nenhum problema: mostra só para onde o dinheiro foi. Pagamentos a pessoas físicas aparecem só como total, sem nomes, para proteger a privacidade de servidores, aposentados e prestadores.</p></details>
+    <details open><summary>Câmara</summary><p>O custo da Câmara é o que a própria Câmara pagou no período, com o dinheiro que recebe da Prefeitura: salários, funcionários, contas e serviços.</p></details>
+  </div>
+</section>
+"""
+escreve("prefeitura/index.html", pagina("prefeitura", "Prefeitura · Radar Bragança",
+        "Quanto a Prefeitura de Bragança Paulista recebe, quanto paga e para quem, com os dados oficiais do TCE-SP.",
+        "/prefeitura/", prefeitura, "Radar.prefeitura()",
+        extra_head=f'<script src="/prefeitura.js?v={int(os.path.getmtime(os.path.join(SITE, "prefeitura.js")))}"></script>\n'))
+
 escreve("bairros/index.html", pagina("bairros", "Seu bairro · Radar Bragança",
         "Busque seu bairro ou sua rua e veja tudo o que os vereadores de Bragança Paulista pediram para lá, e por quem.",
         "/bairros/", bairros, "Radar.bairros()"))
@@ -384,7 +427,8 @@ sobre = """
       <li><span class="ti">1</span><span>Sistema legislativo da Câmara Municipal (braganca.siscam.com.br): propostas, votações e presença</span><b></b></li>
       <li><span class="ti">2</span><span>Portal da Transparência da Câmara: viagens oficiais e prestações de contas</span><b></b></li>
       <li><span class="ti">3</span><span>TSE: votos de cada vereador na eleição de 2024</span><b></b></li>
-      <li><span class="ti">4</span><span>Site camarabp.sp.gov.br: foto e e-mail oficial de cada gabinete</span><b></b></li></ul>
+      <li><span class="ti">4</span><span>Site camarabp.sp.gov.br: foto e e-mail oficial de cada gabinete</span><b></b></li>
+      <li><span class="ti">5</span><span>Tribunal de Contas do Estado (TCE-SP): receitas, pagamentos e fornecedores da Prefeitura e gastos da Câmara</span><b></b></li></ul>
       <p class="mute" style="margin:12px 0 0;font-size:14px">Um robô volta a essas fontes toda madrugada e atualiza o site. Se a coleta vier incompleta ou estranha, nada é publicado.</p></div>
     <div class="box"><h3>Achou um erro?</h3><p id="m-erro" style="margin:0 0 10px"></p><p class="mute" style="margin:0;font-size:14px">Todos os números foram conferidos contra a fonte oficial antes da publicação: propostas, votos, presença no plenário e nas comissões, viagens e votos de 2024.</p></div>
   </div>
@@ -438,7 +482,7 @@ escreve("404.html", pagina("", "Página não encontrada · Radar Bragança", "P�
   <p class="lead" style="margin:0 auto 20px">O endereço pode ter mudado. Comece por uma destas páginas:</p>
   <p style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><a class="btn" href="/">Página inicial</a><a class="btn gh" href="/vereadores/">Vereadores</a><a class="btn gh" href="/bairros/">Seu bairro</a></p>
 </section>""", ""))
-urls = ["/", "/vereadores/", "/comparar/", "/bairros/", "/propostas/", "/sobre/", "/demandas/"] + [f"/vereador/{slug(v['ap'])}/" for v in V]
+urls = ["/", "/vereadores/", "/comparar/", "/prefeitura/", "/bairros/", "/propostas/", "/sobre/", "/demandas/"] + [f"/vereador/{slug(v['ap'])}/" for v in V]
 escreve("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"<url><loc>{DOMINIO}{u}</loc><lastmod>{D['ger']}</lastmod></url>\n" for u in urls) + "</urlset>\n")
 escreve("robots.txt", f"User-agent: *\nAllow: /\nDisallow: /v/\nSitemap: {DOMINIO}/sitemap.xml\n")

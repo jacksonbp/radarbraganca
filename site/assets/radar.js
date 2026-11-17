@@ -297,6 +297,48 @@ P.comparar=function(){
   desenha();
 };
 
+P.prefeitura=function(){
+  const F=window.PF; if(!F)return;
+  const MES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  const MESX=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  const mi=v=>{const a=Math.abs(v);return a>=1e9?(v/1e9).toLocaleString('pt-BR',{maximumFractionDigits:2})+' bi':a>=1e6?(v/1e6).toLocaleString('pt-BR',{maximumFractionDigits:1})+' mi':a>=1e3?Math.round(v/1e3).toLocaleString('pt-BR')+' mil':nf(v)};
+  const R=v=>'R$ '+mi(v);
+  const cnpj=d=>d.length===14?`${d.slice(0,2)}.${d.slice(2,5)}.${d.slice(5,8)}/${d.slice(8,12)}-${d.slice(12)}`:d;
+  const anos=Object.keys(F.anos).sort(); let ano=anos[anos.length-1];
+  const ate=a=>{const L=F.meses.filter(m=>m[0].startsWith(a));const u=+L[L.length-1][0].slice(5);return u===12?`em ${a}`:`de janeiro a ${MESX[u-1]} de ${a}`};
+  $('pf-anos').innerHTML=anos.map(a=>`<li><button class="chip" type="button" data-a="${a}">${a}</button></li>`).join('');
+  $('pf-anos').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){ano=b.dataset.a;draw()}});
+  const draw=()=>{
+    const Y=F.anos[ano], per=ate(ano);
+    $('pf-anos').querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.a===ano));
+    $('pf-kpis').innerHTML=`
+      <div class="kpi"><span class="eyebrow">Entrou</span><b class="num" style="color:var(--l)">${R(Y.rec)}</b><span>impostos, taxas e repasses, ${per}</span></div>
+      <div class="kpi"><span class="eyebrow">Pago pela Prefeitura</span><b class="num" style="color:var(--b)">${R(Y.pago)}</b><span>dinheiro que saiu do caixa, ${per}</span></div>
+      <div class="kpi"><span class="eyebrow">Empresas que receberam</span><b class="num">${nf(Y.nforn)}</b><span>as 10 maiores ficaram com ${Math.round(Y.top10/Y.forn_tot*100)}% do que foi pago a empresas</span></div>
+      <div class="kpi"><span class="eyebrow">Custo da Câmara</span><b class="num" style="color:var(--c)">${R(Y.cam)}</b><span>pago pela Câmara, ${per}</span></div>`;
+    // mês a mês
+    const L=F.meses.filter(m=>m[0].startsWith(ano)), mx=Math.max(...L.map(m=>Math.max(m[1],m[2])),1);
+    $('pf-mes-sub').textContent=`Em milhões de reais, ${per}. Os meses seguintes aparecem quando a Prefeitura enviar os dados ao TCE.`;
+    $('pf-meses').innerHTML=Array.from({length:12},(_,i)=>{const m=L.find(x=>+x[0].slice(5)===i+1);
+      return `<div class="pm${m?'':' vz'}" title="${m?`${MESX[i]}: entrou ${R(m[1])}, pago ${R(m[2])}`:'sem dados ainda'}"><div class="pm-b">${m?`<i class="e" style="height:${m[1]/mx*100}%"><span>${Math.round(m[1]/1e6)}</span></i><i class="s" style="height:${m[2]/mx*100}%"><span>${Math.round(m[2]/1e6)}</span></i>`:''}</div><small>${MES[i]}</small></div>`}).join('');
+    // receitas
+    const tg=Y.grp.reduce((s,g)=>s+g[1],0)||1;
+    $('pf-grp').innerHTML=Y.grp.slice(0,10).map((g,i)=>`<li><span class="num mute">${i+1}</span><span class="nm">${esc(g[0])}</span><b class="num">${R(g[1])}</b><span class="br"><i style="width:${g[1]/Y.grp[0][1]*100}%;background:var(--l)"></i></span></li>`).join('')
+      +(Y.grp.length>10?`<li><span></span><span class="nm mute">Outras ${Y.grp.length-10} fontes</span><b class="num mute">${R(Y.grp.slice(10).reduce((s,g)=>s+g[1],0))}</b></li>`:'');
+    // câmara
+    $('pf-cam').innerHTML=`<p class="pf-big num">${R(Y.cam)}</p><p style="margin:0 0 10px">foi o que a Câmara pagou ${per}: cerca de <b>${R(Y.cam/Y.n)}</b> por mês.</p>
+      <p class="mute" style="margin:0;font-size:14px">É o equivalente a ${(Y.cam/Y.pago*100).toLocaleString('pt-BR',{maximumFractionDigits:1})}% do que a Prefeitura pagou no mesmo período. Inclui salários dos vereadores e funcionários, contas e serviços. <a href="/vereadores/">Veja o que cada vereador fez</a>.</p>`;
+    // fornecedores
+    $('pf-forn-sub').textContent=`As empresas que mais receberam ${per}. Ao todo, ${nf(Y.nforn)} empresas receberam pagamentos.`;
+    let n=10; const mxf=Y.top[0]?Y.top[0][2]:1;
+    const lista=()=>{$('pf-forn').innerHTML=Y.top.slice(0,n).map((f,i)=>`<li><span class="num mute">${i+1}</span><div><b>${esc(f[1])}</b><small>CNPJ ${cnpj(f[0])} · ${nf(f[3])} ${f[3]===1?'pagamento':'pagamentos'}</small><span class="br"><i style="width:${f[2]/mxf*100}%"></i></span></div><b class="num">${R(f[2])}</b></li>`).join('');
+      $('pf-mais').hidden=n>=Y.top.length};
+    $('pf-mais').onclick=()=>{n=Y.top.length;lista()}; lista();
+    $('pf-pf').innerHTML=`Fora desta lista: <b>${R(Y.prop)}</b> pagos em nome da própria Prefeitura, em geral salários e repasses internos, e <b>${R(Y.pf)}</b> em ${nf(Y.npf)} pagamentos a pessoas físicas. Os nomes das pessoas não são mostrados, para proteger a privacidade.`;
+  };
+  draw();
+};
+
 P.vereador=function(id){
   const v=V.find(x=>x.id===id); if(!v)return; const i=v.i;
   document.documentElement.style.setProperty('--tint',`hsl(${hue(i)} 85% 94%)`);
