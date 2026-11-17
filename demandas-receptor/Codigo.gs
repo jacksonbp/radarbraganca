@@ -204,6 +204,19 @@ function ligarTelegram() {
   Logger.log(t.ok ? 'Telegram ligado.' : 'Falhou: ' + JSON.stringify(t));
 }
 
+/** Diagnóstico: mostra no registro de execução qual robô e qual conversa estão ligados (sem mostrar o token). */
+function verTelegram() {
+  const props = PropertiesService.getScriptProperties();
+  const token = props.getProperty('TELEGRAM_TOKEN'), chat = props.getProperty('TELEGRAM_CHAT');
+  const api = m => JSON.parse(UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/' + m, { muteHttpExceptions: true }).getContentText());
+  const eu = api('getMe');
+  Logger.log('Robô: ' + (eu.ok ? '@' + eu.result.username : 'token recusado'));
+  Logger.log('Conversa guardada: ' + chat);
+  if (chat) { const c = api('getChat?chat_id=' + chat); Logger.log('Essa conversa é de: ' + (c.ok ? (c.result.first_name || '') + ' ' + (c.result.last_name || '') + ' @' + (c.result.username || '-') + ' (' + c.result.type + ')' : JSON.stringify(c))); }
+  const t = enviarTelegram(token, chat, '🔎 Teste de diagnóstico da Voz do Bairro');
+  Logger.log('Envio de teste: ' + (t.ok ? 'aceito pelo Telegram' : JSON.stringify(t)));
+}
+
 /** Rode esta função uma vez pelo editor para criar a aba e autorizar o e-mail. */
 function prepararPlanilha() {
   pegarAba();
