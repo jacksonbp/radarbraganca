@@ -47,17 +47,33 @@ anos = range(int(C.POSSE[:4]), int(D["ger"][:4]) + 1)
 TIPOS1 = {"9": "Indica", "7": "Requerimento", "8": "Mo", "11": "Pedido"}
 
 print("1. Propostas por vereador, grupo e ano (tela oficial x site)")
-contagens = Counter((i, it[7], int(it[3][:4])) for it in IT for i in it[6])
+contagens = Counter()
+for it in IT:
+    ano_documento = int(it[1].rsplit("/", 1)[-1].strip())
+    for i in it[6]:
+        contagens[i, it[7], ano_documento] += 1
+
 for i, v in enumerate(V):
     for g, grupo in C.GRUPOS.items():
         for ano in anos:
+            params = {"Pesquisa": "Avancada", "ShowSearch": "False", "GrupoId": g, "Numeracao": "Documento",
+                      "Ano": ano, "TipoAutorId": 1, "AutorId": v["id"]}
+            st = contagens[i, g, ano]
+            obs = ""
             try:
-                of = tela({"Pesquisa": "Avancada", "ShowSearch": "False", "GrupoId": g, "Numeracao": "Documento",
-                           "Ano": ano, "TipoAutorId": 1, "AutorId": v["id"]})
+                of = tela(params)
+                if ano == anos.start and of > st:
+                    # O ano da numeração pode diferir da data de apresentação.
+                    linhas = C.csv_docs(dict(params, Ordenacao=2))
+                    anteriores = {int(r["Id"]) for r in linhas
+                                  if (data_doc := C.data_csv(r["Data"])) and data_doc < C.POSSE.replace("-", "")}
+                    if anteriores:
+                        obs = f"tela={of}, excluídos {len(anteriores)} documentos anteriores à posse"
+                        of -= len(anteriores)
             except (ValueError, SystemExit):
                 salvar()
                 raise
-            conf(f"{v['ap']} · {grupo} ({ano})", contagens[i, g, ano], of)
+            conf(f"{v['ap']} · {grupo} ({ano})", st, of, obs)
 
 if args.propostas:
     salvar()
