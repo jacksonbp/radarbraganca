@@ -210,13 +210,13 @@ document.querySelectorAll('[data-atualizado]').forEach(el=>{el.textContent=`Dado
 const P={};
 
 P.inicio=function(){
-  $('livet').textContent=`Ao vivo · dados conferidos ${ago()}`; setInterval(()=>{$('livet').textContent=`Ao vivo · dados conferidos ${ago()}`},6e4);
+  $('livet').textContent=`dados conferidos ${ago()}`; setInterval(()=>{$('livet').textContent=`dados conferidos ${ago()}`},6e4);
   const STATS=[['',IT.length,'propostas até agora'],['k-b',D.catot.b||0,'pedidos nos bairros'],['k-h',D.catot.h||0,'homenagens'],['k-l',D.catot.l||0,'propostas de lei']];
   $('stats').innerHTML=STATS.map(([k,n,l],i)=>`<div class="stat ${k}"><b class="num" id="st${i}">${nf(n)}</b><span>${l}</span></div>`).join('');
   STATS.forEach(([k,n],i)=>countUp($('st'+i),n));
   const POSSE=new Date(D.posse+'T00:00:00-03:00').getTime(), POR_MS=V.length*D.sal.v*12/(365.25*864e5);
   const tick=()=>{$('tick').textContent=brl.format((Date.now()-POSSE)*POR_MS)}; tick(); if(!reduce)setInterval(tick,120);
-  $('msal').textContent=`e subindo agora · estimativa: ${V.length} salários de ${brl.format(D.sal.v)} por mês desde ${dt(D.posse)}`+(D.sal.confirmado?'':' · valor a confirmar no texto oficial');
+  $('msal').textContent=`${V.length} vereadores × ${brl.format(D.sal.v)} por mês, desde ${dt(D.posse)}`+(D.sal.confirmado?'':' · valor mensal a confirmar no texto oficial');
   $('faces').innerHTML=V.slice().sort(ORD.nome).map(v=>`<li><a href="${urlV(v)}">${foto(v,'')}<span>${esc(v.ap)}</span></a></li>`).join('');
   $('pct').textContent=D.nvot?Math.round(D.unan/D.nvot*100)+'%':'–';
   {const div=D.nvot-D.unan;

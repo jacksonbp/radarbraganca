@@ -472,3 +472,13 @@ section[id]{scroll-margin-top:118px}
 .pf-forn li>b{font-size:15px;white-space:nowrap}
 #pf-kpis .kpi b{font-size:clamp(26px,2.6vw,34px);white-space:nowrap}
 .pf-meses{padding-top:18px}
+
+/* Ações e indicadores da página inicial */
+.hero .stats { margin-top: 10px; }
+.hero .meter { margin-top: 16px; }
+.hero .meter .v { font-size: clamp(26px, 6vw, 36px); }
+.hero .intro { max-width: 52ch; }
+@media (max-width: 420px) {
+  .hero .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero .meter { padding: 14px 16px; }
+}

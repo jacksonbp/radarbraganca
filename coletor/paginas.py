@@ -38,6 +38,10 @@ def pagina(ativa, titulo, descricao, url, corpo, init, imagem="/capa.jpg", titul
         f'<li{" class=cta" if k == "voz" else ""}><a href="{h}"{" aria-current=page" if k == ativa else ""}>{n}</a></li>'
         for k, h, n in MENU)
     img = imagem if imagem.startswith("http") else DOMINIO + imagem
+    noscript = '<noscript><p class="wrap warn" style="margin-top:20px">Este site precisa do JavaScript ligado no navegador para mostrar os dados.</p></noscript>' if init else ""
+    scripts = f'''<script src="/dados.js?v={D['gerh']}"></script>
+<script src="/assets/radar.js?v={VER('radar.js')}"></script>
+<script>{init}</script>''' if init else ""
     return f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -70,7 +74,7 @@ def pagina(ativa, titulo, descricao, url, corpo, init, imagem="/capa.jpg", titul
   <nav aria-label="Menu principal"><ul class="menu">{menu}</ul></nav>
 </div></header>
 <main id="conteudo">
-<noscript><p class="wrap warn" style="margin-top:20px">Este site precisa do JavaScript ligado no navegador para mostrar os dados.</p></noscript>
+{noscript}
 {corpo}
 </main>
 <footer class="foot2"><div class="wrap">
@@ -80,9 +84,7 @@ def pagina(ativa, titulo, descricao, url, corpo, init, imagem="/capa.jpg", titul
   <div><h4>Contato</h4><ul><li>Achou um erro? Escreva para<br><a href="mailto:contato@bragancaterraquerida.com.br"><b>contato@bragancaterraquerida.com.br</b></a><br>Conferimos e corrigimos o mais rápido possível, e a correção fica registrada.</li><li><a href="/sobre/">Como contamos os números</a></li></ul></div>
   <p class="fine"><span data-atualizado></span> Este não é um site oficial. Projeto independente, sem ligação com a Câmara, a Prefeitura, candidatos ou partidos. Todos os dados vêm de fontes públicas, citadas em cada página.</p>
 </div></footer>
-<script src="/dados.js?v={D['gerh']}"></script>
-<script src="/assets/radar.js?v={VER('radar.js')}"></script>
-<script>{init}</script>
+{scripts}
 <!-- Contador de visitas (GoatCounter): sem cookies, não identifica ninguém. -->
 <script data-goatcounter="https://radarbraganca.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
@@ -117,7 +119,7 @@ LD = '<script type="application/ld+json">' + json.dumps({"@context": "https://sc
 inicio = f"""
 <section class="wrap hero">
   <div>
-    <span class="live"><i></i><span id="livet">Ao vivo</span></span>
+    <span class="live"><i></i><span id="livet">Dados da Câmara</span></span>
     <h1 class="logo" aria-label="Radar Bragança">{LOGO.replace('currentColor', '#111a24')}<span><b>RADAR</b><b>BRAGANÇA</b></span></h1>
     <p class="intro"><b>Raio-X da Câmara de Bragança Paulista.</b> O que cada um dos 19 vereadores fez desde que assumiu, em 2025. Atualizado todo dia com os dados oficiais da Câmara.</p>
     <form class="search" id="fbq" role="search" style="max-width:none"><label for="hq" class="eyebrow" style="display:block;margin-bottom:8px">O que pediram pelo seu bairro?</label>
@@ -125,9 +127,19 @@ inicio = f"""
     <ul class="chips" id="bairros-chips"></ul>
   </div>
   <div>
-    <div class="meter"><p class="t">Salário pago aos {len(V)} vereadores desde a posse</p><p class="v num" id="tick">R$ 0,00</p><small id="msal"></small></div>
     <div class="stats" id="stats"></div>
+    <div class="meter"><p class="t">Estimativa de salários de {len(V)} vereadores desde a posse</p><p class="v num" id="tick">R$ 0,00</p><small id="msal"></small></div>
     <p class="upd" data-atualizado></p>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>Explore o Radar</h2>
+  <div class="tiles">
+    {tile("o", "/vereadores/", "Os 19 vereadores", "Presença, propostas, votos e viagens de cada um, com a mesma régua.", IC_USERS)}
+    {tile("b", "/bairros/", "Seu bairro", "Tudo o que pediram para a sua rua, e por quem.", IC_PIN)}
+    {tile("l", "/propostas/", "Propostas", "Consulte pedidos, homenagens e projetos de lei.", IC_LAW)}
+    {tile("h", "/demandas/", "Voz do Bairro", "Tem um problema no seu bairro? Conte aqui e nós encaminhamos.", IC_MEGA)}
   </div>
 </section>
 
@@ -138,17 +150,6 @@ inicio = f"""
     <li>{IC_CHECK}<b>Mesma régua</b><span>Os 19 vereadores medidos do mesmo jeito, sem nota nem opinião</span></li>
     <li>{IC_CHECK}<b>Fonte em cada número</b><span>Cada proposta abre na página da Câmara</span></li>
   </ul>
-</section>
-
-<section class="wrap">
-  <p class="eyebrow">Explore</p>
-  <h2>Escolha por onde começar</h2>
-  <div class="tiles">
-    {tile("o", "/vereadores/", "Os 19 vereadores", "Presença, propostas, votos e viagens de cada um, com a mesma régua.", IC_USERS)}
-    {tile("b", "/bairros/", "Seu bairro", "Tudo o que pediram para a sua rua, e por quem.", IC_PIN)}
-    {tile("l", "/propostas/", "Propostas", "Homenagem ou trabalho? Leia proposta por proposta.", IC_LAW)}
-    {tile("h", "/demandas/", "Voz do Bairro", "Tem um problema no seu bairro? Conte aqui e nós encaminhamos.", IC_MEGA)}
-  </div>
 </section>
 
 <section class="wrap">
@@ -398,7 +399,7 @@ escreve("bairros/index.html", pagina("bairros", "Seu bairro · Radar Bragança",
 propostas = f"""
 <section class="wrap phead">
   <p class="eyebrow">Tudo o que entrou na Câmara</p>
-  <h1>Homenagem ou trabalho?</h1>
+  <h1>O que os vereadores propuseram</h1>
   <p class="lead" id="hsub"></p>
   <div class="split" id="split" aria-hidden="true"></div>
   <div class="cats" id="cats"></div>
