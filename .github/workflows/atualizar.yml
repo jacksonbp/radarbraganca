@@ -1,5 +1,5 @@
 # Robô diário do Radar Bragança.
-# Todo dia às 4h (horário de Brasília) ele coleta os dados de novo na Câmara
+# Todo dia às 4h17 (horário de Brasília) ele coleta os dados de novo na Câmara
 # e republica o site. Se a coleta vier incompleta ou estranha, o coletor para
 # com erro, nada é publicado e o site fica com a última versão boa.
 name: Atualizar dados e publicar
@@ -31,12 +31,10 @@ jobs:
         with:
           python-version: "3.12"
       - name: Coletar dados na Câmara
-        if: github.event_name != 'push'
         run: |
           pip install pillow pypdf
           python coletor/coletar.py
       - name: Auditar propostas contra a tela oficial
-        if: github.event_name != 'push'
         id: auditoria
         run: |
           rm -f coletor/auditoria.json
@@ -48,7 +46,6 @@ jobs:
           name: auditoria-propostas
           path: coletor/auditoria.json
       - name: Guardar os dados novos no repositório
-        if: github.event_name != 'push'
         run: |
           git config user.name "radar-robo"
           git config user.email "radar-robo@users.noreply.github.com"
