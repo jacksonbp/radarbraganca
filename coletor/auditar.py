@@ -6,22 +6,29 @@ e não o CSV que o robô usa). Gera coletor/auditoria.json e imprime um resumo.
 
 Uso: python coletor/auditar.py
 """
-import json, os, random, re, sys, time, urllib.parse, urllib.request
+import argparse, json, os, random, re, sys, urllib.parse, urllib.request
 from collections import Counter
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import coletar as C
 
 RAIZ = C.RAIZ
 B = C.BASE
-D = json.loads(open(os.path.join(RAIZ, "site", "dados.js"), encoding="utf-8").read()[len("window.RB="):].rstrip().rstrip(";"))
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--propostas", action="store_true", help="Compara apenas CSV e tela oficial por autor, grupo e ano")
+args = parser.parse_args()
+D = C.ler_dados()
 V, IT = D["v"], D["items"]
 R = {"ok": [], "dif": [], "aviso": []}
 
 
 def tela(params, caminho="Documentos"):
     s = C.baixar(f"{B}/{caminho}?" + urllib.parse.urlencode(params, doseq=True))
-    m = re.search(r"([\d\.]+)\s*registros", s)
-    return int(m.group(1).replace(".", "")) if m else 0
+    if re.search(r">\s*Nenhum registro encontrado\s*</p>", s, re.IGNORECASE):
+        return 0
+    m = re.search(r"([\d.]+)\s+registros?\s+encontrados?", s, re.IGNORECASE)
+    if not m:
+        raise ValueError(f"Tela de {caminho} sem contagem reconhecida: {params}")
+    return int(m.group(1).replace(".", ""))
 
 
 def conf(nome, site, oficial, obs=""):
@@ -30,17 +37,31 @@ def conf(nome, site, oficial, obs=""):
     print(("  OK  " if site == oficial else "  DIF ") + f"{nome}: site={site} oficial={oficial} {obs}")
 
 
-anos = sorted({it[3][:4] for it in IT})
-TIPOS1 = {"9": "Indica", "7": "Requerimento", "8": "Mo", "11": "Pedido"}
-TIPOS3 = {"2": "Projeto de Lei ", "3": "Projeto de Lei Complementar", "4": "Projeto de Resolu", "5": "Projeto de Decreto", "6": "Projeto de Emenda"}
+def salvar():
+    with open(os.path.join(RAIZ, "coletor", "auditoria.json"), "w", encoding="utf-8") as arquivo:
+        json.dump(R, arquivo, ensure_ascii=False, indent=1)
+    print(f"\nRESUMO: {len(R['ok'])} conferências iguais, {len(R['dif'])} diferenças, {len(R['aviso'])} informativos")
 
-print("1. Propostas de cada vereador, por tipo (tela oficial x site)")
+
+anos = range(int(C.POSSE[:4]), int(D["ger"][:4]) + 1)
+TIPOS1 = {"9": "Indica", "7": "Requerimento", "8": "Mo", "11": "Pedido"}
+
+print("1. Propostas por vereador, grupo e ano (tela oficial x site)")
+contagens = Counter((i, it[7], int(it[3][:4])) for it in IT for i in it[6])
 for i, v in enumerate(V):
-    for g, tipos in ((1, TIPOS1), (3, TIPOS3)):
-        of = sum(tela({"Pesquisa": "Avancada", "ShowSearch": "False", "GrupoId": g, "Numeracao": "Documento", "Ano": a,
-                       "TipoAutorId": 1, "AutorId": v["id"]}) for a in anos)
-        st = sum(1 for it in IT if i in it[6] and ((it[7] == g) if len(it) > 7 else True))
-        conf(f"{v['ap']} · {'proposituras' if g == 1 else 'projetos'} ({'+'.join(anos)})", st, of)
+    for g, grupo in C.GRUPOS.items():
+        for ano in anos:
+            try:
+                of = tela({"Pesquisa": "Avancada", "ShowSearch": "False", "GrupoId": g, "Numeracao": "Documento",
+                           "Ano": ano, "TipoAutorId": 1, "AutorId": v["id"]})
+            except (ValueError, SystemExit):
+                salvar()
+                raise
+            conf(f"{v['ap']} · {grupo} ({ano})", contagens[i, g, ano], of)
+
+if args.propostas:
+    salvar()
+    sys.exit(1 if R["dif"] else 0)
 
 print("2. Total de propostas da cidade por tipo (todos os autores x só vereadores atuais)")
 for tid, pref in TIPOS1.items():
@@ -109,15 +130,14 @@ for g in D["rep"][:5]:
     print(f"  INFO {rua}: site (mesmo assunto)={g['n']}  oficial (todas que citam a rua)={of}")
 
 print("9. Links de 10 propostas sorteadas abrem a página certa")
-for it in random.sample(IT, 10):
+for it in random.sample(IT, min(10, len(IT))):
     s = C.baixar(f"{B}/Documentos/Details?id={it[0]}")
     t = C.limpa(re.search(r"<title>(.*?)</title>", s, re.S).group(1))
     num = re.search(r"(\d+)/(\d{4})", it[1])
     conf(f"Link {it[1]}", True, bool(num and f"{num.group(1)}/{num.group(2)}" in t), t[:80])
 
 print("10. Recontagem interna")
-conf("Unanimidade recalculada", D["unan"], D["unan"])
+conf("Unanimidade dentro do total de votações", 0 <= D["unan"] <= D["nvot"], True)
 conf("Soma dos grupos = total", sum(D["catot"].values()), len(IT))
 
-json.dump(R, open(os.path.join(RAIZ, "coletor", "auditoria.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-print(f"\nRESUMO: {len(R['ok'])} conferências iguais, {len(R['dif'])} diferenças, {len(R['aviso'])} informativos")
+salvar()
