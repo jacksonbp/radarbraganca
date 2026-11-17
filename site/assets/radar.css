@@ -379,15 +379,19 @@ section[id]{scroll-margin-top:118px}
 .gbar i.me{width:18px;height:18px;margin:-9px 0 0 -9px;background:var(--red);z-index:1}
 .gleg{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin:2px 0 0}
 .jt li{isolation:isolate}
-/* onde foi votado */
-.lrank{gap:16px}
-.lrank li{align-items:start}
-.lrank .ti{margin-top:2px}
-.lrank .nm small{display:block;font-weight:400;font-size:12.5px;color:var(--mute);margin-top:1px}
-.lp{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;border-radius:7px;padding:2px 8px;background:var(--soft)}
-.lp.ok{color:var(--b);background:#e8f0fe}
-.lp.no{color:var(--red);background:#fdecec}
-.lp.mute{font-weight:500}
-.vv{text-align:right}
-.vv b{display:block;font-size:17px}
-.vv small{display:block;font-size:12px;color:var(--mute)}
+/* bairros que deram mais votos */
+.lcards{display:grid;gap:12px;margin-top:18px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.lcard:first-child{grid-column:1/-1}
+@media(min-width:900px){.lcards{grid-template-columns:repeat(5,minmax(0,1fr))}.lcard:first-child{grid-column:auto}}
+@media(max-width:559px){.lcard{padding:14px}.lpc{font-size:30px}.lcard h3{font-size:16px}.lpd{font-size:12.5px}}
+.lcard{position:relative;background:#fff;border:1px solid var(--hair);border-radius:20px;padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-width:0}
+.lnum{position:absolute;top:16px;right:16px;font-size:12px;font-weight:700;color:var(--mute)}
+.lpc{font-family:var(--display);font-weight:900;font-size:38px;line-height:1;letter-spacing:-.02em;color:var(--b)}
+.lvt{font-size:13px;color:var(--mute);margin-top:2px}
+.lcard h3{font-family:var(--display);font-weight:900;font-size:19px;line-height:1.15;margin:14px 0 2px;letter-spacing:-.01em}
+.lsc{font-size:12.5px;color:var(--mute);margin:0 0 14px;line-height:1.35}
+.lpd{margin:auto 0 0;padding-top:12px;border-top:1px solid var(--hair);font-size:13.5px;font-weight:600}
+.lpd b{font-size:18px;margin-right:2px}
+.lpd.ok{color:var(--b)}
+.lpd.no{color:var(--red)}
+.lpd.mute{font-weight:500}

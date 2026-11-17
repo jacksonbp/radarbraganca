@@ -262,7 +262,7 @@ for v in V:
   <p class="crumbs"><a href="/">Início</a> › <a href="/vereadores/">Vereadores</a> › {e(v['ap'])}</p>
   <div class="prof">{foto}<div><h1>{e(v['ap'])}</h1><p class="civil">{e(v['nome'])}</p><div class="tags">{tags}</div><div class="contato">{contato}</div></div></div>
   <div class="kpis" id="kpis"></div>
-  <nav class="subnav" aria-label="Nesta página"><a href="#s-propostas">Propostas</a><a href="#s-voto24">Onde foi votado</a><a href="#s-ruas">Ruas que voltam</a><a href="#s-votos">Votos e comissões</a><a href="#s-blocos">Com quem vota</a><a href="#s-viagens">Viagens</a></nav>
+  <nav class="subnav" aria-label="Nesta página"><a href="#s-propostas">Propostas</a><a href="#s-voto24">Bairros que votaram</a><a href="#s-ruas">Ruas que voltam</a><a href="#s-votos">Votos e comissões</a><a href="#s-blocos">Com quem vota</a><a href="#s-viagens">Viagens</a></nav>
 </section>
 <section class="wrap">
   <div class="cols">
@@ -271,11 +271,10 @@ for v in V:
   </div>
 </section>
 <section class="wrap" id="s-voto24">
-  <p class="eyebrow">Eleição de 2024 × pedidos</p><h2>Onde foi votado e onde pede</h2>
-  <div class="cols">
-    <div class="box"><h3>Voto concentrado ou espalhado?</h3><div id="locc"></div></div>
-    <div class="box"><h3>Onde foi mais votado</h3><div id="loc"></div></div>
-  </div>
+  <p class="eyebrow">Eleição de 2024</p><h2>Os bairros que deram mais votos</h2>
+  <p class="lead" id="locc"></p>
+  <div class="lcards" id="loc"></div>
+  <p class="mute small">O local de votação é onde o eleitor vota, que nem sempre é onde mora. Os nomes de bairro da Justiça Eleitoral e da Câmara às vezes não batem; por isso alguns aparecem como “sem pedidos com esse nome”.</p>
 </section>
 <section class="wrap" id="s-propostas">
   <p class="eyebrow">Proposta por proposta</p><h2>Tudo o que apresentou desde a posse</h2>

@@ -272,17 +272,10 @@ P.vereador=function(id){
   if($('loc')){
     const L=v.loc;
     if(!L||!L.length){$('s-voto24').hidden=true}else{
-      const lc=v.lc, m=D.locm, tipo=m==null?'':lc>=m+5?'mais concentrado que a média':lc<=m-5?'mais espalhado pela cidade que a média':'perto da média';
-      const todos=V.filter(w=>w.lc!=null).map(w=>w.lc), hi=Math.ceil((Math.max(...todos)+4)/10)*10, x=n=>(n/hi*100).toFixed(1);
-      $('locc').innerHTML=`<div class="gov num"><b>${lc}%</b><span>dos votos de 2024 vieram dos<br>5 locais onde foi mais votado</span></div>
-        <div class="gbar" aria-hidden="true">${todos.map(n=>`<i style="left:${x(n)}%"></i>`).join('')}<i class="me" style="left:${x(lc)}%"></i></div>
-        <div class="gleg"><span>← espalhado</span><span>concentrado →</span></div>
-        <p class="small">Um voto <b>${tipo}</b>${m!=null?` da Câmara (<b class="num">${m}%</b>)`:''}.</p>
-        <p class="mute small">Cada ponto é um vereador; o vermelho é ${esc(v.ap)}. Voto concentrado vem de poucos bairros; voto espalhado vem da cidade toda.</p>`;
-      const mx=L[0][3];
-      $('loc').innerHTML=`<ol class="rank lrank">${L.map(r=>{const p=r[4]==null?`<span class="lp mute">bairro não aparece nos pedidos</span>`:r[4]?`<span class="lp ok">${nf(r[4])} ${r[4]===1?'pedido dele':'pedidos dele'} neste bairro</span>`:`<span class="lp no">nenhum pedido dele neste bairro</span>`;
-        return `<li><span class="ti">${svg(ICON.pin,16)}</span><span class="nm">${esc(r[1]||'—')}<small>${esc(r[0])}</small>${p}</span><span class="vv num"><b>${String(r[3]).replace('.',',')}%</b><small>${nf(r[2])} votos</small></span><span class="br"><i style="width:${r[3]/mx*100}%"></i></span></li>`}).join('')}</ol>
-        <p class="mute small">O local de votação é onde o eleitor vota, que nem sempre é onde mora. Os nomes de bairro da Justiça Eleitoral e da Câmara às vezes não batem.</p>`;
+      const lc=v.lc, m=D.locm, tipo=m==null?'':lc>=m+5?'concentrado em poucos bairros':lc<=m-5?'espalhado pela cidade':'nem concentrado nem espalhado';
+      $('locc').innerHTML=`${v.vot?`${esc(v.ap)} teve <b class="num">${nf(v.vot)}</b> votos. `:''}<b class="num">${lc}%</b> deles vieram destes 5 locais de votação: um voto ${tipo}${m!=null?` (a média da Câmara é <span class="num">${m}%</span>)`:''}. Abaixo, se ele faz pedidos para esses bairros.`;
+      $('loc').innerHTML=L.map((r,n)=>{const p=r[4]==null?`<p class="lpd mute">Sem pedidos com esse nome de bairro</p>`:r[4]?`<p class="lpd ok"><b class="num">${nf(r[4])}</b> ${r[4]===1?'pedido dele':'pedidos dele'} aqui</p>`:`<p class="lpd no"><b class="num">0</b> pedidos dele aqui</p>`;
+        return `<article class="lcard"><span class="lnum">${n+1}º</span><b class="lpc num">${String(r[3]).replace('.',',')}%</b><span class="lvt num">${nf(r[2])} votos</span><h3>${esc(r[1]||'—')}</h3><p class="lsc">${esc(r[0])}</p>${p}</article>`}).join('');
     }
   }
   if($('jt')){
