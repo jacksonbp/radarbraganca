@@ -46,6 +46,11 @@ def salvar():
 anos = range(int(C.POSSE[:4]), int(D["ger"][:4]) + 1)
 TIPOS1 = {"9": "Indica", "7": "Requerimento", "8": "Mo", "11": "Pedido"}
 
+IDS_SITE = {it[0] for it in IT}
+# Documentos com data a partir da véspera da coleta contam como "novos" (a coleta pode cruzar a meia-noite).
+from datetime import date, timedelta
+RECENTE = (date.fromisoformat(D["ger"]) - timedelta(days=1)).strftime("%Y%m%d")
+
 print("1. Propostas por vereador, grupo e ano (tela oficial x site)")
 contagens = Counter()
 for it in IT:
@@ -70,6 +75,18 @@ for i, v in enumerate(V):
                     if anteriores:
                         obs = f"tela={of}, excluídos {len(anteriores)} documentos anteriores à posse"
                         of -= len(anteriores)
+                if of > st:
+                    # A coleta leva ~10 minutos; documentos protocolados nesse meio-tempo aparecem na tela
+                    # mas não no site. Só eles viram aviso: qualquer documento antigo faltando continua sendo diferença.
+                    linhas = C.csv_docs(dict(params, Ordenacao=2))
+                    faltando = [r for r in linhas if int(r["Id"]) not in IDS_SITE
+                                and (data_doc := C.data_csv(r["Data"])) >= C.POSSE.replace("-", "")]
+                    if faltando and len(faltando) == of - st and all(C.data_csv(r["Data"]) >= RECENTE for r in faltando):
+                        nums = ", ".join(r["DescricaoCompleta"].strip() for r in faltando)
+                        R["aviso"].append({"item": f"{v['ap']} · {grupo} ({ano})", "site": st, "oficial": of,
+                                           "obs": f"protocolado(s) depois da coleta: {nums}; entra(m) na próxima atualização"})
+                        print(f"  INFO {v['ap']} · {grupo} ({ano}): site={st} oficial={of} (novo depois da coleta: {nums})")
+                        continue
             except (ValueError, SystemExit):
                 salvar()
                 raise
