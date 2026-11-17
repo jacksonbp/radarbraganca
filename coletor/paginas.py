@@ -195,6 +195,18 @@ vereadores = """
   <ul class="legend" aria-label="Legenda das barras coloridas"><li class="k-b"><i></i>Pedidos nos bairros</li><li class="k-c"><i></i>Cobranças</li><li class="k-h"><i></i>Homenagens</li><li class="k-l"><i></i>Propostas de lei</li><li class="k-o"><i></i>Outros</li></ul>
   <div class="vgrid" id="grid"></div>
 </section>
+<section class="wrap" id="comparar">
+  <p class="eyebrow">Lado a lado</p>
+  <h2>Comparar dois vereadores</h2>
+  <p class="mute" style="margin:0 0 12px">Escolha dois nomes para ver os mesmos números de cada um, lado a lado.</p>
+  <div class="filters cmp-f">
+    <label class="field">Primeiro vereador<select id="ca"></select></label>
+    <label class="field">Segundo vereador<select id="cb"></select></label>
+  </div>
+  <div class="box cmp-box"><table class="cmp" id="cmp"></table></div>
+  <div class="dl"><button class="btn gh" id="csv" type="button">Baixar planilha com os 19 vereadores</button>
+    <span class="mute">Arquivo CSV, abre no Excel ou no Google Planilhas. Use à vontade, citando a fonte.</span></div>
+</section>
 """
 escreve("vereadores/index.html", pagina("vereadores", "Vereadores · Radar Bragança",
         "Os 19 vereadores de Bragança Paulista: presença, propostas, votos e viagens de cada um, com dados oficiais.",
@@ -396,8 +408,9 @@ lista_corr = "".join(f"<li><b>{e(d)}</b> · {e(t)}</li>" for d, t in CORRECOES) 
 sobre += f"""
 <section class="wrap" id="correcoes">
   <p class="eyebrow">Transparência do próprio site</p>
-  <h2>Correções, direito de resposta e aviso legal</h2>
+  <h2>Quem somos, correções e aviso legal</h2>
   <div class="method">
+    <details open><summary>Quem faz e como é financiado</summary><p>O Radar Bragança é feito pela equipe do Bragança Terra Querida, moradores de Bragança Paulista que querem facilitar o acompanhamento da Câmara e da Prefeitura. O site é mantido pelos próprios organizadores.<br><b>Regra de financiamento:</b> não aceitamos dinheiro, patrocínio ou anúncio de vereadores, políticos, candidatos, partidos, da Prefeitura ou da Câmara. Se um dia o site tiver apoio de leitores ou patrocínio de comércio local, isso será informado aqui, e quem apoia não tem nenhuma influência sobre os números.</p></details>
     <details open><summary>Correções</summary><p>Quando alguém aponta um erro, conferimos na fonte oficial. Se o erro for nosso, corrigimos e anotamos aqui a data e o que mudou.</p><ul>{lista_corr}</ul></details>
     <details open><summary>Direito de resposta</summary><p>Qualquer vereador, a Prefeitura ou a Câmara pode mandar uma nota sobre os dados publicados para <a href="mailto:bragancaterraquerida@gmail.com">bragancaterraquerida@gmail.com</a>. A nota é publicada sem cortes ao lado dos dados de quem a enviou, desde que trate dos números mostrados aqui.</p></details>
     <details open><summary>Aviso legal</summary><p>Este não é um site oficial. É um projeto independente, sem ligação com a Câmara, a Prefeitura, candidatos ou partidos, e não faz propaganda a favor ou contra ninguém. Todas as informações vêm de dados que os próprios órgãos públicos publicam, como manda a Lei de Acesso à Informação (Lei 12.527/2011). Cada número tem a fonte indicada. O site mostra fatos e contagens, não dá notas nem acusa ninguém. Se um dado oficial estiver errado na origem, o erro aparece aqui também até que o órgão o corrija.</p></details>

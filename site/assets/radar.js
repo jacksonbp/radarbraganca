@@ -244,6 +244,46 @@ P.vereadores=function(){
     $('conta').textContent=L.length===V.length?`Mostrando os ${V.length} vereadores.`:`Mostrando ${L.length} de ${V.length} vereadores.`;
   };
   ['q','partido','ordem'].forEach(id=>$(id).addEventListener('input',render)); render();
+  // comparar dois vereadores (sem cor de "vencedor": mesma régua, só os números)
+  const NOMES=[...V].sort(ORD.nome);
+  const pp=(x,t)=>t?Math.round(x/t*100)+'%':'–';
+  const LIN=[
+    ['Partido',v=>esc(v.part)],
+    ['Presença nas reuniões',v=>{const t=v.P+v.A+v.F;return `${pp(v.P,t)} <small>${v.P} de ${t}</small>`}],
+    ['Faltas nas reuniões',v=>nf(v.F)],
+    ['Presença nas comissões',v=>{const c=v.cm||{P:0,A:0,F:0},t=c.P+c.A+c.F;return t?`${pp(c.P,t)} <small>${c.P} de ${t}</small>`:'–'}],
+    ['Propostas desde a posse',v=>nf(v.tot)],
+    ['Pedidos de conserto',v=>nf(v.cat.b)],
+    ['Cobranças à Prefeitura',v=>nf(v.cat.c)],
+    ['Projetos de lei',v=>nf(v.cat.l)],
+    ['Homenagens',v=>nf(v.cat.h)],
+    ['Votos “não”',v=>nf(v.vn)],
+    ['Apoio aos projetos da Prefeitura',v=>v.gov&&v.gov[1]?`${pp(v.gov[0],v.gov[1])} <small>${v.gov[0]} de ${v.gov[1]}</small>`:'–'],
+    ['Viagens oficiais',v=>(v.vg||[]).length?`${v.vg.length} <small>${brl.format(v.vgt||0)}</small>`:'0'],
+    ['Votos na eleição de 2024',v=>v.vot?nf(v.vot):'–'],
+  ];
+  const opt=sel=>NOMES.forEach(v=>{const o=document.createElement('option');o.value=v.id;o.textContent=v.ap;sel.appendChild(o)});
+  opt($('ca'));opt($('cb'));$('ca').value=NOMES[0].id;$('cb').value=NOMES[1].id;
+  const cmp=()=>{const a=V.find(v=>v.id==$('ca').value),b=V.find(v=>v.id==$('cb').value);
+    const j=(a.jt||[]).find(x=>x[0]===b.id);
+    $('cmp').innerHTML=`<thead><tr><th></th><th scope="col"><a href="${urlV(a)}">${esc(a.ap)}</a></th><th scope="col"><a href="${urlV(b)}">${esc(b.ap)}</a></th></tr></thead><tbody>`
+      +LIN.map(([n,f])=>`<tr><th scope="row">${n}</th><td class="num">${f(a)}</td><td class="num">${f(b)}</td></tr>`).join('')
+      +(a===b?'':`<tr><th scope="row">Votaram igual</th><td class="num" colspan="2">${j?`${j[1]}% <small>das ${j[2]} votações divididas em que os dois votaram</small>`:'<small>poucas votações divididas em comum para comparar</small>'}</td></tr>`)+'</tbody>';};
+  ['ca','cb'].forEach(id=>$(id).addEventListener('input',cmp)); cmp();
+  // planilha
+  $('csv').addEventListener('click',()=>{
+    const C=[['Vereador',v=>v.ap],['Nome completo',v=>v.nome],['Partido',v=>v.part],['Reuniões presente',v=>v.P],['Ausências justificadas',v=>v.A],['Faltas',v=>v.F],
+      ['Comissões presente',v=>(v.cm||{}).P||0],['Comissões faltas',v=>(v.cm||{}).F||0],['Propostas total',v=>v.tot],['Pedidos de conserto',v=>v.cat.b],['Cobranças',v=>v.cat.c],
+      ['Homenagens',v=>v.cat.h],['Projetos de lei',v=>v.cat.l],['Outras',v=>v.cat.o],['Votos sim',v=>v.vs],['Votos não',v=>v.vn],['Abstenções',v=>v.va],
+      ['Projetos da Prefeitura votados',v=>(v.gov||[])[1]||0],['Votou sim nesses',v=>(v.gov||[])[0]||0],['Viagens',v=>(v.vg||[]).length],['Gasto em viagens (R$)',v=>String(v.vgt||0).replace('.',',')],
+      ['Votos em 2024',v=>v.vot||0],['Ficha na Câmara',v=>v.url]];
+    const q=x=>{x=String(x??'');return /[;"\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x};
+    const linhas=[C.map(c=>c[0]).join(';'),...NOMES.map(v=>C.map(c=>q(c[1](v))).join(';')),'',
+      q(`Fonte: Radar Bragança (bragancaterraquerida.com.br), dados oficiais da Câmara, TSE e Portal da Transparência. Desde ${new Date(D.posse+'T12:00').toLocaleDateString('pt-BR')}, atualizado em ${GER.toLocaleDateString('pt-BR')}.`)];
+    const blob=new Blob(['﻿'+linhas.join('\r\n')],{type:'text/csv;charset=utf-8'});
+    const u=URL.createObjectURL(blob),l=document.createElement('a');l.href=u;l.download=`radar-braganca-vereadores-${GER.toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);
+  });
 };
 
 P.vereador=function(id){
