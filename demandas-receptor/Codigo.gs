@@ -124,7 +124,19 @@ function sincronizarPainel() {
       .requireValueInList(ESTADOS_PUBLICOS, true).setAllowInvalid(false).build());
 
     const linhasDem = dem.getRange(2, 1, dem.getLastRow() - 1, 12).getValues();
-    const nPub = Math.max(pub.getLastRow() - 1, 0);
+    // getLastRow conta as caixinhas vazias; a última linha usada é a última com Bairro, Problema ou Protocolo.
+    const usada = r => r[1] !== '' || r[2] !== '' || r[6] !== '';
+    const tudo = pub.getLastRow() > 1 ? pub.getRange(2, 1, pub.getLastRow() - 1, 8).getValues() : [];
+    let nPub = tudo.length;
+    while (nPub && !usada(tudo[nPub - 1])) nPub--;
+    // Se ficaram linhas vazias no meio (ex.: linhas criadas lá embaixo), sobe tudo para o começo da aba.
+    const cheias = tudo.slice(0, nPub).filter(usada);
+    if (cheias.length < nPub) {
+      pub.getRange(2, 1, nPub, 8).clearContent();
+      pub.getRange(2, 1, nPub, 1).insertCheckboxes();
+      if (cheias.length) pub.getRange(2, 1, cheias.length, 8).setValues(cheias);
+      nPub = cheias.length;
+    }
     const linhasPub = nPub ? pub.getRange(2, 1, nPub, 8).getValues() : [];
     const onde = {};
     linhasPub.forEach((r, i) => { if (r[6]) onde[r[6]] = i; });
@@ -136,7 +148,11 @@ function sincronizarPainel() {
       const i = onde[protocolo];
       if (i === undefined) {
         if (!PARA_PUBLICO[sit]) return;
-        novas.push([true, limparPublico(r[4], 120), limparPublico(r[3], 140), localSeguro(r[5]), PARA_PUBLICO[sit], hoje, protocolo, sit]);
+        // Se o nome de quem mandou aparece no bairro ou no local (ex.: escreveu o próprio nome no campo Bairro),
+        // a linha é criada SEM publicar, para você revisar antes.
+        const bairro = limparPublico(r[4], 120), local = localSeguro(r[5]);
+        const publicar = !temNome(r[8], bairro + ' ' + local);
+        novas.push([publicar, bairro, limparPublico(r[3], 140), local, PARA_PUBLICO[sit], hoje, protocolo, sit]);
         return;
       }
       if (linhasPub[i][7] === sit) return; // nada mudou na aba Demandas; respeita o que foi editado à mão
@@ -146,9 +162,9 @@ function sincronizarPainel() {
       pub.getRange(linha, 8).setValue(sit);
     });
     if (novas.length) {
-      const ini = pub.getLastRow() + 1;
+      const ini = nPub + 2;
       pub.getRange(ini, 1, novas.length, 8).setValues(novas);
-      pub.getRange(ini, 1, novas.length, 1).insertCheckboxes().setValues(novas.map(() => [true]));
+      pub.getRange(ini, 1, novas.length, 1).insertCheckboxes().setValues(novas.map(n => [n[0]]));
       pub.getRange(ini, 6, novas.length, 1).setNumberFormat('dd/mm/yyyy');
     }
   } finally { lock.releaseLock(); }
@@ -170,6 +186,14 @@ function localSeguro(x) {
        .replace(/\s+(n[º°o]\.?|número|numero)\s*\d.*$/i, ' ')            // "nº 508"
        .replace(/(?<!km\s*)(\s*[-–,]?\s*\d+[a-z]?)+\s*$/i, ' ');            // números soltos no fim
   return s.replace(/\s{2,}/g, ' ').replace(/[\s,;\-–]+$/, '').trim().slice(0, 160);
+}
+
+/** true se alguma palavra do nome (3+ letras, ignorando "da", "de"...) aparece no texto público. */
+function temNome(nome, texto) {
+  const norm = x => String(x || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const t = ' ' + norm(texto).replace(/[^a-z0-9]+/g, ' ') + ' ';
+  return norm(nome).split(/[^a-z]+/).filter(p => p.length >= 3 && !['das', 'dos', 'teste'].includes(p))
+    .some(p => t.includes(' ' + p + ' '));
 }
 
 function limparPublico(x, max) {

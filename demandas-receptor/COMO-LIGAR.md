@@ -76,3 +76,6 @@ Nome, contato, protocolo e o texto original nunca vão para o site. A atualizaç
 painel no site (no máximo 1 vez por minuto); para forçar, rode `sincronizarAgora` no editor.
 O que você editar à mão na aba "Problemas dos bairros" (texto, local, "Resolvido") é respeitado até a Situação
 mudar de novo na aba Demandas. Confira o **Local público**: tire número de casa se puder identificar quem reclamou.
+
+Proteção extra: se o nome de quem mandou aparece no Bairro ou no Local (ex.: a pessoa escreveu o próprio nome
+no campo Bairro), a linha é criada em "Problemas dos bairros" com **Publicar desmarcado**. Corrija e marque à mão.
