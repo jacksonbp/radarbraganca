@@ -247,7 +247,7 @@ P.vereador=function(id){
   document.documentElement.style.setProperty('--deep',`hsl(${hue(i)} 55% 26%)`);
   const t=v.P+v.A+v.F, cm=v.cm||{P:0,A:0,F:0}, tc=cm.P+cm.A+cm.F;
   $('kpis').innerHTML=`
-    <div class="kpi"><span class="eyebrow">Presença no plenário</span><div class="pres">${ring(v,64)}<p><b class="num" style="font-size:22px">${v.P} de ${t}</b><small class="num">sessões com presença registrada na votação desde ${mesAno(D.pri.replace(/-/g,''))} · <span class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</span></small></p></div></div>
+    <div class="kpi kpi-pres"><span class="eyebrow">Presença no plenário</span><div class="pres">${ring(v,56)}<b class="num">${v.P} de ${t}</b></div><span>sessões com presença registrada na votação desde ${mesAno(D.pri.replace(/-/g,''))} · <span class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</span></span></div>
     <div class="kpi"><span class="eyebrow">Presença nas comissões</span><b class="num">${tc?Math.round(cm.P/tc*100)+'%':'–'}</b><span>${tc?`${cm.P} de ${tc} sessões · ${cm.F} ${cm.F===1?'falta':'faltas'}`:'sem lista de presença registrada'}</span></div>
     <div class="kpi"><span class="eyebrow">Propostas desde a posse</span><b class="num" style="color:var(--b)">${nf(v.tot)}</b><span>${nf(v.cat.b)} pedidos · ${nf(v.cat.c)} cobranças · ${nf(v.cat.l)} de lei</span></div>
     <div class="kpi"><span class="eyebrow">Viagens oficiais</span><b class="num" style="color:var(--c)">${nf((v.vg||[]).length)}</b><span>${(v.vg||[]).length?brl.format(v.vgt||0)+' em despesas':'nenhuma registrada'}</span></div>`;

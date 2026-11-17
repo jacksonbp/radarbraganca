@@ -341,3 +341,23 @@ section[id]{scroll-margin-top:118px}
 .e404 .bign{color:var(--red)}
 @media (prefers-reduced-motion:reduce){.tile,.vcard,.rp,.cat{transition:none}.tile:hover,.vcard:hover,.rp:hover,.cat:hover{transform:none}}
 @media(min-width:900px){.hero .logo b{font-size:clamp(44px,5.6vw,74px)}.hero .logo svg{width:clamp(52px,6vw,72px)}}
+
+/* acabamento */
+.kpi-pres .pres{gap:12px;margin:2px 0 2px}
+.kpi-pres .pres>b{font-size:clamp(24px,2.4vw,30px);white-space:nowrap}
+.kpi>span:last-child{line-height:1.45}
+.kpi .bad{color:var(--red);font-weight:600}
+.chips{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);padding-right:32px}
+@media(max-width:899px){
+  .menu{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);scroll-snap-type:x proximity;padding-right:40px}
+  .menu li{scroll-snap-align:start}
+}
+@media(max-width:759px){
+  .prof{text-align:center;justify-items:center}
+  .prof .tags{justify-content:center}
+  .prof .contato{display:grid;grid-template-columns:1fr;width:100%}
+  .prof .contato .btn{justify-content:center;text-align:center;width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+.btn{transition:background-color .15s,box-shadow .15s,transform .15s}
+.btn:active{transform:translateY(1px)}
+@media(max-width:899px){.hero .logo{max-width:100%}.hero .logo b{font-size:clamp(30px,12.2vw,64px)}.hero .logo svg{width:clamp(38px,11vw,60px);height:auto;flex:none}}
