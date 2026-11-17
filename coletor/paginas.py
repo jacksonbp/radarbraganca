@@ -395,7 +395,7 @@ sobre = """
   <div class="method">
     <details open><summary>Presença nas reuniões da Câmara</summary><p id="m-pres"></p></details>
     <details open><summary>Presença nas comissões</summary><p id="m-com"></p></details>
-    <details open><summary>Os grupos de propostas</summary><p>A mesma regra vale para todos.<br>• <b>Pedido de conserto</b> (na Câmara se chama “indicação”): o vereador pede à Prefeitura uma melhoria na rua ou no bairro.<br>• <b>Cobrança</b>: pedido de informação, requerimento ou moção de apelo, quando o vereador pergunta ou cobra algo da Prefeitura ou de outro órgão.<br>• <b>Homenagem</b>: parabéns, voto de pesar, título, medalha, nome de rua ou data comemorativa.<br>• <b>Projeto de lei</b>: cria ou muda uma regra da cidade.<br>• <b>Outros</b>: moções de apoio ou repúdio e regras internas da Câmara.</p></details>
+    <details open><summary>Os grupos de propostas</summary><p>A mesma regra vale para todos.<br>• <b>Pedido de melhoria no bairro</b> (na Câmara se chama “indicação”): o vereador pede à Prefeitura uma melhoria na rua ou no bairro.<br>• <b>Cobrança</b>: pedido de informação, requerimento ou moção de apelo, quando o vereador pergunta ou cobra algo da Prefeitura ou de outro órgão.<br>• <b>Homenagem</b>: parabéns, voto de pesar, título, medalha, nome de rua ou data comemorativa.<br>• <b>Projeto de lei</b>: cria ou muda uma regra da cidade.<br>• <b>Outros</b>: moções de apoio ou repúdio e regras internas da Câmara.</p></details>
     <details open><summary>Votos</summary><p id="m-vot"></p></details>
     <details open><summary>Com quem vota e apoio à Prefeitura</summary><p id="m-blo"></p></details>
     <details open><summary>Onde foi votado e onde pede</summary><p id="m-loc"></p></details>

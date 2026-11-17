@@ -248,7 +248,7 @@ P.vereadores=function(){
   // planilha
   $('csv').addEventListener('click',()=>{
     const C=[['Vereador',v=>v.ap],['Nome completo',v=>v.nome],['Partido',v=>v.part],['Reuniões presente',v=>v.P],['Ausências justificadas',v=>v.A],['Faltas',v=>v.F],
-      ['Comissões presente',v=>(v.cm||{}).P||0],['Comissões faltas',v=>(v.cm||{}).F||0],['Propostas total',v=>v.tot],['Pedidos de conserto',v=>v.cat.b],['Cobranças',v=>v.cat.c],
+      ['Comissões presente',v=>(v.cm||{}).P||0],['Comissões faltas',v=>(v.cm||{}).F||0],['Propostas total',v=>v.tot],['Pedidos de melhoria no bairro',v=>v.cat.b],['Cobranças',v=>v.cat.c],
       ['Homenagens',v=>v.cat.h],['Projetos de lei',v=>v.cat.l],['Outras',v=>v.cat.o],['Votos sim',v=>v.vs],['Votos não',v=>v.vn],['Abstenções',v=>v.va],
       ['Projetos da Prefeitura votados',v=>(v.gov||[])[1]||0],['Votou sim nesses',v=>(v.gov||[])[0]||0],['Viagens',v=>(v.vg||[]).length],['Gasto em viagens (R$)',v=>String(v.vgt||0).replace('.',',')],
       ['Votos em 2024',v=>v.vot||0],['Ficha na Câmara',v=>v.url]];
@@ -270,10 +270,10 @@ P.comparar=function(){
   const com=v=>{const c=v.cm||{P:0,A:0,F:0},t=c.P+c.A+c.F;return [pp(c.P,t),t?`${c.P} de ${t} reuniões`:'sem lista registrada']};
   const gov=v=>v.gov&&v.gov[1]?[pp(v.gov[0],v.gov[1]),`${v.gov[0]} de ${v.gov[1]} projetos`]:[null,''];
   const G=[
-    ['Presença',[['Presença nas reuniões',pres,1],['Faltas nas reuniões',v=>[v.F,''],0],['Presença nas comissões',com,1]]],
-    ['Propostas desde a posse',[['Total de propostas',v=>[v.tot,''],0],['Pedidos de conserto',v=>[v.cat.b,''],0],
-      ['Cobranças à Prefeitura',v=>[v.cat.c,''],0],['Projetos de lei',v=>[v.cat.l,''],0],['Homenagens',v=>[v.cat.h,''],0]]],
-    ['Votos e gastos',[['Votos “não”',v=>[v.vn,''],0],['Apoio aos projetos da Prefeitura',gov,1],
+    ['Presença',[['Presença nas reuniões',pres,1],['Faltas nas reuniões',v=>[v.F,''],0],['Presença nas comissões',com,1,'grupos de vereadores que analisam os projetos']]],
+    ['Propostas desde a posse',[['Total de propostas',v=>[v.tot,''],0],['Pedidos de melhoria no bairro',v=>[v.cat.b,''],0,'tapar buraco, podar árvore, trocar lâmpada'],
+      ['Cobranças à Prefeitura',v=>[v.cat.c,''],0,'perguntas e pedidos de explicação'],['Projetos de lei',v=>[v.cat.l,''],0,'propostas de novas regras para a cidade'],['Homenagens',v=>[v.cat.h,''],0,'parabéns, títulos, nomes de rua']]],
+    ['Votos e gastos',[['Votos “não”',v=>[v.vn,''],0,'vezes em que votou contra'],['Apoio aos projetos da Prefeitura',gov,1,'votou “sim” nos projetos enviados pelo prefeito'],
       ['Viagens oficiais',v=>[(v.vg||[]).length,(v.vg||[]).length?brl.format(v.vgt||0):''],0],['Votos na eleição de 2024',v=>[v.vot||0,''],0]]]];
   const fmt=(n,pc)=>n==null?'–':pc?n+'%':nf(n);
   const card=(v,lado)=>`<div class="vs-c" style="--h:${hue(v.i)}">${v.foto?`<img src="/fotos/${v.id}.jpg" alt="Foto de ${esc(v.ap)}">`:`<span class="vs-ph">${esc(v.in)}</span>`}
@@ -283,10 +283,10 @@ P.comparar=function(){
     $('vs').innerHTML=card(a,'a')+'<span class="vs-x" aria-hidden="true">×</span>'+card(b,'b');
     const j=(a.jt||[]).find(x=>x[0]===b.id);
     $('cmp').style.cssText=`--ha:${hue(a.i)};--hb:${hue(b.i)}`;
-    $('cmp').innerHTML=G.map(([tit,L])=>`<div class="cg"><h2>${tit}</h2>${L.map(([n,f,pc])=>{
+    $('cmp').innerHTML=G.map(([tit,L])=>`<div class="cg"><h2>${tit}</h2>${L.map(([n,f,pc,ex])=>{
       const [x,dx]=f(a), [y,dy]=f(b), max=pc?100:Math.max(1,x||0,y||0);
       const w=n=>n==null?0:Math.max(2,Math.round(n/max*100));
-      return `<div class="cr"><div class="cr-l">${n}</div>
+      return `<div class="cr"><div class="cr-l">${n}${ex?`<small>${ex}</small>`:''}</div>
         <div class="cr-v a"><b class="num">${fmt(x,pc)}</b><small>${dx}</small><i style="--w:${w(x)}%"></i></div>
         <div class="cr-v b"><b class="num">${fmt(y,pc)}</b><small>${dy}</small><i style="--w:${w(y)}%"></i></div></div>`}).join('')}</div>`).join('')
       +(a===b?'':`<div class="cg cg-j"><h2>Os dois votam juntos?</h2><p>${j?`<b class="num">${j[1]}%</b> Nas ${j[2]} votações em que a Câmara se dividiu e os dois votaram, eles votaram igual em ${j[1]} de cada 100.`:'Os dois votaram juntos em poucas votações divididas, então não dá para comparar.'}</p></div>`);
@@ -305,7 +305,7 @@ P.vereador=function(id){
   $('kpis').innerHTML=`
     <div class="kpi kpi-pres"><span class="eyebrow">Presença nas reuniões</span><div class="pres">${ring(v,56)}<b class="num">${v.P} de ${t}</b></div><span>reuniões em que esteve presente e votou, desde ${mesAno(D.pri.replace(/-/g,''))} · <span class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</span></span></div>
     <div class="kpi"><span class="eyebrow">Presença nas comissões</span><b class="num">${tc?Math.round(cm.P/tc*100)+'%':'–'}</b><span>${tc?`${cm.P} de ${tc} reuniões · ${cm.F} ${cm.F===1?'falta':'faltas'}`:'sem lista de presença registrada'}</span></div>
-    <div class="kpi"><span class="eyebrow">Propostas desde a posse</span><b class="num" style="color:var(--b)">${nf(v.tot)}</b><span>${nf(v.cat.b)} pedidos de conserto · ${nf(v.cat.c)} cobranças à Prefeitura · ${nf(v.cat.l)} projetos de lei</span></div>
+    <div class="kpi"><span class="eyebrow">Propostas desde a posse</span><b class="num" style="color:var(--b)">${nf(v.tot)}</b><span>${nf(v.cat.b)} pedidos de melhoria no bairro · ${nf(v.cat.c)} cobranças à Prefeitura · ${nf(v.cat.l)} projetos de lei</span></div>
     <div class="kpi"><span class="eyebrow">Viagens oficiais</span><b class="num" style="color:var(--c)">${nf((v.vg||[]).length)}</b><span>${(v.vg||[]).length?brl.format(v.vgt||0)+' em despesas':'nenhuma registrada'}</span></div>`;
   // o que propôs
   $('picks').innerHTML=bar5(v)+ORDER.map(c=>`<button class="pick k-${c} num" type="button" data-c="${c}" ${v.cat[c]?'':'disabled'}><i></i><span>${CAT[c][0]}</span><b>${nf(v.cat[c])}</b><span class="ar" aria-hidden="true">›</span></button>`).join('');
@@ -418,7 +418,7 @@ P.sobre=function(){
   $('m-pres').innerHTML=`<b>Contamos como presente quem votou.</b> Em cada reunião da Câmara, quem votou (sim, não, abstenção, ou o presidente, que não vota) estava lá. Quem aparece como “ausente” em todas as votações da reunião teve falta.<br><br>Foram ${D.sess} reuniões${D.pri?' de '+dt(D.pri):''} até ${D.ult?dt(D.ult):'agora'}. <b>A Câmara só começou a registrar o voto de cada vereador em ${D.pri?mesAno(D.pri.replace(/-/g,'')):'2026'}.</b> Antes disso não há registro, e o site não acusa ninguém por esse período.<br><br>Reuniões com votação só “de braço levantado”, sem lista de nomes, não entram. A lista oficial de frequência da Câmara é feita em outros momentos da reunião e pode dar números um pouco diferentes.`;
   $('m-sal').innerHTML=`O valor é o mesmo para os ${V.length} e foi fixado pela <a href="${esc(D.sal.u)}" target="_blank" rel="noopener">${esc(D.sal.lei)}</a>. É o valor bruto. O contador da página inicial é uma estimativa: ${V.length} salários por mês, proporcional ao tempo desde a posse, sem 13º nem outros pagamentos.`+(D.sal.confirmado?'':' <b>O valor de R$ '+nf(D.sal.v)+' foi publicado pela imprensa local e ainda precisa ser conferido no texto oficial.</b>');
   $('m-com').textContent=`Comissões são grupos de vereadores que estudam os projetos antes da votação: Finanças e Orçamento, Justiça e Redação, Educação e Cultura, e Assuntos Socioeconômicos. Contamos as ${nf(D.ncom||0)} reuniões de comissão${D.pricom?' desde '+dt(D.pricom):''} que têm lista de presença no sistema. Cada vereador só é contado nas comissões de que faz parte. Reunião sem lista não entra: falta de registro não é falta do vereador.`;
-  if($('m-loc'))$('m-loc').textContent=`Os votos de 2024 são os dados oficiais do TSE, somados por escola onde se vota. O bairro de cada escola é o que a Justiça Eleitoral informa. Mostramos as 5 escolas onde cada vereador teve mais votos e quantos pedidos de conserto ele fez para aquele bairro. “Voto concentrado” quer dizer que boa parte dos votos veio dessas 5 escolas; na média da Câmara, ${D.locm??'–'}%. Atenção: o eleitor vota perto de onde morava quando tirou o título, que nem sempre é onde mora hoje. Por isso o cruzamento mostra uma tendência, não uma regra.`;
+  if($('m-loc'))$('m-loc').textContent=`Os votos de 2024 são os dados oficiais do TSE, somados por escola onde se vota. O bairro de cada escola é o que a Justiça Eleitoral informa. Mostramos as 5 escolas onde cada vereador teve mais votos e quantos pedidos de melhoria ele fez para aquele bairro. “Voto concentrado” quer dizer que boa parte dos votos veio dessas 5 escolas; na média da Câmara, ${D.locm??'–'}%. Atenção: o eleitor vota perto de onde morava quando tirou o título, que nem sempre é onde mora hoje. Por isso o cruzamento mostra uma tendência, não uma regra.`;
   if($('m-blo'))$('m-blo').textContent=`“Com quem vota” olha só as ${nf(D.ndiv||0)} votações em que a Câmara se dividiu, ou seja, em que pelo menos um vereador votou diferente. Quando todos votam igual, não dá para comparar ninguém. Para cada dupla de vereadores, contamos quantas vezes os dois votaram igual. Só comparamos duplas que votaram juntas pelo menos 8 vezes. “Projetos da Prefeitura” são as ${nf(D.nexe||0)} votações de projetos enviados pelo prefeito. A porcentagem é de votos “sim”. Ausências não contam.`;
   $('m-vot').textContent=`Só entram as votações em que o sistema da Câmara registra o voto de cada vereador: ${nf(D.nvot)}${D.pri?' desde '+dt(D.pri):''}. Em ${nf(D.unan)} delas, todos votaram igual.`;
   $('m-erro').innerHTML=`Escreva para <b>${esc(CONFIG.contato)}</b> com o link da proposta ou da página. A correção é feita rápido.`;
