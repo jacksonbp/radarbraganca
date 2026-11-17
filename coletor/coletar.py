@@ -508,6 +508,33 @@ def montar():
             else:
                 V[i]["F"] += 1
 
+    # quem vota com quem: só nas votações divididas (alguém votou diferente)
+    ATIVOS = ("a favor", "contra", "abstencao")
+    div = []
+    for vt in votos:
+        a = {i: r for i, r in vt["v"].items() if r in ATIVOS}
+        if len(a) >= 2 and len(set(a.values())) > 1:
+            div.append(a)
+    par = defaultdict(lambda: [0, 0])
+    for a in div:
+        for i in a:
+            for j in a:
+                if i < j:
+                    par[(i, j)][1] += 1
+                    par[(i, j)][0] += a[i] == a[j]
+    # alinhamento com a Prefeitura: votos nos projetos do Executivo
+    exe = [vt for vt in votos if norm(vt["a"]).startswith("executivo")]
+    for i, v in enumerate(V):
+        jt = []
+        for j, w in enumerate(V):
+            if j != i:
+                igual, total = par.get((min(i, j), max(i, j)), (0, 0))
+                if total >= 8:
+                    jt.append([w["id"], round(igual / total * 100), total])
+        v["jt"] = sorted(jt, key=lambda x: (-x[1], -x[2]))
+        rs = [vt["v"][i] for vt in exe if vt["v"].get(i) in ATIVOS]
+        v["gov"] = [sum(r == "a favor" for r in rs), len(rs)]
+
     agora = datetime.now(BRT)
     dados = {
         "gerh": agora.isoformat(timespec="seconds"), "ger": agora.strftime("%Y-%m-%d"), "posse": POSSE,
@@ -515,8 +542,8 @@ def montar():
         "sess": len(sess_ok), "ult": max((d for _, d in sess_ok), default=""), "pri": min((d for _, d in sess_ok), default=""), "semreg": len(semreg),
         "ncom": ncom, "pricom": pricom, "comissoes": COMISSOES,
         "bairros": [b for b, _ in bairros], "bairrosn": [n for _, n in bairros],
-        "rep": rep,
-        "v": [{k: v.get(k) for k in ("id", "ap", "nome", "part", "mesa", "foto", "email", "url", "ficha", "cat", "vs", "vn", "va", "P", "A", "F", "naos", "vot", "ant", "vg", "vgt", "cm")} for v in V],
+        "rep": rep, "ndiv": len(div), "nexe": len(exe),
+        "v": [{k: v.get(k) for k in ("id", "ap", "nome", "part", "mesa", "foto", "email", "url", "ficha", "cat", "vs", "vn", "va", "P", "A", "F", "naos", "vot", "ant", "vg", "vgt", "cm", "jt", "gov")} for v in V],
         "items": IT,
     }
     conferir(dados)

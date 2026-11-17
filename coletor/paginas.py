@@ -262,7 +262,7 @@ for v in V:
   <p class="crumbs"><a href="/">Início</a> › <a href="/vereadores/">Vereadores</a> › {e(v['ap'])}</p>
   <div class="prof">{foto}<div><h1>{e(v['ap'])}</h1><p class="civil">{e(v['nome'])}</p><div class="tags">{tags}</div><div class="contato">{contato}</div></div></div>
   <div class="kpis" id="kpis"></div>
-  <nav class="subnav" aria-label="Nesta página"><a href="#s-propostas">Propostas</a><a href="#s-ruas">Ruas que voltam</a><a href="#s-votos">Votos e comissões</a><a href="#s-viagens">Viagens</a></nav>
+  <nav class="subnav" aria-label="Nesta página"><a href="#s-propostas">Propostas</a><a href="#s-ruas">Ruas que voltam</a><a href="#s-votos">Votos e comissões</a><a href="#s-blocos">Com quem vota</a><a href="#s-viagens">Viagens</a></nav>
 </section>
 <section class="wrap">
   <div class="cols">
@@ -282,6 +282,13 @@ for v in V:
   <div class="cols">
     <div class="box"><h3>Como votou</h3><div id="votos"></div></div>
     <div class="box"><h3>Comissões</h3><div id="com"></div><h3 style="margin-top:22px">Comparado com 2021–2024</h3><div id="ant"></div></div>
+  </div>
+</section>
+<section class="wrap" id="s-blocos">
+  <p class="eyebrow">Votações divididas</p><h2>Com quem vota e quanto apoia a Prefeitura</h2>
+  <div class="cols">
+    <div class="box"><h3>Com quem vota</h3><div id="jt"></div></div>
+    <div class="box"><h3>Projetos da Prefeitura</h3><div id="gov"></div></div>
   </div>
 </section>
 <section class="wrap" id="s-viagens">
@@ -364,6 +371,7 @@ sobre = """
     <details open><summary>Presença nas comissões</summary><p id="m-com"></p></details>
     <details open><summary>Os grupos de propostas</summary><p>A mesma regra vale para todos. <b>Indicação</b> é pedido de melhoria. <b>Pedido de informação</b>, <b>requerimento</b> e moção de <b>apelo</b> são cobranças. Moções, requerimentos e projetos que dão parabéns, votos de pesar, título, medalha, nome de rua ou criam data comemorativa são <b>homenagens</b>. Os demais projetos são <b>propostas de lei</b>. Moções de apoio ou repúdio e regras internas da Câmara ficam em <b>outros</b>.</p></details>
     <details open><summary>Votos</summary><p id="m-vot"></p></details>
+    <details open><summary>Com quem vota e apoio à Prefeitura</summary><p id="m-blo"></p></details>
     <details open><summary>Salário</summary><p id="m-sal"></p></details>
     <details open><summary>Bairros e ruas</summary><p>O bairro e a rua são lidos do texto oficial de cada pedido (o trecho “Rua tal – Bairro tal”). Quando o texto não segue esse formato, o pedido não entra no cruzamento por rua, mas continua aparecendo na busca por palavra.</p></details>
     <details open><summary>Viagens oficiais</summary><p>Do Portal da Transparência da Câmara (Despesas de Viagens). O valor de cada viagem é lido da prestação de contas oficial (PDF). Ele soma alimentação e hospedagem de todos que foram na viagem, inclusive motorista e servidores, e não inclui combustível nem pedágio. Viagem com mais de um vereador aparece na página de cada um.</p></details>
