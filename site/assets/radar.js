@@ -70,6 +70,12 @@ V.forEach((v,i)=>{const w=v.ap.split(/\s+/).filter(x=>!/^(da|de|do|dos|das)$/i.t
 const foto=(v,cls='av')=>v.foto?`<img class="${cls}" src="/fotos/${v.id}.jpg" alt="" loading="lazy">`:`<span class="${cls} ph0" style="background:hsl(${hue(v.i)} 80% 92%);color:hsl(${hue(v.i)} 55% 28%);display:grid;place-items:center;font-weight:700" aria-hidden="true">${v.in}</span>`;
 const av=i=>foto(V[i]);
 D.rep.forEach(g=>{g.items=g.ids.map(n=>IT[n])});
+/* contagem pelo tipo oficial da Câmara (inclui coautoria, como a busca da Câmara por autor) */
+const TIPOS=[['ind','Indicações','indicação',/^Indica/,'pedidos à Prefeitura'],['ped','Pedidos de informação','pedido de informação',/^Pedido de Informa/,'perguntas oficiais à Prefeitura'],
+ ['req','Requerimentos','requerimento',/^Requerimento/,'pedidos a outros órgãos e à Câmara'],['moc','Moções','moção',/^Mo/,'apoio, repúdio ou homenagem'],
+ ['pl','Projetos de lei','projeto de lei',/^Projeto de Lei/,'inclui lei complementar'],['pr','Outros projetos','outro projeto',/^Projeto/,'resolução e decreto legislativo']];
+V.forEach(v=>{v.tp={};TIPOS.forEach(t=>v.tp[t[0]]=0)});
+IT.forEach(it=>{const t=TIPOS.find(t=>t[3].test(it[1]));if(t)it[6].forEach(i=>V[i].tp[t[0]]++)});
 const pctPres=v=>{const t=v.P+v.A+v.F;return t?Math.round(v.P/t*100):null};
 
 /* ---------- cartão de proposta ---------- */
@@ -258,7 +264,7 @@ P.vereadores=function(){
   $('csv').addEventListener('click',()=>{
     const C=[['Vereador',v=>v.ap],['Nome completo',v=>v.nome],['Partido',v=>v.part],['Reuniões presente',v=>v.P],['Ausências justificadas',v=>v.A],['Faltas',v=>v.F],
       ['Comissões presente',v=>(v.cm||{}).P||0],['Comissões faltas',v=>(v.cm||{}).F||0],['Propostas total',v=>v.tot],['Pedidos de melhoria no bairro',v=>v.cat.b],['Cobranças',v=>v.cat.c],
-      ['Homenagens',v=>v.cat.h],['Projetos de lei',v=>v.cat.l],['Outras',v=>v.cat.o],['Votos sim',v=>v.vs],['Votos não',v=>v.vn],['Abstenções',v=>v.va],
+      ['Homenagens',v=>v.cat.h],['Projetos de lei',v=>v.cat.l],['Outras',v=>v.cat.o],...TIPOS.map(([k,pl])=>[pl+' (contagem da Câmara)',v=>v.tp[k]]),['Votos sim',v=>v.vs],['Votos não',v=>v.vn],['Abstenções',v=>v.va],
       ['Projetos da Prefeitura votados',v=>(v.gov||[])[1]||0],['Votou sim nesses',v=>(v.gov||[])[0]||0],['Viagens',v=>(v.vg||[]).length],['Gasto em viagens (R$)',v=>String(v.vgt||0).replace('.',',')],
       ['Votos em 2024',v=>v.vot||0],['Ficha na Câmara',v=>v.url]];
     const q=x=>{x=String(x??'');return /[;"\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x};
@@ -282,6 +288,7 @@ P.comparar=function(){
     ['Presença',[['Presença nas reuniões',pres,1],['Faltas nas reuniões',v=>[v.F,''],0],['Presença nas comissões',com,1,'grupos de vereadores que analisam os projetos']]],
     ['Propostas desde a posse',[['Total de propostas',v=>[v.tot,''],0],['Pedidos de melhoria no bairro',v=>[v.cat.b,''],0,'tapar buraco, podar árvore, trocar lâmpada'],
       ['Cobranças à Prefeitura',v=>[v.cat.c,''],0,'perguntas e pedidos de explicação'],['Projetos de lei',v=>[v.cat.l,''],0,'propostas de novas regras para a cidade'],['Homenagens',v=>[v.cat.h,''],0,'parabéns, títulos, nomes de rua']]],
+    ['Na contagem oficial da Câmara',TIPOS.map(([k,pl,,,ex])=>[pl,v=>[v.tp[k],''],0,ex])],
     ['Votos e gastos',[['Votos “não”',v=>[v.vn,''],0,'vezes em que votou contra'],['Apoio aos projetos da Prefeitura',gov,1,'votou “sim” nos projetos enviados pelo prefeito'],
       ['Viagens oficiais',v=>[(v.vg||[]).length,(v.vg||[]).length?brl.format(v.vgt||0):''],0],['Votos na eleição de 2024',v=>[v.vot||0,''],0]]]];
   const fmt=(n,pc)=>n==null?'–':pc?n+'%':nf(n);
@@ -374,6 +381,9 @@ P.vereador=function(id){
     <div class="kpi"><span class="eyebrow">Presença nas comissões</span><b class="num">${tc?Math.round(cm.P/tc*100)+'%':'–'}</b><span>${tc?`${cm.P} de ${tc} reuniões · ${cm.F} ${cm.F===1?'falta':'faltas'}`:'sem lista de presença registrada'}</span></div>
     <div class="kpi"><span class="eyebrow">Propostas desde a posse</span><b class="num" style="color:var(--b)">${nf(v.tot)}</b><span>${nf(v.cat.b)} pedidos de melhoria no bairro · ${nf(v.cat.c)} cobranças à Prefeitura · ${nf(v.cat.l)} projetos de lei</span></div>
     <div class="kpi"><span class="eyebrow">Viagens oficiais</span><b class="num" style="color:var(--c)">${nf((v.vg||[]).length)}</b><span>${(v.vg||[]).length?brl.format(v.vgt||0)+' em despesas':'nenhuma registrada'}</span></div>`;
+  $('kpis').insertAdjacentHTML('afterend',`<div class="tipos"><p class="eyebrow">Na contagem oficial da Câmara, desde a posse</p>
+    <ul>${TIPOS.map(([k,pl,sg])=>`<li><b class="num">${nf(v.tp[k])}</b><span>${v.tp[k]===1?sg:pl.toLowerCase()}</span></li>`).join('')}</ul>
+    <small>Os mesmos números que aparecem na busca da Câmara por autor, contando também as propostas feitas junto com outros vereadores.${v.url?` <a href="${esc(v.url)}" target="_blank" rel="noopener">Ficha oficial ↗</a>`:''}</small></div>`);
   // o que propôs
   $('picks').innerHTML=bar5(v)+ORDER.map(c=>`<button class="pick k-${c} num" type="button" data-c="${c}" ${v.cat[c]?'':'disabled'}><i></i><span>${CAT[c][0]}</span><b>${nf(v.cat[c])}</b><span class="ar" aria-hidden="true">›</span></button>`).join('');
   $('picks').addEventListener('click',e=>{const p=e.target.closest('.pick');if(p&&!p.disabled)openCat(p.dataset.c,i)});
