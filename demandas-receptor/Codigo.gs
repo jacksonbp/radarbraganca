@@ -147,7 +147,7 @@ function avisarTelegram(v) {
   try {
     const props = PropertiesService.getScriptProperties();
     const token = props.getProperty('TELEGRAM_TOKEN'), chat = props.getProperty('TELEGRAM_CHAT');
-    if (!token || !chat) return;
+    if (!token || !chat) { console.warn('Telegram: falta TELEGRAM_TOKEN ou TELEGRAM_CHAT'); return; }
     const linhas = [
       '📣 Voz do Bairro · ' + v.protocolo,
       v.tipo + ' · ' + v.tema,
@@ -162,8 +162,9 @@ function avisarTelegram(v) {
       '',
       'Planilha: ' + SpreadsheetApp.openById(PLANILHA_ID).getUrl()
     ].filter((x, i, a) => x !== '' || (a[i - 1] !== '' && i > 0));
-    enviarTelegram(token, chat, linhas.join(BR).slice(0, 4000));
-  } catch (_) { /* aviso é extra: nunca impede a gravação */ }
+    const r = enviarTelegram(token, chat, linhas.join(BR).slice(0, 4000));
+    if (!r.ok) console.error('Telegram recusou: ' + JSON.stringify(r));
+  } catch (err) { console.error('Telegram falhou: ' + err); /* aviso é extra: nunca impede a gravação */ }
 }
 
 const BR = String.fromCharCode(10);
