@@ -337,7 +337,7 @@ comparar = """
 <section class="wrap phead">
   <p class="eyebrow">Lado a lado</p>
   <h1>Comparar vereadores</h1>
-  <p class="lead">Escolha dois vereadores. Os números são os mesmos para todos e vêm dos dados oficiais. A barra mostra cada número perto do maior da Câmara.</p>
+  <p class="lead">Escolha dois vereadores. Os números são os mesmos para todos e vêm dos dados oficiais. Nas barras, quem tem o número maior fica com a barra cheia, e as porcentagens vão de 0 a 100%.</p>
   <div class="vs" id="vs"></div>
   <div id="cmp"></div>
   <p class="mute" style="font-size:14px;margin-top:18px">Desde a posse, em 1º de janeiro de 2025. Como cada número é contado: <a href="/sobre/">Sobre</a>.</p>

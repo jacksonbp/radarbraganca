@@ -271,7 +271,7 @@ P.comparar=function(){
   const gov=v=>v.gov&&v.gov[1]?[pp(v.gov[0],v.gov[1]),`${v.gov[0]} de ${v.gov[1]} projetos`]:[null,''];
   const G=[
     ['Presença',[['Presença nas reuniões',pres,1],['Faltas nas reuniões',v=>[v.F,''],0],['Presença nas comissões',com,1]]],
-    ['Propostas desde a posse',[['Total de propostas',v=>[v.tot,''],0],['Pedidos de conserto',v=>[v.cat.b,'na rua ou no bairro'],0],
+    ['Propostas desde a posse',[['Total de propostas',v=>[v.tot,''],0],['Pedidos de conserto',v=>[v.cat.b,''],0],
       ['Cobranças à Prefeitura',v=>[v.cat.c,''],0],['Projetos de lei',v=>[v.cat.l,''],0],['Homenagens',v=>[v.cat.h,''],0]]],
     ['Votos e gastos',[['Votos “não”',v=>[v.vn,''],0],['Apoio aos projetos da Prefeitura',gov,1],
       ['Viagens oficiais',v=>[(v.vg||[]).length,(v.vg||[]).length?brl.format(v.vgt||0):''],0],['Votos na eleição de 2024',v=>[v.vot||0,''],0]]]];
@@ -284,7 +284,7 @@ P.comparar=function(){
     const j=(a.jt||[]).find(x=>x[0]===b.id);
     $('cmp').style.cssText=`--ha:${hue(a.i)};--hb:${hue(b.i)}`;
     $('cmp').innerHTML=G.map(([tit,L])=>`<div class="cg"><h2>${tit}</h2>${L.map(([n,f,pc])=>{
-      const max=pc?100:Math.max(1,...V.map(v=>f(v)[0]||0)), [x,dx]=f(a), [y,dy]=f(b);
+      const [x,dx]=f(a), [y,dy]=f(b), max=pc?100:Math.max(1,x||0,y||0);
       const w=n=>n==null?0:Math.max(2,Math.round(n/max*100));
       return `<div class="cr"><div class="cr-l">${n}</div>
         <div class="cr-v a"><b class="num">${fmt(x,pc)}</b><small>${dx}</small><i style="--w:${w(x)}%"></i></div>
