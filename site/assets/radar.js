@@ -298,7 +298,7 @@ P.vereador=function(id){
       `<div class="gov num"><b>${pc}%</b><span>a favor dos projetos enviados pela Prefeitura<br>${nf(g[0])} de ${nf(g[1])} votos</span></div>
        <div class="gbar" aria-hidden="true">${todos.map(x=>`<i style="left:${esc_(x)}%"></i>`).join('')}<i class="me" style="left:${esc_(g[0]/g[1]*100)}%"></i></div>
        <div class="gleg num"><span>${lo}%</span><span>100%</span></div>
-       <p class="small">Média da Câmara: <b class="num">${med}%</b>. ${pos===1?'É quem mais apoia':pos===todos.length?'É quem menos apoia':'É o '+pos+'º que mais apoia'} os projetos da Prefeitura, entre ${todos.length} vereadores.</p>
+       <p class="small">Média da Câmara: <b class="num">${med}%</b>. ${pos===1?'É o índice mais alto':pos===todos.length?'É o índice mais baixo':'É o '+pos+'º índice mais alto'} de apoio aos projetos da Prefeitura, entre ${todos.length} vereadores.</p>
        <p class="mute small">Cada ponto é um vereador; o vermelho é ${esc(v.ap)}. Apoiar ou não a Prefeitura não é bom nem ruim por si só: mostra de que lado cada um costuma ficar.</p>`;
   }
   $('votos').innerHTML=`<div class="vote num"><div><b>${nf(v.vs)}</b><span>vezes sim</span></div><div class="n"><b>${nf(v.vn+v.va)}</b><span>${v.va?'não ou abstenção':'vezes não'}</span></div></div>

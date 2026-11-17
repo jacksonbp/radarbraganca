@@ -388,6 +388,23 @@ sobre = """
   </div>
 </section>
 """
+# Registro público de correções: acrescente uma linha a cada erro corrigido.
+# Formato: ("dd/mm/aaaa", "o que estava errado e o que foi feito")
+CORRECOES = [
+]
+lista_corr = "".join(f"<li><b>{e(d)}</b> · {e(t)}</li>" for d, t in CORRECOES) or     "<li>Nenhuma correção registrada até agora. O registro começou em 17/11/2026.</li>"
+sobre += f"""
+<section class="wrap" id="correcoes">
+  <p class="eyebrow">Transparência do próprio site</p>
+  <h2>Correções, direito de resposta e aviso legal</h2>
+  <div class="method">
+    <details open><summary>Correções</summary><p>Quando alguém aponta um erro, conferimos na fonte oficial. Se o erro for nosso, corrigimos e anotamos aqui a data e o que mudou.</p><ul>{lista_corr}</ul></details>
+    <details open><summary>Direito de resposta</summary><p>Qualquer vereador, a Prefeitura ou a Câmara pode mandar uma nota sobre os dados publicados para <a href="mailto:bragancaterraquerida@gmail.com">bragancaterraquerida@gmail.com</a>. A nota é publicada sem cortes ao lado dos dados de quem a enviou, desde que trate dos números mostrados aqui.</p></details>
+    <details open><summary>Aviso legal</summary><p>Este não é um site oficial. É um projeto independente, sem ligação com a Câmara, a Prefeitura, candidatos ou partidos, e não faz propaganda a favor ou contra ninguém. Todas as informações vêm de dados que os próprios órgãos públicos publicam, como manda a Lei de Acesso à Informação (Lei 12.527/2011). Cada número tem a fonte indicada. O site mostra fatos e contagens, não dá notas nem acusa ninguém. Se um dado oficial estiver errado na origem, o erro aparece aqui também até que o órgão o corrija.</p></details>
+    <details open><summary>Privacidade</summary><p>O site não usa cookies e não identifica quem o visita. As visitas são contadas de forma anônima, sem guardar quem é a pessoa. As fontes de letra são carregadas do Google Fonts. As mensagens enviadas pela página Voz do Bairro ficam guardadas com a equipe, não são publicadas e só são repassadas com autorização de quem escreveu. Para apagar uma mensagem, escreva para o e-mail acima.</p></details>
+  </div>
+</section>
+"""
 escreve("sobre/index.html", pagina("sobre", "Sobre · Radar Bragança",
         "Como o Radar Bragança conta os números: fontes oficiais, regras e como pedir correção.",
         "/sobre/", sobre, "Radar.sobre()"))
