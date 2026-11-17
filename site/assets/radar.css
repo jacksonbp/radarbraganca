@@ -407,3 +407,9 @@ section[id]{scroll-margin-top:118px}
 .rt-l span{display:inline-flex;align-items:center;gap:6px}
 .rt-l span i{width:10px;height:10px;border-radius:3px;display:inline-block}
 .rt .rt-d{margin:12px 0 0;font-size:13.5px;line-height:1.5}
+/* revisão de layout */
+.cols{align-items:start}
+@media(max-width:899px){.menu .cta{order:-1}}
+.crumbs a,.rank .nm a,.ext{display:inline-block;padding:5px 0;margin:-5px 0}
+.ext{padding:6px 2px}
+.foot2 li a{display:inline-block;padding:4px 0}

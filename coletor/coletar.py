@@ -455,6 +455,29 @@ def montar():
                 b = re.sub(r"^(bairro|jardim|jd|vila|vl|parque|pq|residencial|res|recanto|loteamento|chacaras?|estancia|condominio|conjunto|nucleo|cidade|do|da|dos|das|de)\s+", "", b)
             return b.strip()
         todos_b = {chave_b(it[10]) for it in IT if it[4] == "b" and it[10]}
+        # o TSE grava tudo em maiúsculas e sem acento: devolve acentos e minúsculas nas palavras de ligação
+        ACENTO = {"agua": "Água", "aguas": "Águas", "braganca": "Bragança", "julio": "Júlio", "sao": "São", "lourenco": "Lourenço",
+                  "taboao": "Taboão", "amelia": "Amélia", "libania": "Libânia", "colegio": "Colégio", "casper": "Cásper", "libero": "Líbero",
+                  "goncalves": "Gonçalves", "jose": "José", "mauricio": "Maurício", "joao": "João", "antonio": "Antônio", "sergio": "Sérgio",
+                  "lucia": "Lúcia", "ignea": "Ígnea", "camara": "Câmara", "ciencias": "Ciências", "lavapes": "Lavapés", "ii": "II",
+                  "ifsp": "IFSP", "profa": "Profª", "profa.": "Profª."}
+        LIGA = {"de", "da", "do", "das", "dos", "e", "d'aparecida"}
+        grafia = {norm(it[10]): it[10] for it in IT if it[10]}
+        def arruma(t):
+            if norm(t) in grafia:
+                return grafia[norm(t)]
+            out = []
+            for n, p in enumerate(t.replace("-", " - ").split()):
+                k = norm(p)
+                if n == 0 and k in ("ee.", "ee", "em.", "em"):
+                    out.append(k[:2].upper())
+                elif k in ACENTO:
+                    out.append(ACENTO[k])
+                elif n and k in LIGA:
+                    out.append(p.lower() if k != "d'aparecida" else "D'Aparecida")
+                else:
+                    out.append(p)
+            return " ".join(out).replace(" - ", "-")
         por_nome = {norm(n): c for n, c in tse["votos"].items()}
         concs = []
         for i, v in enumerate(V):
@@ -465,7 +488,7 @@ def montar():
             total = sum(c.values())
             meus = Counter(chave_b(it[10]) for it in IT if it[4] == "b" and it[10] and i in it[6])
             top = list(c.items())[:5]
-            v["loc"] = [[tse["locais"].get(k, {}).get("nome", "?"), tse["locais"].get(k, {}).get("bairro", ""), n,
+            v["loc"] = [[arruma(tse["locais"].get(k, {}).get("nome", "?")), arruma(tse["locais"].get(k, {}).get("bairro", "")), n,
                          round(n / total * 100, 1),
                          meus.get(chave_b(tse["locais"].get(k, {}).get("bairro", ""))) or (0 if chave_b(tse["locais"].get(k, {}).get("bairro", "")) in todos_b else None)]
                         for k, n in top]
