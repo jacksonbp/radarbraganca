@@ -67,13 +67,14 @@ function doPost(e) {
 // Abrir o endereço no navegador mostra só isto (serve para testar se está no ar).
 const ABA_PUBLICA = 'Problemas dos bairros';
 const CAMPOS_PUBLICOS = ['Publicar', 'Bairro', 'Problema', 'Local público', 'Situação', 'Atualizado em'];
-const ESTADOS_PUBLICOS = ['Publicado', 'Encaminhado', 'Aguardando retorno', 'Solução informada', 'Resolvido'];
+const ESTADOS_PUBLICOS = ['Publicado', 'Em análise', 'Encaminhado', 'Aguardando retorno', 'Solução informada', 'Resolvido'];
 
 function doGet(e) {
   if (!e || !e.parameter || e.parameter.painel !== 'bairros') {
     return resposta({ ok: true, servico: 'Voz do Bairro' });
   }
   try {
+    try { sincronizarPainel(); } catch (err) { console.error('Sincronizar painel: ' + err); }
     const aba = SpreadsheetApp.openById(PLANILHA_ID).getSheetByName(ABA_PUBLICA);
     if (!aba) return resposta({ ok: false });
     const [cabecalho, ...linhas] = aba.getDataRange().getValues();
@@ -96,6 +97,71 @@ function problemasPublicos(linhas) {
         ? Utilities.formatDate(atualizado, 'America/Sao_Paulo', 'yyyy-MM-dd') : ''
     }];
   });
+}
+
+// ------------------------------------------------------------------ Demandas -> painel público
+// Quando a Situação de uma demanda (aba Demandas) muda para Em análise, Encaminhada ou Respondida,
+// cria ou atualiza a linha dela na aba pública, já com Publicar marcado. Arquivada tira do site.
+// Vão para o site só: bairro, assunto e local. Nome, contato, protocolo e texto original nunca vão.
+// Roda sozinho toda vez que o site abre o painel (no máximo 1 vez por minuto) e pode ser rodado pelo editor.
+const PARA_PUBLICO = { 'Em análise': 'Em análise', 'Encaminhada': 'Encaminhado', 'Respondida': 'Solução informada' };
+
+function sincronizarPainel() {
+  const cache = CacheService.getScriptCache();
+  if (cache.get('sinc')) return;
+  cache.put('sinc', '1', 60);
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) return;
+  try {
+    const pl = SpreadsheetApp.openById(PLANILHA_ID);
+    const dem = pl.getSheetByName(ABA), pub = pl.getSheetByName(ABA_PUBLICA);
+    if (!dem || !pub || dem.getLastRow() < 2) return;
+    // Colunas internas da aba pública (não vão para o site): G = Protocolo, H = Situação na aba Demandas.
+    if (pub.getRange(1, 7).getValue() !== 'Protocolo (interno)') {
+      pub.getRange(1, 7, 1, 2).setValues([['Protocolo (interno)', 'Situação em Demandas (interno)']]).setFontWeight('bold');
+    }
+    pub.getRange('E2:E').setDataValidation(SpreadsheetApp.newDataValidation()
+      .requireValueInList(ESTADOS_PUBLICOS, true).setAllowInvalid(false).build());
+
+    const linhasDem = dem.getRange(2, 1, dem.getLastRow() - 1, 12).getValues();
+    const nPub = Math.max(pub.getLastRow() - 1, 0);
+    const linhasPub = nPub ? pub.getRange(2, 1, nPub, 8).getValues() : [];
+    const onde = {};
+    linhasPub.forEach((r, i) => { if (r[6]) onde[r[6]] = i; });
+    const novas = [], hoje = new Date();
+
+    linhasDem.forEach(r => {
+      const protocolo = String(r[1] || ''), sit = String(r[11] || '');
+      if (!protocolo) return;
+      const i = onde[protocolo];
+      if (i === undefined) {
+        if (!PARA_PUBLICO[sit]) return;
+        novas.push([true, limparPublico(r[4], 120), limparPublico(r[3], 140), limparPublico(r[5], 160), PARA_PUBLICO[sit], hoje, protocolo, sit]);
+        return;
+      }
+      if (linhasPub[i][7] === sit) return; // nada mudou na aba Demandas; respeita o que foi editado à mão
+      const linha = i + 2;
+      if (sit === 'Arquivada') pub.getRange(linha, 1).setValue(false);
+      else if (PARA_PUBLICO[sit]) pub.getRange(linha, 5, 1, 2).setValues([[PARA_PUBLICO[sit], hoje]]);
+      pub.getRange(linha, 8).setValue(sit);
+    });
+    if (novas.length) {
+      const ini = pub.getLastRow() + 1;
+      pub.getRange(ini, 1, novas.length, 8).setValues(novas);
+      pub.getRange(ini, 1, novas.length, 1).insertCheckboxes().setValues(novas.map(() => [true]));
+      pub.getRange(ini, 6, novas.length, 1).setNumberFormat('dd/mm/yyyy');
+    }
+  } finally { lock.releaseLock(); }
+}
+
+function limparPublico(x, max) {
+  return String(x == null ? '' : x).replace(/^'/, '').trim().slice(0, max);
+}
+
+/** Para rodar pelo editor: sincroniza agora, sem esperar o site abrir o painel. */
+function sincronizarAgora() {
+  CacheService.getScriptCache().remove('sinc');
+  sincronizarPainel();
 }
 
 function prepararPainelBairros() {

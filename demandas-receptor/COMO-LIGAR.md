@@ -64,3 +64,15 @@ Para ligar (uma vez):
 5. **Implantar → Gerenciar implantações → Editar → Nova versão → Implantar.**
 
 Para desligar: apague a propriedade `TELEGRAM_CHAT`.
+
+## Painel automático
+
+Na aba **Demandas**, ao mudar a **Situação** de uma linha:
+- **Em análise** → a demanda aparece no site (aba "Problemas dos bairros", Publicar marcado) com bairro, assunto e local.
+- **Encaminhada** → no site vira "Encaminhado". **Respondida** → "Solução informada".
+- **Arquivada** → sai do site (Publicar desmarcado).
+
+Nome, contato, protocolo e o texto original nunca vão para o site. A atualização acontece quando alguém abre o
+painel no site (no máximo 1 vez por minuto); para forçar, rode `sincronizarAgora` no editor.
+O que você editar à mão na aba "Problemas dos bairros" (texto, local, "Resolvido") é respeitado até a Situação
+mudar de novo na aba Demandas. Confira o **Local público**: tire número de casa se puder identificar quem reclamou.
