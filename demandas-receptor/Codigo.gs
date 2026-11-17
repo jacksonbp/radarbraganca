@@ -92,7 +92,7 @@ function problemasPublicos(linhas) {
     const bairroPublico = String(bairro || '').trim().slice(0, 120);
     if (!titulo || !bairroPublico) return [];
     return [{
-      bairro: bairroPublico, titulo, local: String(local || '').trim().slice(0, 160), situacao,
+      bairro: bairroPublico, titulo, local: localSeguro(local), situacao,
       atualizado: atualizado instanceof Date && !isNaN(atualizado.getTime())
         ? Utilities.formatDate(atualizado, 'America/Sao_Paulo', 'yyyy-MM-dd') : ''
     }];
@@ -136,7 +136,7 @@ function sincronizarPainel() {
       const i = onde[protocolo];
       if (i === undefined) {
         if (!PARA_PUBLICO[sit]) return;
-        novas.push([true, limparPublico(r[4], 120), limparPublico(r[3], 140), limparPublico(r[5], 160), PARA_PUBLICO[sit], hoje, protocolo, sit]);
+        novas.push([true, limparPublico(r[4], 120), limparPublico(r[3], 140), localSeguro(r[5]), PARA_PUBLICO[sit], hoje, protocolo, sit]);
         return;
       }
       if (linhasPub[i][7] === sit) return; // nada mudou na aba Demandas; respeita o que foi editado à mão
@@ -152,6 +152,24 @@ function sincronizarPainel() {
       pub.getRange(ini, 6, novas.length, 1).setNumberFormat('dd/mm/yyyy');
     }
   } finally { lock.releaseLock(); }
+}
+
+/**
+ * Protege quem reclamou: tira do local o número da casa, complemento (casa, apto, bloco, lote...),
+ * CEP, telefone e e-mail. Fica só a rua ou o ponto de referência. Ex.: "Rua X, 508 508" -> "Rua X".
+ */
+function localSeguro(x) {
+  const B = '(?:^|(?<=[^A-Za-zÀ-ÿ]))', E = '(?=[^A-Za-zÀ-ÿ]|$)'; // limites de palavra que entendem acento
+  let s = String(x == null ? '' : x).replace(/^'/, '');
+  s = s.replace(new RegExp('[,;]?\\s*' + B + '(tel|telefone|fone|cel|celular|whats(app)?|zap|contato|cep)' + E + '[:.]?', 'gi'), ' ')
+       .replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, ' ')                          // e-mail
+       .replace(/\(?\d{2}\)?\s*9?\d{4}[-\s]?\d{4}/g, ' ')                 // telefone
+       .replace(/\d{5}-?\d{3}/g, ' ')                                     // CEP
+       .replace(new RegExp(B + '(casa|apto?|apartamento|bloco|bl|lote|lt|quadra|qd|sobrado|fundos|complemento)' + E + '.*$', 'i'), ' ')
+       .replace(/,\s*(n[º°o]\.?\s*)?\d.*$/i, ' ')                         // ", 508 ..." até o fim
+       .replace(/\s+(n[º°o]\.?|número|numero)\s*\d.*$/i, ' ')            // "nº 508"
+       .replace(/(?<!km\s*)(\s*[-–,]?\s*\d+[a-z]?)+\s*$/i, ' ');            // números soltos no fim
+  return s.replace(/\s{2,}/g, ' ').replace(/[\s,;\-–]+$/, '').trim().slice(0, 160);
 }
 
 function limparPublico(x, max) {
