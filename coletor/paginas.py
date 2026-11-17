@@ -77,8 +77,8 @@ def pagina(ativa, titulo, descricao, url, corpo, init, imagem="/capa.jpg", titul
   <div><a class="brand" href="/">{LOGO}<span><b>RADAR</b><b>BRAGANÇA</b></span></a>
     <p>O que cada vereador de Bragança Paulista fez desde a posse, com os dados oficiais da Câmara, do TSE e do Portal da Transparência. Mesma régua para todos, sem nota nem opinião.</p></div>
   <div><h4>Páginas</h4><ul>{"".join(f'<li><a href="{h}">{n}</a></li>' for k, h, n in MENU)}</ul></div>
-  <div><h4>Contato</h4><ul><li>Achou um erro? Escreva para<br><b>bragancaterraquerida@gmail.com</b></li><li><a href="/sobre/">Como contamos os números</a></li></ul></div>
-  <p class="fine"><span data-atualizado></span> Projeto independente, sem ligação com a Câmara, a Prefeitura ou partidos.</p>
+  <div><h4>Contato</h4><ul><li>Achou um erro? Escreva para<br><a href="mailto:bragancaterraquerida@gmail.com"><b>bragancaterraquerida@gmail.com</b></a><br>Conferimos e corrigimos o mais rápido possível, e a correção fica registrada.</li><li><a href="/sobre/">Como contamos os números</a></li></ul></div>
+  <p class="fine"><span data-atualizado></span> Este não é um site oficial. Projeto independente, sem ligação com a Câmara, a Prefeitura, candidatos ou partidos. Todos os dados vêm de fontes públicas, citadas em cada página.</p>
 </div></footer>
 <script src="/dados.js?v={D['gerh']}"></script>
 <script src="/assets/radar.js?v={VER('radar.js')}"></script>
