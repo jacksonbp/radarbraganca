@@ -289,7 +289,7 @@ P.comparar=function(){
     ['Propostas desde a posse',[['Total de propostas',v=>[v.tot,''],0],['Pedidos de melhoria no bairro',v=>[v.cat.b,''],0,'tapar buraco, podar árvore, trocar lâmpada'],
       ['Cobranças à Prefeitura',v=>[v.cat.c,''],0,'perguntas e pedidos de explicação'],['Projetos de lei',v=>[v.cat.l,''],0,'propostas de novas regras para a cidade'],['Homenagens',v=>[v.cat.h,''],0,'parabéns, títulos, nomes de rua']]],
     ['Na contagem oficial da Câmara',TIPOS.map(([k,pl,,,ex])=>[pl,v=>[v.tp[k],''],0,ex])],
-    ['Votos e gastos',[['Vezes que votou “não”',v=>[v.vn,`de ${nf(v.vs+v.vn+v.va)} votações`],0,'quantas vezes votou contra um projeto'],['Apoio aos projetos da Prefeitura',gov,1,'votou “sim” nos projetos enviados pelo prefeito'],
+    ['Votos e gastos',[['Votou a favor dos projetos',v=>{const t=v.vs+v.vn+v.va;return [pp(v.vs,t),t?`votou contra ${nf(v.vn)} ${v.vn===1?'vez':'vezes'} em ${nf(t)} votações`:'']},1,'de cada 100 votações, em quantas votou “sim”'],['Apoio aos projetos da Prefeitura',gov,1,'votou “sim” nos projetos enviados pelo prefeito'],
       ['Viagens oficiais',v=>[(v.vg||[]).length,(v.vg||[]).length?brl.format(v.vgt||0):''],0],['Votos na eleição de 2024',v=>[v.vot||0,''],0]]]];
   const fmt=(n,pc)=>n==null?'–':pc?n+'%':nf(n);
   const card=(v,lado)=>`<div class="vs-c" style="--h:${hue(v.i)}">${v.foto?`<img src="/fotos/${v.id}.jpg" alt="Foto de ${esc(v.ap)}">`:`<span class="vs-ph">${esc(v.in)}</span>`}
