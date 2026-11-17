@@ -184,6 +184,7 @@ vereadores = """
   <p class="eyebrow">Um por um</p>
   <h1>Os vereadores de Bragança Paulista</h1>
   <p class="lead" id="vsub"></p>
+  <a class="cmp-cta" href="/comparar/"><span class="cmp-ic" aria-hidden="true">⇄</span><span><b>Comparar dois vereadores</b><small>Escolha dois nomes e veja os números lado a lado</small></span><span aria-hidden="true">→</span></a>
   <div class="filters">
     <label class="field">Buscar por nome<input id="q" type="search" placeholder="Ex.: Fabiana, Coxinha" autocomplete="off"></label>
     <label class="field">Partido<select id="partido"><option value="">Todos</option></select></label>
@@ -195,15 +196,7 @@ vereadores = """
   <ul class="legend" aria-label="Legenda das barras coloridas"><li class="k-b"><i></i>Pedidos nos bairros</li><li class="k-c"><i></i>Cobranças</li><li class="k-h"><i></i>Homenagens</li><li class="k-l"><i></i>Propostas de lei</li><li class="k-o"><i></i>Outros</li></ul>
   <div class="vgrid" id="grid"></div>
 </section>
-<section class="wrap" id="comparar">
-  <p class="eyebrow">Lado a lado</p>
-  <h2>Comparar dois vereadores</h2>
-  <p class="mute" style="margin:0 0 12px">Escolha dois nomes para ver os mesmos números de cada um, lado a lado.</p>
-  <div class="filters cmp-f">
-    <label class="field">Primeiro vereador<select id="ca"></select></label>
-    <label class="field">Segundo vereador<select id="cb"></select></label>
-  </div>
-  <div class="box cmp-box"><table class="cmp" id="cmp"></table></div>
+<section class="wrap" id="planilha">
   <div class="dl"><button class="btn gh" id="csv" type="button">Baixar planilha com os 19 vereadores</button>
     <span class="mute">Arquivo CSV, abre no Excel ou no Google Planilhas. Use à vontade, citando a fonte.</span></div>
 </section>
@@ -268,6 +261,7 @@ for v in V:
         + (f'<span class="pill r">{nf(v["vot"])} votos em 2024</span>' if v.get("vot") else "")
     contato = (f'<a class="btn lt" href="{e(v.get("ficha") or v["url"])}" target="_blank" rel="noopener">Ficha oficial na Câmara ↗</a>'
                + (f'<a class="btn lt" href="mailto:{e(v["email"])}">{e(v["email"])}</a>' if v.get("email") else "")
+               + f'<a class="btn lt" href="/comparar/?a={v["id"]}">⇄ Comparar com outro</a>'
                + '<a class="btn wa" id="wa" href="#" target="_blank" rel="noopener">Compartilhar no WhatsApp</a><button class="btn gh" type="button" id="cp">Copiar link</button>')
     corpo = f"""
 <section class="wrap phead" style="padding-top:20px">
@@ -339,6 +333,20 @@ bairros = f"""
   <div class="reps" id="reps"></div>
 </section>
 """
+comparar = """
+<section class="wrap phead">
+  <p class="eyebrow">Lado a lado</p>
+  <h1>Comparar vereadores</h1>
+  <p class="lead">Escolha dois vereadores. Os números são os mesmos para todos e vêm dos dados oficiais. A barra mostra cada número perto do maior da Câmara.</p>
+  <div class="vs" id="vs"></div>
+  <div id="cmp"></div>
+  <p class="mute" style="font-size:14px;margin-top:18px">Desde a posse, em 1º de janeiro de 2025. Como cada número é contado: <a href="/sobre/">Sobre</a>.</p>
+</section>
+"""
+escreve("comparar/index.html", pagina("vereadores", "Comparar vereadores · Radar Bragança",
+        "Compare dois vereadores de Bragança Paulista lado a lado: presença, propostas, votos e viagens, com dados oficiais.",
+        "/comparar/", comparar, "Radar.comparar()"))
+
 escreve("bairros/index.html", pagina("bairros", "Seu bairro · Radar Bragança",
         "Busque seu bairro ou sua rua e veja tudo o que os vereadores de Bragança Paulista pediram para lá, e por quem.",
         "/bairros/", bairros, "Radar.bairros()"))
@@ -430,7 +438,7 @@ escreve("404.html", pagina("", "Página não encontrada · Radar Bragança", "P�
   <p class="lead" style="margin:0 auto 20px">O endereço pode ter mudado. Comece por uma destas páginas:</p>
   <p style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><a class="btn" href="/">Página inicial</a><a class="btn gh" href="/vereadores/">Vereadores</a><a class="btn gh" href="/bairros/">Seu bairro</a></p>
 </section>""", ""))
-urls = ["/", "/vereadores/", "/bairros/", "/propostas/", "/sobre/", "/demandas/"] + [f"/vereador/{slug(v['ap'])}/" for v in V]
+urls = ["/", "/vereadores/", "/comparar/", "/bairros/", "/propostas/", "/sobre/", "/demandas/"] + [f"/vereador/{slug(v['ap'])}/" for v in V]
 escreve("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"<url><loc>{DOMINIO}{u}</loc><lastmod>{D['ger']}</lastmod></url>\n" for u in urls) + "</urlset>\n")
 escreve("robots.txt", f"User-agent: *\nAllow: /\nDisallow: /v/\nSitemap: {DOMINIO}/sitemap.xml\n")

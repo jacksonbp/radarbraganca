@@ -244,32 +244,7 @@ P.vereadores=function(){
     $('conta').textContent=L.length===V.length?`Mostrando os ${V.length} vereadores.`:`Mostrando ${L.length} de ${V.length} vereadores.`;
   };
   ['q','partido','ordem'].forEach(id=>$(id).addEventListener('input',render)); render();
-  // comparar dois vereadores (sem cor de "vencedor": mesma régua, só os números)
   const NOMES=[...V].sort(ORD.nome);
-  const pp=(x,t)=>t?Math.round(x/t*100)+'%':'–';
-  const LIN=[
-    ['Partido',v=>esc(v.part)],
-    ['Presença nas reuniões',v=>{const t=v.P+v.A+v.F;return `${pp(v.P,t)} <small>${v.P} de ${t}</small>`}],
-    ['Faltas nas reuniões',v=>nf(v.F)],
-    ['Presença nas comissões',v=>{const c=v.cm||{P:0,A:0,F:0},t=c.P+c.A+c.F;return t?`${pp(c.P,t)} <small>${c.P} de ${t}</small>`:'–'}],
-    ['Propostas desde a posse',v=>nf(v.tot)],
-    ['Pedidos de conserto',v=>nf(v.cat.b)],
-    ['Cobranças à Prefeitura',v=>nf(v.cat.c)],
-    ['Projetos de lei',v=>nf(v.cat.l)],
-    ['Homenagens',v=>nf(v.cat.h)],
-    ['Votos “não”',v=>nf(v.vn)],
-    ['Apoio aos projetos da Prefeitura',v=>v.gov&&v.gov[1]?`${pp(v.gov[0],v.gov[1])} <small>${v.gov[0]} de ${v.gov[1]}</small>`:'–'],
-    ['Viagens oficiais',v=>(v.vg||[]).length?`${v.vg.length} <small>${brl.format(v.vgt||0)}</small>`:'0'],
-    ['Votos na eleição de 2024',v=>v.vot?nf(v.vot):'–'],
-  ];
-  const opt=sel=>NOMES.forEach(v=>{const o=document.createElement('option');o.value=v.id;o.textContent=v.ap;sel.appendChild(o)});
-  opt($('ca'));opt($('cb'));$('ca').value=NOMES[0].id;$('cb').value=NOMES[1].id;
-  const cmp=()=>{const a=V.find(v=>v.id==$('ca').value),b=V.find(v=>v.id==$('cb').value);
-    const j=(a.jt||[]).find(x=>x[0]===b.id);
-    $('cmp').innerHTML=`<thead><tr><th></th><th scope="col"><a href="${urlV(a)}">${esc(a.ap)}</a></th><th scope="col"><a href="${urlV(b)}">${esc(b.ap)}</a></th></tr></thead><tbody>`
-      +LIN.map(([n,f])=>`<tr><th scope="row">${n}</th><td class="num">${f(a)}</td><td class="num">${f(b)}</td></tr>`).join('')
-      +(a===b?'':`<tr><th scope="row">Votaram igual</th><td class="num" colspan="2">${j?`${j[1]}% <small>das ${j[2]} votações divididas em que os dois votaram</small>`:'<small>poucas votações divididas em comum para comparar</small>'}</td></tr>`)+'</tbody>';};
-  ['ca','cb'].forEach(id=>$(id).addEventListener('input',cmp)); cmp();
   // planilha
   $('csv').addEventListener('click',()=>{
     const C=[['Vereador',v=>v.ap],['Nome completo',v=>v.nome],['Partido',v=>v.part],['Reuniões presente',v=>v.P],['Ausências justificadas',v=>v.A],['Faltas',v=>v.F],
@@ -284,6 +259,42 @@ P.vereadores=function(){
     const u=URL.createObjectURL(blob),l=document.createElement('a');l.href=u;l.download=`radar-braganca-vereadores-${GER.toISOString().slice(0,10)}.csv`;
     document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);
   });
+};
+
+P.comparar=function(){
+  const NOMES=[...V].sort(ORD.nome), qs=new URLSearchParams(location.search);
+  const pega=(k,d)=>V.find(v=>v.id==qs.get(k))||d;
+  let a=pega('a',NOMES[0]), b=pega('b',NOMES.find(v=>v!==a));
+  const pp=(x,t)=>t?Math.round(x/t*100):null;
+  const pres=v=>{const t=v.P+v.A+v.F;return [pp(v.P,t),`${v.P} de ${t} reuniões`]};
+  const com=v=>{const c=v.cm||{P:0,A:0,F:0},t=c.P+c.A+c.F;return [pp(c.P,t),t?`${c.P} de ${t} reuniões`:'sem lista registrada']};
+  const gov=v=>v.gov&&v.gov[1]?[pp(v.gov[0],v.gov[1]),`${v.gov[0]} de ${v.gov[1]} projetos`]:[null,''];
+  const G=[
+    ['Presença',[['Presença nas reuniões',pres,1],['Faltas nas reuniões',v=>[v.F,''],0],['Presença nas comissões',com,1]]],
+    ['Propostas desde a posse',[['Total de propostas',v=>[v.tot,''],0],['Pedidos de conserto',v=>[v.cat.b,'na rua ou no bairro'],0],
+      ['Cobranças à Prefeitura',v=>[v.cat.c,''],0],['Projetos de lei',v=>[v.cat.l,''],0],['Homenagens',v=>[v.cat.h,''],0]]],
+    ['Votos e gastos',[['Votos “não”',v=>[v.vn,''],0],['Apoio aos projetos da Prefeitura',gov,1],
+      ['Viagens oficiais',v=>[(v.vg||[]).length,(v.vg||[]).length?brl.format(v.vgt||0):''],0],['Votos na eleição de 2024',v=>[v.vot||0,''],0]]]];
+  const fmt=(n,pc)=>n==null?'–':pc?n+'%':nf(n);
+  const card=(v,lado)=>`<div class="vs-c" style="--h:${hue(v.i)}">${v.foto?`<img src="/fotos/${v.id}.jpg" alt="Foto de ${esc(v.ap)}">`:`<span class="vs-ph">${esc(v.in)}</span>`}
+    <a class="vs-n" href="${urlV(v)}">${esc(v.ap)}</a><span class="pill">${esc(v.part)}${v.mesa?' · '+esc(v.mesa):''}</span>
+    <label class="vs-s"><span class="sr">Trocar vereador</span><select data-l="${lado}">${NOMES.map(x=>`<option value="${x.id}"${x===v?' selected':''}>${esc(x.ap)}</option>`).join('')}</select></label></div>`;
+  const desenha=foco=>{
+    $('vs').innerHTML=card(a,'a')+'<span class="vs-x" aria-hidden="true">×</span>'+card(b,'b');
+    const j=(a.jt||[]).find(x=>x[0]===b.id);
+    $('cmp').style.cssText=`--ha:${hue(a.i)};--hb:${hue(b.i)}`;
+    $('cmp').innerHTML=G.map(([tit,L])=>`<div class="cg"><h2>${tit}</h2>${L.map(([n,f,pc])=>{
+      const max=pc?100:Math.max(1,...V.map(v=>f(v)[0]||0)), [x,dx]=f(a), [y,dy]=f(b);
+      const w=n=>n==null?0:Math.max(2,Math.round(n/max*100));
+      return `<div class="cr"><div class="cr-l">${n}</div>
+        <div class="cr-v a"><b class="num">${fmt(x,pc)}</b><small>${dx}</small><i style="--w:${w(x)}%"></i></div>
+        <div class="cr-v b"><b class="num">${fmt(y,pc)}</b><small>${dy}</small><i style="--w:${w(y)}%"></i></div></div>`}).join('')}</div>`).join('')
+      +(a===b?'':`<div class="cg cg-j"><h2>Os dois votam juntos?</h2><p>${j?`<b class="num">${j[1]}%</b> Nas ${j[2]} votações em que a Câmara se dividiu e os dois votaram, eles votaram igual em ${j[1]} de cada 100.`:'Os dois votaram juntos em poucas votações divididas, então não dá para comparar.'}</p></div>`);
+    $('vs').querySelectorAll('select').forEach(s=>s.addEventListener('change',()=>{const v=V.find(x=>x.id==s.value);if(s.dataset.l==='a')a=v;else b=v;
+      history.replaceState(null,'',`?a=${a.id}&b=${b.id}`);desenha(s.dataset.l)}));
+    if(foco)$('vs').querySelector(`select[data-l="${foco}"]`).focus();
+  };
+  desenha();
 };
 
 P.vereador=function(id){
