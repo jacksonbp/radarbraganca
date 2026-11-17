@@ -204,15 +204,23 @@ const GER=new Date(D.gerh);
 function ago(){const m=Math.max(0,Math.round((Date.now()-GER.getTime())/6e4));
   return m<2?'agora mesmo':m<60?`há ${m} minutos`:m<120?'há 1 hora':m<1440?`há ${Math.floor(m/60)} horas`:m<2880?'ontem':`há ${Math.floor(m/1440)} dias`}
 document.querySelectorAll('.phead>.eyebrow').forEach(el=>{el.insertAdjacentText('beforeend',` · atualizado em ${GER.toLocaleDateString('pt-BR',{day:'numeric',month:'long'})}`)});
-document.querySelectorAll('[data-atualizado]').forEach(el=>{el.textContent=`Dados conferidos na Câmara em ${GER.toLocaleDateString('pt-BR',{day:'numeric',month:'long'})}, às ${GER.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}. O robô volta lá todo dia de madrugada.`});
+document.querySelectorAll('[data-atualizado]').forEach(el=>{el.textContent=`Dados conferidos na Câmara em ${GER.toLocaleDateString('pt-BR',{day:'numeric',month:'long'})}, às ${GER.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}.`});
 
 /* ================= PÁGINAS ================= */
 const P={};
 
 P.inicio=function(){
   $('livet').textContent=`dados conferidos ${ago()}`; setInterval(()=>{$('livet').textContent=`dados conferidos ${ago()}`},6e4);
-  const STATS=[['',IT.length,'propostas até agora'],['k-b',D.catot.b||0,'pedidos nos bairros'],['k-h',D.catot.h||0,'homenagens'],['k-l',D.catot.l||0,'propostas de lei']];
-  $('stats').innerHTML=STATS.map(([k,n,l],i)=>`<div class="stat ${k}"><b class="num" id="st${i}">${nf(n)}</b><span>${l}</span></div>`).join('');
+  const STATS=[
+    ['',D.totalPropostas??IT.length,'propostas até agora',''],
+    ['k-b',D.catot.b||0,'pedidos nos bairros','b'],
+    ['k-h',D.catot.h||0,'homenagens','h'],
+    ['k-l',D.catot.l||0,'propostas de lei','l']
+  ];
+  $('stats').innerHTML=STATS.map(([k,n,label,category],i)=>{
+    const filter=category ? `?categoria=${category}` : '';
+    return `<a class="stat ${k}" href="/propostas/${filter}#lista-propostas"><b class="num" id="st${i}">${nf(n)}</b><span>${label}</span><span class="stat-link">Ver registros &rarr;</span></a>`;
+  }).join('');
   STATS.forEach(([k,n],i)=>countUp($('st'+i),n));
   const POSSE=new Date(D.posse+'T00:00:00-03:00').getTime(), POR_MS=V.length*D.sal.v*12/(365.25*864e5);
   const tick=()=>{$('tick').textContent=brl.format((Date.now()-POSSE)*POR_MS)}; tick(); if(!reduce)setInterval(tick,120);
@@ -229,6 +237,7 @@ P.inicio=function(){
   $('rzl').innerHTML=`<span><i class="p"></i>${nf(ped0)} pedidos de melhoria</span><span><i class="l"></i>${nf(lei0)} projetos de lei</span>`;
   $('rzd').textContent=`Desde a posse. Pedido de melhoria é quando o vereador pede à Prefeitura um conserto na rua ou no bairro; projeto de lei cria ou muda uma regra da cidade.`;
   $('bairros-chips').innerHTML=D.bairros.slice(0,8).map(b=>`<li><a class="chip" href="/bairros/?q=${encodeURIComponent(b)}">${esc(b)}</a></li>`).join('');
+  if ($('hq-bairros')) $('hq-bairros').replaceChildren(...D.bairros.map(b => new Option(b,b)));
   $('fbq').addEventListener('submit',e=>{e.preventDefault();location.href='/bairros/?q='+encodeURIComponent($('hq').value.trim())});
   listaReps($('reps'),D.rep.slice(0,CEL?3:6),CEL?3:6);
 };
@@ -294,6 +303,22 @@ P.comparar=function(){
       history.replaceState(null,'',`?a=${a.id}&b=${b.id}`);desenha(s.dataset.l)}));
     if(foco)$('vs').querySelector(`select[data-l="${foco}"]`).focus();
   };
+  const copy=$('cmp-copy');
+  if(copy) copy.addEventListener('click',async()=>{
+    const url=new URL('comparar/',SITE);
+    url.searchParams.set('a',a.id);
+    url.searchParams.set('b',b.id);
+    const status=$('cmp-copy-status');
+    try{
+      await navigator.clipboard.writeText(url.href);
+      status.textContent='Link copiado.';
+    }catch(_){
+      const link=document.createElement('a');
+      link.href=url.href;
+      link.textContent=url.href;
+      status.replaceChildren(link);
+    }
+  });
   desenha();
 };
 
@@ -354,7 +379,7 @@ P.vereador=function(id){
   $('picks').addEventListener('click',e=>{const p=e.target.closest('.pick');if(p&&!p.disabled)openCat(p.dataset.c,i)});
   // lista com abas
   const minhas=IT.filter(it=>it[6].includes(i)); let cat='';
-  $('tabs').innerHTML=`<li><button class="chip on" type="button" data-k="">Todas<small>${nf(minhas.length)}</small></button></li>`+ORDER.filter(c=>v.cat[c]).map(c=>`<li><button class="chip" type="button" data-k="${c}">${CAT[c][3]}s<small>${nf(v.cat[c])}</small></button></li>`).join('').replace('Proposta de leis','Propostas de lei');
+  $('tabs').innerHTML=`<li><button class="chip${cat?'':' on'}" type="button" data-k="">Todas<small>${nf(minhas.length)}</small></button></li>`+ORDER.filter(c=>v.cat[c]).map(c=>`<li><button class="chip${cat===c?' on':''}" type="button" data-k="${c}">${CAT[c][3]}s<small>${nf(v.cat[c])}</small></button></li>`).join('').replace('Proposta de leis','Propostas de lei');
   const draw=()=>pager($('lista'),cat?minhas.filter(it=>it[4]===cat):minhas,false,CEL?5:10);
   $('tabs').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;cat=b.dataset.k;$('tabs').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));draw()}); draw();
   // onde pediu
@@ -413,18 +438,22 @@ P.bairros=function(){
   $('chips').innerHTML=D.bairros.slice(0,14).map(b=>`<li><button class="chip" type="button" data-b="${esc(b)}">${esc(b)}</button></li>`).join('');
   let tm;
   function bairro(q){
+    document.dispatchEvent(new CustomEvent('radar:bairro',{detail:q}));
     const host=$('bres'), k=norm(q.trim()), city=k.length===0;
     $('chips').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',norm(x.dataset.b)===k));
-    try{history.replaceState(null,'',city?location.pathname:'?q='+encodeURIComponent(q.trim()))}catch(_){}
+    try{history.replaceState(null,'',location.pathname+(city?'':'?q='+encodeURIComponent(q.trim()))+location.hash)}catch(_){}
     if(!city&&k.length<3){host.innerHTML='<div class="panel"><p class="mute" style="margin:0">Continue digitando: preciso de pelo menos 3 letras.</p></div>';return}
     const items=city?IT:IT.filter(it=>it.n.includes(k));
-    if(!items.length){host.innerHTML=`<div class="panel"><p class="mute" style="margin:0">Nada encontrado para “${esc(q)}”. Confira a grafia ou tente só uma parte do nome.</p></div>`;return}
+    const official=D.bairros.find(name=>norm(name)===k);
+    const report=city?'':'<p><a class="btn gh" href="/demandas/?bairro='+encodeURIComponent(official||q.trim())+'">Relatar um problema neste bairro</a></p>';
+    if(!items.length){host.innerHTML=`<div class="panel"><p class="mute" style="margin:0">Nada encontrado para “${esc(q)}”. Confira a grafia ou tente só uma parte do nome.</p>${official?report:''}</div>`;return}
     const cnt=new Map(); items.forEach(it=>it[6].forEach(a=>cnt.set(a,(cnt.get(a)||0)+1)));
     const top=[...cnt.entries()].sort((a,b)=>b[1]-a[1]), mx=top[0][1];
     const th=themeCount(items.filter(it=>it[4]==='b'||it[4]==='c')).slice(0,city&&CEL?3:5);
     const reps=city?[]:D.rep.filter(g=>g.items.some(it=>it.n.includes(k))).slice(0,3);
     host.innerHTML=`<div class="panel">
      <div class="ph"><span class="big num">${nf(items.length)}</span><p>${city?'propostas para <b>a cidade inteira</b> até agora':`${items.length===1?'proposta cita':'propostas citam'} <b>${esc(q.trim())}</b> até agora`}</p></div>
+     ${report}
      <div class="two">
        ${city?'':`<div><h3>Quem mais pediu</h3><ol class="rank">${top.slice(0,5).map(([a,n])=>`<li>${av(a)}<span class="nm"><a href="${urlV(V[a])}">${esc(V[a].ap)}</a> <span class="mute" style="font-weight:400">· ${esc(V[a].part)}</span></span><b class="num">${nf(n)}</b><span class="br"><i style="width:${n/mx*100}%"></i></span></li>`).join('')}</ol>
          ${top.length>5?`<p class="mute" style="font-size:13.5px;margin:10px 0 0">Mais ${top.length-5} vereadores também citaram.</p>`:''}</div>`}
@@ -433,7 +462,36 @@ P.bairros=function(){
      </div>
      ${reps.length?`<p class="h3" style="margin-top:24px">Problemas que voltam aqui</p><div class="reps">${reps.map(repHTML).join('')}</div>`:''}
      <p class="h3" style="margin-top:24px">${city?'As propostas mais recentes da cidade':'Os pedidos mais recentes'}</p><div id="blist"></div></div>`;
-    pager($('blist'),items,true,city&&CEL?2:4);
+    const list=$('blist');
+    const topics=themeCount(items).filter(([key])=>Object.hasOwn(TH,key));
+    const resultCount=document.createElement('span');
+    resultCount.className='bairro-topic-count';
+    resultCount.setAttribute('role','status');
+
+    const renderList=(key='')=>{
+      const matches=key?items.filter(it=>it[8]===key):items;
+      resultCount.textContent=nf(matches.length)+(matches.length===1?' proposta':' propostas');
+      pager(list,matches,true,city&&CEL?2:4);
+    };
+    if(topics.length>1){
+      const bar=document.createElement('div');
+      bar.className='bairro-topic-bar';
+      const field=document.createElement('div');
+      field.className='bairro-topic-field';
+      const label=document.createElement('label');
+      label.htmlFor='bairro-topic';
+      label.textContent='Filtrar por assunto';
+      const select=document.createElement('select');
+      select.id='bairro-topic';
+      select.className='bairro-topic-select';
+      select.append(new Option('Todos os assuntos',''));
+      topics.forEach(([key])=>select.append(new Option(TH[key][0],key)));
+      select.addEventListener('change',()=>renderList(select.value));
+      field.append(label,select);
+      bar.append(field,resultCount);
+      list.before(bar);
+    }
+    renderList();
   }
   $('bq').addEventListener('input',e=>{clearTimeout(tm);tm=setTimeout(()=>bairro(e.target.value),150)});
   document.addEventListener('click',e=>{const b=e.target.closest('[data-b]');if(b){$('bq').value=b.dataset.b;bairro(b.dataset.b);$('busca').scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'})}});
@@ -448,7 +506,8 @@ P.propostas=function(){
   $('cats').innerHTML=ORDER.map(c=>`<button class="cat k-${c}" type="button" data-c="${c}"><span class="ci">${svg(ICON[CAT[c][2]],26)}</span><span class="cv num">${nf(D.catot[c]||0)}</span><span class="cn">${CAT[c][0]} <span class="now">até agora</span></span><span class="cd">${CAT[c][1]}</span><span class="go">Ver todas →</span></button>`).join('');
   $('cats').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(b)openCat(b.dataset.c,null)});
   // busca livre em todas as propostas
-  let tm, cat='';
+  const category=new URLSearchParams(location.search).get('categoria');
+  let tm, cat=ORDER.includes(category)?category:'';
   $('ptabs').innerHTML=`<li><button class="chip on" type="button" data-k="">Todas</button></li>`+ORDER.map(c=>`<li><button class="chip" type="button" data-k="${c}">${CAT[c][0]}</button></li>`).join('');
   const draw=()=>{const k=norm($('pq').value.trim());const L=IT.filter(it=>(!cat||it[4]===cat)&&(!k||it.n.includes(k)));
     $('pcount').textContent=`${nf(L.length)} ${L.length===1?'proposta':'propostas'}`;pager($('plista'),L,true,CEL?6:12)};

@@ -1,0 +1,59 @@
+.bairro-painel { margin-top: 28px; }
+.bairro-painel-topo { border-left: 4px solid var(--red); padding-left: 14px; margin-bottom: 20px; }
+.bairro-painel-topo h2 { margin: 0; }
+.bairro-painel-topo p { margin: 6px 0 0; font-size: 14px; }
+#problemas-lista { display: grid; gap: 14px; }
+.problema-grupo { border: 1px solid var(--hair); border-radius: 14px; overflow: hidden; background: #fff; }
+.problema-grupo-titulo { display: flex; align-items: center; gap: 9px; padding: 12px 16px; background: var(--soft); border-bottom: 1px solid var(--hair); }
+.problema-grupo-titulo h3 { margin: 0; font-size: 15px; text-transform: none; letter-spacing: normal; }
+.problema-total { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px; background: #fff; color: var(--ink); font-size: 12px; font-weight: 700; }
+.problema-cards { list-style: none; margin: 0; padding: 0; }
+.problema-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 14px 16px; }
+.problema-card + .problema-card { border-top: 1px solid var(--hair); }
+.problema-info { overflow-wrap: anywhere; }
+.problema-info h4 { margin: 0; font-size: 16px; }
+.problema-info p, .problema-info small { display: block; margin: 4px 0 0; color: var(--mute); font-size: 13px; }
+.problema-status { justify-self: start; border-radius: 999px; padding: 4px 10px; color: #653e00; background: #fff2d6; font-size: 12px; font-weight: 700; }
+.problema-status.resolvido { color: #16502d; background: #e2f3e8; }
+.problema-vazio { margin: 0; padding: 14px 16px; color: var(--mute); }
+@media (max-width: 480px) {
+  .problema-card { grid-template-columns: 1fr; gap: 8px; }
+}
+
+
+.bairro-painel { padding-top: 36px; }
+.bairro-painel-topo { border-left: 0; padding: 0; }
+.bairro-painel-topo h2 { font-size: clamp(24px, 4vw, 34px); letter-spacing: -.025em; }
+.bairro-painel-topo p { max-width: 78ch; line-height: 1.6; }
+#problemas-nota { font-size: 12px; color: #697582; }
+#problemas-lista { gap: 16px; }
+.painel-contadores { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.painel-metrica { padding: 20px; border: 1px solid #e1e6ec; border-radius: 16px; background: #fff; box-shadow: 0 3px 12px #111a2406; }
+.painel-metrica span { font-size: 14px; color: #526171; }
+.painel-metrica strong { display: block; font-family: var(--display); font-size: 38px; margin-top: 8px; line-height: 1.15; }
+.metrica-0 { background: #111a24; border-color: #111a24; color: #fff; }
+.metrica-0 span { color: #d9e1e9; }
+.metrica-1 strong { color: #865600; }
+.metrica-2 strong { color: #187044; }
+.painel-progresso { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 16px 20px; background: #f5f7f9; border-radius: 12px; font-size: 13px; }
+.painel-trilha { grid-column: 1 / -1; height: 6px; border-radius: 5px; background: #e1e7ed; overflow: hidden; }
+.painel-preenchimento { height: 100%; background: #187044; border-radius: 5px; }
+.painel-registros { border: 1px solid #e1e6ec; border-radius: 16px; background: #fff; overflow: hidden; }
+.painel-barra { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-bottom: 1px solid #e1e6ec; }
+.painel-filtros { display: flex; flex-wrap: wrap; gap: 5px; }
+.painel-filtros button { font: inherit; font-size: 13px; font-weight: 600; padding: 10px 12px; border: 0; background: #f4f6f8; border-radius: 8px; color: #435161; cursor: pointer; min-height: 44px; }
+.painel-filtros button[aria-pressed="true"] { background: #111a24; color: #fff; }
+.painel-relatar { font-size: 13px; font-weight: 700; background: #bd2b27; color: #fff; border-radius: 9px; padding: 12px 16px; text-decoration: none; }
+.painel-vazio { text-align: center; padding: 42px 24px; }
+.painel-vazio h3 { margin: 0 0 10px; font-size: 18px; text-transform: none; letter-spacing: normal; }
+.painel-vazio p { max-width: 55ch; margin: auto; font-size: 14px; color: #647180; line-height: 1.7; }
+.painel-filtros button:focus-visible, .painel-relatar:focus-visible { outline: 2px solid #111a24; outline-offset: 3px; }
+@media(max-width:600px) {
+ .painel-contadores { gap: 8px; }
+ .painel-metrica { padding: 12px 10px; border-radius: 12px; }
+ .painel-metrica span { font-size: 12px; }
+ .painel-metrica strong { font-size: 30px; }
+ .painel-barra { align-items: stretch; }
+ .painel-relatar { text-align: center; flex-grow: 1; }
+}
+

@@ -33,13 +33,44 @@ MENU = [("inicio", "/", "Início"), ("vereadores", "/vereadores/", "Vereadores")
         ("propostas", "/propostas/", "Propostas"), ("prefeitura", "/prefeitura/", "Prefeitura"), ("sobre", "/sobre/", "Sobre"), ("voz", "/demandas/", "Voz do Bairro")]
 
 
+def menu_mobile(ativa):
+    links = [(h, f'<a href="{h}"{" aria-current=page" if k == ativa else ""}>{n}</a>')
+             for k, h, n in MENU]
+    diretos = ("/bairros/", "/demandas/")
+    main = "".join(link for h, link in links if h in diretos)
+    more = "".join(link for h, link in links if h not in diretos)
+    return ('<div class="mobile-nav">' + main + '<details><summary>Menu</summary>'
+            + '<div class="mobile-nav-links">' + more + '</div></details></div>')
+
+
+def dados_inicio(dados):
+    campos = ("gerh", "posse", "sal", "catot", "nvot", "unan", "pri", "bairros")
+    resumo = {campo: dados[campo] for campo in campos}
+    resumo["totalPropostas"] = len(dados["items"])
+    resumo["v"] = [{campo: v[campo] for campo in ("id", "ap", "foto", "email", "cat") if campo in v}
+                   for v in dados["v"]]
+    indices = {}
+    resumo["items"] = []
+    resumo["rep"] = []
+    for grupo in dados["rep"][:6]:
+        ids = []
+        for antigo in grupo["ids"]:
+            if antigo not in indices:
+                indices[antigo] = len(resumo["items"])
+                resumo["items"].append(dados["items"][antigo])
+            ids.append(indices[antigo])
+        resumo["rep"].append({**grupo, "ids": ids})
+    return "window.RB=" + json.dumps(resumo, ensure_ascii=False, separators=(",", ":")) + ";\n"
+
+
 def pagina(ativa, titulo, descricao, url, corpo, init, imagem="/capa.jpg", titulo_og=None, extra_head=""):
     menu = "".join(
         f'<li{" class=cta" if k == "voz" else ""}><a href="{h}"{" aria-current=page" if k == ativa else ""}>{n}</a></li>'
         for k, h, n in MENU)
     img = imagem if imagem.startswith("http") else DOMINIO + imagem
     noscript = '<noscript><p class="wrap warn" style="margin-top:20px">Este site precisa do JavaScript ligado no navegador para mostrar os dados.</p></noscript>' if init else ""
-    scripts = f'''<script src="/dados.js?v={D['gerh']}"></script>
+    arquivo_dados = 'dados-inicio.js' if ativa == 'inicio' else 'dados.js'
+    scripts = f'''<script src="/{arquivo_dados}?v={D['gerh']}"></script>
 <script src="/assets/radar.js?v={VER('radar.js')}"></script>
 <script>{init}</script>''' if init else ""
     return f"""<!DOCTYPE html>
@@ -66,12 +97,13 @@ def pagina(ativa, titulo, descricao, url, corpo, init, imagem="/capa.jpg", titul
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/radar.css?v={VER('radar.css')}">
+<link rel="stylesheet" href="/assets/mobile-nav.css?v=1">
 {extra_head}</head>
 <body>
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 <header class="nav"><div class="wrap">
   <a class="brand" href="/" aria-label="Radar Bragança, página inicial">{LOGO}<span><b>RADAR</b><b>BRAGANÇA</b></span></a>
-  <nav aria-label="Menu principal"><ul class="menu">{menu}</ul></nav>
+  <nav aria-label="Menu principal"><ul class="menu">{menu}</ul>{menu_mobile(ativa)}</nav>
 </div></header>
 <main id="conteudo">
 {noscript}
@@ -117,18 +149,18 @@ LD = '<script type="application/ld+json">' + json.dumps({"@context": "https://sc
 
 # ------------------------------------------------------------------ Início
 inicio = f"""
-<section class="wrap hero">
+<section class="wrap radar-home">
   <div>
     <span class="live"><i></i><span id="livet">Dados da Câmara</span></span>
     <h1 class="logo" aria-label="Radar Bragança">{LOGO.replace('currentColor', '#111a24')}<span><b>RADAR</b><b>BRAGANÇA</b></span></h1>
-    <p class="intro"><b>Raio-X da Câmara de Bragança Paulista.</b> O que cada um dos 19 vereadores fez desde que assumiu, em 2025. Atualizado todo dia com os dados oficiais da Câmara.</p>
-    <form class="search" id="fbq" role="search" style="max-width:none"><label for="hq" class="eyebrow" style="display:block;margin-bottom:8px">O que pediram pelo seu bairro?</label>
-      <div style="position:relative">{SEARCH_ICON}<input id="hq" type="search" placeholder="Digite seu bairro ou sua rua" autocomplete="off"></div></form>
+    <p class="intro">Veja o que os vereadores propuseram, como votaram e o que pediram para o seu bairro.</p>
+    <form class="search" id="fbq" role="search" ><label for="hq" class="eyebrow" >O que pediram pelo seu bairro?</label>
+      <div class="radar-search-row"><div class="radar-search-field">{SEARCH_ICON}<input id="hq" type="search" list="hq-bairros" placeholder="Digite seu bairro ou sua rua" autocomplete="off"><datalist id="hq-bairros"></datalist></div><button class="btn" type="submit">Buscar</button></div></form>
     <ul class="chips" id="bairros-chips"></ul>
   </div>
   <div>
+    <div class="meter radar-salary"><p class="t">Estimativa de salários de {len(V)} vereadores desde a posse</p><p class="v num" id="tick">R$ 0,00</p><small id="msal"></small><a href="/sobre/">Como calculamos</a></div>
     <div class="stats" id="stats"></div>
-    <div class="meter"><p class="t">Estimativa de salários de {len(V)} vereadores desde a posse</p><p class="v num" id="tick">R$ 0,00</p><small id="msal"></small></div>
     <p class="upd" data-atualizado></p>
   </div>
 </section>
@@ -146,7 +178,7 @@ inicio = f"""
 <section class="wrap" style="padding-top:26px">
   <ul class="trust">
     <li>{IC_CHECK}<b>Só dados oficiais</b><span>Câmara, TSE e Portal da Transparência</span></li>
-    <li>{IC_CHECK}<b>Atualizado todo dia</b><span>Um robô confere tudo de madrugada</span></li>
+    <li>{IC_CHECK}<b>Atualizado todo dia</b><span>Consulta diária às fontes oficiais</span></li>
     <li>{IC_CHECK}<b>Mesma régua</b><span>Os 19 vereadores medidos do mesmo jeito, sem nota nem opinião</span></li>
     <li>{IC_CHECK}<b>Fonte em cada número</b><span>Cada proposta abre na página da Câmara</span></li>
   </ul>
@@ -175,6 +207,7 @@ inicio = f"""
   <div class="reps" id="reps"></div>
 </section>
 """
+escreve("dados-inicio.js", dados_inicio(D))
 escreve("index.html", pagina("inicio", "Radar Bragança",
         "O que cada vereador de Bragança Paulista fez desde a posse: presença, propostas e votos. Só dados oficiais da Câmara, atualizados todo dia.",
         "/", inicio, "Radar.inicio()", titulo_og="Radar Bragança: o que cada vereador fez desde a posse", extra_head=LD))
@@ -260,16 +293,16 @@ for v in V:
     foto = f'<img class="big-ph" src="/fotos/{v["id"]}.jpg" alt="Foto de {e(v["ap"])}">' if v.get("foto") else ""
     tags = f'<span class="pill">{e(v["part"])}</span>' + (f'<span class="pill r">{e(v["mesa"])} da Câmara</span>' if v.get("mesa") else "") \
         + (f'<span class="pill r">{nf(v["vot"])} votos em 2024</span>' if v.get("vot") else "")
-    contato = (f'<a class="btn lt" href="{e(v.get("ficha") or v["url"])}" target="_blank" rel="noopener">Ficha oficial na Câmara ↗</a>'
+    contato = (f'<a class="btn ficha-compare" href="/comparar/?a={v["id"]}">Comparar vereadores</a>'
+               + f'<a class="btn lt" href="{e(v.get("ficha") or v["url"])}" target="_blank" rel="noopener">Ficha oficial na Câmara ↗</a>'
                + (f'<a class="btn lt" href="mailto:{e(v["email"])}">{e(v["email"])}</a>' if v.get("email") else "")
-               + f'<a class="btn lt" href="/comparar/?a={v["id"]}">⇄ Comparar com outro</a>'
                + '<a class="btn wa" id="wa" href="#" target="_blank" rel="noopener">Compartilhar no WhatsApp</a><button class="btn gh" type="button" id="cp">Copiar link</button>')
     corpo = f"""
 <section class="wrap phead" style="padding-top:20px">
   <p class="crumbs"><a href="/">Início</a> › <a href="/vereadores/">Vereadores</a> › {e(v['ap'])}</p>
   <div class="prof">{foto}<div><h1>{e(v['ap'])}</h1><p class="civil">{e(v['nome'])}</p><div class="tags">{tags}</div><div class="contato">{contato}</div></div></div>
+  <nav class="subnav ficha-nav" aria-label="Nesta página"><a href="#s-propostas">Propostas</a><a href="#kpis">Presença</a><a href="#s-votos">Votos e comissões</a><a href="#s-viagens">Viagens</a><a href="#s-voto24">Bairros que votaram</a><a href="#s-ruas">Ruas que voltam</a><a href="#s-blocos">Com quem vota</a></nav>
   <div class="kpis" id="kpis"></div>
-  <nav class="subnav" aria-label="Nesta página"><a href="#s-propostas">Propostas</a><a href="#s-voto24">Bairros que votaram</a><a href="#s-ruas">Ruas que voltam</a><a href="#s-votos">Votos e comissões</a><a href="#s-blocos">Com quem vota</a><a href="#s-viagens">Viagens</a></nav>
 </section>
 <section class="wrap">
   <div class="cols">
@@ -317,6 +350,9 @@ for v in V:
             f"Radar.vereador({v['id']})", imagem=img, titulo_og=f"{v['ap']}: o que fez desde a posse"))
 
 # ------------------------------------------------------------------ Seu bairro
+with open(os.path.join(SITE, "demandas", "index.html"), encoding="utf-8") as arquivo:
+    receptor_bairros = re.search(r'''const ENDERECO\s*=\s*['"]([^'"]+)['"]''', arquivo.read())[1]
+
 bairros = f"""
 <section class="wrap phead" id="busca">
   <p class="eyebrow">Na sua rua</p>
@@ -324,7 +360,16 @@ bairros = f"""
   <p class="lead">Digite o bairro ou a rua. Sem nada digitado, você vê a cidade inteira.</p>
   <div class="search">{SEARCH_ICON}<input id="bq" type="search" list="bl" placeholder="Digite seu bairro ou sua rua" autocomplete="off" aria-label="Bairro ou rua"><datalist id="bl"></datalist></div>
   <ul class="chips" id="chips"></ul>
+  <p><a class="btn gh" href="#problemas-bairro">Ver problemas relatados</a></p>
   <div id="bres"></div>
+</section>
+<section class="wrap bairro-painel" id="problemas-bairro" data-receptor="{e(receptor_bairros)}" aria-labelledby="problemas-titulo">
+  <header class="bairro-painel-topo">
+    <h2 id="problemas-titulo">Problemas dos bairros</h2>
+    <p class="mute">Acompanhe a situação das demandas deste bairro enviadas pelo <a href="/demandas/">Voz do Bairro</a>. Os relatos aparecem aqui após revisão da equipe do Radar Bragança.</p>
+    <p class="mute" id="problemas-nota" role="status"></p>
+  </header>
+  <div id="problemas-lista"></div>
 </section>
 <section class="wrap" id="repetidos">
   <p class="eyebrow">Só aqui</p>
@@ -340,6 +385,7 @@ comparar = """
   <h1>Comparar vereadores</h1>
   <p class="lead">Escolha dois vereadores. Os números são os mesmos para todos e vêm dos dados oficiais. Nas barras, quem tem o número maior fica com a barra cheia, e as porcentagens vão de 0 a 100%.</p>
   <div class="vs" id="vs"></div>
+  <div class="contato"><button class="btn gh" type="button" id="cmp-copy">Copiar link desta comparação</button><span role="status" id="cmp-copy-status"></span></div>
   <div id="cmp"></div>
   <p class="mute" style="font-size:14px;margin-top:18px">Desde a posse, em 1º de janeiro de 2025. Como cada número é contado: <a href="/sobre/">Sobre</a>.</p>
 </section>
@@ -379,7 +425,7 @@ prefeitura = """
   <p class="eyebrow">Como ler</p>
   <h2>De onde vêm esses números</h2>
   <div class="method">
-    <details open><summary>Fonte</summary><p>Portal da Transparência Municipal do Tribunal de Contas do Estado de São Paulo (TCE-SP), com os dados que a Prefeitura envia todo mês. O robô do site busca esses dados toda madrugada. Os números de um mês costumam aparecer no TCE uns 30 a 60 dias depois. Veja a fonte em <a href="https://transparencia.tce.sp.gov.br/municipio/braganca-paulista" target="_blank" rel="noopener">transparencia.tce.sp.gov.br</a>.</p></details>
+    <details open><summary>Fonte</summary><p>Portal da Transparência Municipal do Tribunal de Contas do Estado de São Paulo (TCE-SP), com os dados que a Prefeitura envia todo mês. O Radar consulta esses dados diariamente. Os números de um mês costumam aparecer no TCE uns 30 a 60 dias depois. Veja a fonte em <a href="https://transparencia.tce.sp.gov.br/municipio/braganca-paulista" target="_blank" rel="noopener">transparencia.tce.sp.gov.br</a>.</p></details>
     <details open><summary>“Pago” e “entrou”</summary><p><b>Pago</b> é o dinheiro que de fato saiu do caixa da Prefeitura naquele mês. Pode incluir contas de meses ou anos anteriores. <b>Entrou</b> é o que a Prefeitura arrecadou: impostos, taxas e repasses do Estado e do governo federal. Os dois não se comparam como um “lucro” ou “prejuízo”: a Prefeitura também guarda dinheiro para pagar depois, e parte das receitas tem destino obrigatório, como saúde e educação.</p></details>
     <details open><summary>Fornecedores</summary><p>A lista soma os pagamentos feitos a cada empresa (CNPJ) no ano. Aparecer na lista não indica nenhum problema: mostra só para onde o dinheiro foi. Pagamentos a pessoas físicas aparecem só como total, sem nomes, para proteger a privacidade de servidores, aposentados e prestadores.</p></details>
     <details open><summary>Câmara</summary><p>O custo da Câmara é o que a própria Câmara pagou no período, com o dinheiro que recebe da Prefeitura: salários, funcionários, contas e serviços.</p></details>
@@ -393,7 +439,7 @@ escreve("prefeitura/index.html", pagina("prefeitura", "Prefeitura · Radar Braga
 
 escreve("bairros/index.html", pagina("bairros", "Seu bairro · Radar Bragança",
         "Busque seu bairro ou sua rua e veja tudo o que os vereadores de Bragança Paulista pediram para lá, e por quem.",
-        "/bairros/", bairros, "Radar.bairros()"))
+        "/bairros/", bairros, "Radar.bairros()", extra_head='<link rel="stylesheet" href="/assets/problemas-bairro.css?v=5">\n<script defer src="/assets/problemas-bairro.js?v=5"></script>\n'))
 
 # ------------------------------------------------------------------ Propostas
 propostas = f"""
@@ -404,7 +450,7 @@ propostas = f"""
   <div class="split" id="split" aria-hidden="true"></div>
   <div class="cats" id="cats"></div>
 </section>
-<section class="wrap">
+<section class="wrap" id="lista-propostas">
   <p class="eyebrow">Proposta por proposta</p>
   <h2>Procure qualquer proposta</h2>
   <div class="search" style="max-width:640px">{SEARCH_ICON}<input id="pq" type="search" placeholder="Ex.: creche, iluminação, Rua Santa Clara" autocomplete="off" aria-label="Procurar proposta"></div>
@@ -430,7 +476,7 @@ sobre = """
       <li><span class="ti">3</span><span>TSE: votos de cada vereador na eleição de 2024</span><b></b></li>
       <li><span class="ti">4</span><span>Site camarabp.sp.gov.br: foto e e-mail oficial de cada gabinete</span><b></b></li>
       <li><span class="ti">5</span><span>Tribunal de Contas do Estado (TCE-SP): receitas, pagamentos e fornecedores da Prefeitura e gastos da Câmara</span><b></b></li></ul>
-      <p class="mute" style="margin:12px 0 0;font-size:14px">Um robô volta a essas fontes toda madrugada e atualiza o site. Se a coleta vier incompleta ou estranha, nada é publicado.</p></div>
+      <p class="mute" style="margin:12px 0 0;font-size:14px">Consultamos as fontes diariamente. Quando a coleta retorna dados incompletos ou inconsistentes, o site exibe a última versão validada.</p></div>
     <div class="box"><h3>Achou um erro?</h3><p id="m-erro" style="margin:0 0 10px"></p><p class="mute" style="margin:0;font-size:14px">Todos os números foram conferidos contra a fonte oficial antes da publicação: propostas, votos, presença no plenário e nas comissões, viagens e votos de 2024.</p></div>
   </div>
 </section>
@@ -488,6 +534,19 @@ escreve("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="h
         + "".join(f"<url><loc>{DOMINIO}{u}</loc><lastmod>{D['ger']}</lastmod></url>\n" for u in urls) + "</urlset>\n")
 escreve("robots.txt", f"User-agent: *\nAllow: /\nDisallow: /v/\nSitemap: {DOMINIO}/sitemap.xml\n")
 
+
+def dados_formulario(pagina, dados):
+    vereadores = [{"ap": v["ap"], "part": v.get("part", "")} for v in dados["v"]]
+    conteudo = json.dumps({"v": vereadores, "bairros": dados["bairros"]},
+                          ensure_ascii=False, separators=(",", ":")).replace("<", r"<")
+    bloco = f'<script type="application/json" id="dados-formulario">{conteudo}</script>'
+    padrao = r'<script src="\.\./dados\.js"></script>|<script type="application/json" id="dados-formulario">.*?</script>'
+    resultado, total = re.subn(padrao, lambda _: bloco, pagina, flags=re.S)
+    if total != 1:
+        raise ValueError("Bloco de dados do formulario ausente ou duplicado")
+    return resultado
+
+
 # ------------------------------------------------------------------ Voz do Bairro: mesmo menu do resto do site
 pd = os.path.join(SITE, "demandas", "index.html")
 if os.path.exists(pd):
@@ -505,8 +564,10 @@ if os.path.exists(pd):
         '@media(max-width:899px){.rb-nav>div{gap:0;padding-top:8px}.rb-nav ul{margin:0 -16px;padding:6px 16px 8px;width:calc(100% + 32px);overflow-x:auto;scrollbar-width:none}.rb-nav li a{padding:7px 11px;font-size:14px;background:#f4f6f8}.rb-nav .cta a{background:#e5322d}}'
         '.top .back{display:none}')
     bloco = ('<!-- menu:ini --><style>' + css + '</style><nav class="rb-nav" aria-label="Menu principal"><div><a class="brand" href="/">'
-             + LOGO + '<span><b>RADAR</b><b>BRAGANÇA</b></span></a><ul>' + itens + '</ul></div></nav><!-- menu:fim -->\n')
+             + LOGO + '<span><b>RADAR</b><b>BRAGANÇA</b></span></a><ul class="desktop-nav">' + itens + '</ul>' + menu_mobile("voz") + '</div></nav><!-- menu:fim -->\n')
+    if "/assets/mobile-nav.css?" not in h:
+        h = h.replace("</head>", '<link rel="stylesheet" href="/assets/mobile-nav.css?v=1">\n' + "</head>", 1)
     h = h.replace("<body>\n", "<body>\n" + bloco, 1)
-    open(pd, "w", encoding="utf-8").write(h)
+    open(pd, "w", encoding="utf-8").write(dados_formulario(h, D))
 
 print(f"Páginas geradas: início, vereadores, {len(V)} vereadores, bairros, propostas, sobre.")

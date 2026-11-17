@@ -22,12 +22,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/radar.css?v=1794934310">
+<link rel="stylesheet" href="/assets/mobile-nav.css?v=1">
 </head>
 <body>
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 <header class="nav"><div class="wrap">
   <a class="brand" href="/" aria-label="Radar Bragança, página inicial"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#e5322d"/><path d="M19 17a21 21 0 000 30M45 17a21 21 0 010 30M10 9a33 33 0 000 46M54 9a33 33 0 010 46" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/></svg><span><b>RADAR</b><b>BRAGANÇA</b></span></a>
-  <nav aria-label="Menu principal"><ul class="menu"><li><a href="/">Início</a></li><li><a href="/vereadores/" aria-current=page>Vereadores</a></li><li><a href="/bairros/">Seu bairro</a></li><li><a href="/propostas/">Propostas</a></li><li><a href="/prefeitura/">Prefeitura</a></li><li><a href="/sobre/">Sobre</a></li><li class=cta><a href="/demandas/">Voz do Bairro</a></li></ul></nav>
+  <nav aria-label="Menu principal"><ul class="menu"><li><a href="/">Início</a></li><li><a href="/vereadores/" aria-current=page>Vereadores</a></li><li><a href="/bairros/">Seu bairro</a></li><li><a href="/propostas/">Propostas</a></li><li><a href="/prefeitura/">Prefeitura</a></li><li><a href="/sobre/">Sobre</a></li><li class=cta><a href="/demandas/">Voz do Bairro</a></li></ul><div class="mobile-nav"><a href="/bairros/">Seu bairro</a><a href="/demandas/">Voz do Bairro</a><details><summary>Menu</summary><div class="mobile-nav-links"><a href="/">Início</a><a href="/vereadores/" aria-current=page>Vereadores</a><a href="/propostas/">Propostas</a><a href="/prefeitura/">Prefeitura</a><a href="/sobre/">Sobre</a></div></details></div></nav>
 </div></header>
 <main id="conteudo">
 <noscript><p class="wrap warn" style="margin-top:20px">Este site precisa do JavaScript ligado no navegador para mostrar os dados.</p></noscript>
@@ -37,6 +38,7 @@
   <h1>Comparar vereadores</h1>
   <p class="lead">Escolha dois vereadores. Os números são os mesmos para todos e vêm dos dados oficiais. Nas barras, quem tem o número maior fica com a barra cheia, e as porcentagens vão de 0 a 100%.</p>
   <div class="vs" id="vs"></div>
+  <div class="contato"><button class="btn gh" type="button" id="cmp-copy">Copiar link desta comparação</button><span role="status" id="cmp-copy-status"></span></div>
   <div id="cmp"></div>
   <p class="mute" style="font-size:14px;margin-top:18px">Desde a posse, em 1º de janeiro de 2025. Como cada número é contado: <a href="/sobre/">Sobre</a>.</p>
 </section>
@@ -50,7 +52,7 @@
   <p class="fine"><span data-atualizado></span> Este não é um site oficial. Projeto independente, sem ligação com a Câmara, a Prefeitura, candidatos ou partidos. Todos os dados vêm de fontes públicas, citadas em cada página.</p>
 </div></footer>
 <script src="/dados.js?v=2026-11-17T13:59:13-03:00"></script>
-<script src="/assets/radar.js?v=1794934310"></script>
+<script src="/assets/radar.js?v=1794934310&texto=2&fluxos=1"></script>
 <script>Radar.comparar()</script>
 <!-- Contador de visitas (GoatCounter): sem cookies, não identifica ninguém. -->
 <script data-goatcounter="https://radarbraganca.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

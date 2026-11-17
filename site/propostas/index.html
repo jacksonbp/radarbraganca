@@ -22,12 +22,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/radar.css?v=1794934310">
+<link rel="stylesheet" href="/assets/mobile-nav.css?v=1">
 </head>
 <body>
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 <header class="nav"><div class="wrap">
   <a class="brand" href="/" aria-label="Radar Bragança, página inicial"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#e5322d"/><path d="M19 17a21 21 0 000 30M45 17a21 21 0 010 30M10 9a33 33 0 000 46M54 9a33 33 0 010 46" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/></svg><span><b>RADAR</b><b>BRAGANÇA</b></span></a>
-  <nav aria-label="Menu principal"><ul class="menu"><li><a href="/">Início</a></li><li><a href="/vereadores/">Vereadores</a></li><li><a href="/bairros/">Seu bairro</a></li><li><a href="/propostas/" aria-current=page>Propostas</a></li><li><a href="/prefeitura/">Prefeitura</a></li><li><a href="/sobre/">Sobre</a></li><li class=cta><a href="/demandas/">Voz do Bairro</a></li></ul></nav>
+  <nav aria-label="Menu principal"><ul class="menu"><li><a href="/">Início</a></li><li><a href="/vereadores/">Vereadores</a></li><li><a href="/bairros/">Seu bairro</a></li><li><a href="/propostas/" aria-current=page>Propostas</a></li><li><a href="/prefeitura/">Prefeitura</a></li><li><a href="/sobre/">Sobre</a></li><li class=cta><a href="/demandas/">Voz do Bairro</a></li></ul><div class="mobile-nav"><a href="/bairros/">Seu bairro</a><a href="/demandas/">Voz do Bairro</a><details><summary>Menu</summary><div class="mobile-nav-links"><a href="/">Início</a><a href="/vereadores/">Vereadores</a><a href="/propostas/" aria-current=page>Propostas</a><a href="/prefeitura/">Prefeitura</a><a href="/sobre/">Sobre</a></div></details></div></nav>
 </div></header>
 <main id="conteudo">
 <noscript><p class="wrap warn" style="margin-top:20px">Este site precisa do JavaScript ligado no navegador para mostrar os dados.</p></noscript>
@@ -39,7 +40,7 @@
   <div class="split" id="split" aria-hidden="true"></div>
   <div class="cats" id="cats"></div>
 </section>
-<section class="wrap">
+<section class="wrap" id="lista-propostas">
   <p class="eyebrow">Proposta por proposta</p>
   <h2>Procure qualquer proposta</h2>
   <div class="search" style="max-width:640px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="pq" type="search" placeholder="Ex.: creche, iluminação, Rua Santa Clara" autocomplete="off" aria-label="Procurar proposta"></div>
@@ -57,7 +58,7 @@
   <p class="fine"><span data-atualizado></span> Este não é um site oficial. Projeto independente, sem ligação com a Câmara, a Prefeitura, candidatos ou partidos. Todos os dados vêm de fontes públicas, citadas em cada página.</p>
 </div></footer>
 <script src="/dados.js?v=2026-11-17T13:59:13-03:00"></script>
-<script src="/assets/radar.js?v=1794934310"></script>
+<script src="/assets/radar.js?v=1794934310&texto=3"></script>
 <script>Radar.propostas()</script>
 <!-- Contador de visitas (GoatCounter): sem cookies, não identifica ninguém. -->
 <script data-goatcounter="https://radarbraganca.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

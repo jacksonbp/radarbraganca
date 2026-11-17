@@ -21,22 +21,23 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/radar.css?v=1794934310">
+<link rel="stylesheet" href="/assets/radar.css?v=1794934310&ficha=1">
+<link rel="stylesheet" href="/assets/mobile-nav.css?v=1">
 </head>
 <body>
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 <header class="nav"><div class="wrap">
   <a class="brand" href="/" aria-label="Radar Bragança, página inicial"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#e5322d"/><path d="M19 17a21 21 0 000 30M45 17a21 21 0 010 30M10 9a33 33 0 000 46M54 9a33 33 0 010 46" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/></svg><span><b>RADAR</b><b>BRAGANÇA</b></span></a>
-  <nav aria-label="Menu principal"><ul class="menu"><li><a href="/">Início</a></li><li><a href="/vereadores/" aria-current=page>Vereadores</a></li><li><a href="/bairros/">Seu bairro</a></li><li><a href="/propostas/">Propostas</a></li><li><a href="/prefeitura/">Prefeitura</a></li><li><a href="/sobre/">Sobre</a></li><li class=cta><a href="/demandas/">Voz do Bairro</a></li></ul></nav>
+  <nav aria-label="Menu principal"><ul class="menu"><li><a href="/">Início</a></li><li><a href="/vereadores/" aria-current=page>Vereadores</a></li><li><a href="/bairros/">Seu bairro</a></li><li><a href="/propostas/">Propostas</a></li><li><a href="/prefeitura/">Prefeitura</a></li><li><a href="/sobre/">Sobre</a></li><li class=cta><a href="/demandas/">Voz do Bairro</a></li></ul><div class="mobile-nav"><a href="/bairros/">Seu bairro</a><a href="/demandas/">Voz do Bairro</a><details><summary>Menu</summary><div class="mobile-nav-links"><a href="/">Início</a><a href="/vereadores/" aria-current=page>Vereadores</a><a href="/propostas/">Propostas</a><a href="/prefeitura/">Prefeitura</a><a href="/sobre/">Sobre</a></div></details></div></nav>
 </div></header>
 <main id="conteudo">
 <noscript><p class="wrap warn" style="margin-top:20px">Este site precisa do JavaScript ligado no navegador para mostrar os dados.</p></noscript>
 
 <section class="wrap phead" style="padding-top:20px">
   <p class="crumbs"><a href="/">Início</a> › <a href="/vereadores/">Vereadores</a> › Quique Brown</p>
-  <div class="prof"><img class="big-ph" src="/fotos/302.jpg" alt="Foto de Quique Brown"><div><h1>Quique Brown</h1><p class="civil">Luis Henrique Camargo Duarte</p><div class="tags"><span class="pill">AVANTE</span><span class="pill r">2.713 votos em 2024</span></div><div class="contato"><a class="btn lt" href="https://camarabp.sp.gov.br/vereador/290/quique-brown" target="_blank" rel="noopener">Ficha oficial na Câmara ↗</a><a class="btn lt" href="mailto:quique.brown@camarabp.sp.gov.br">quique.brown@camarabp.sp.gov.br</a><a class="btn lt" href="/comparar/?a=302">⇄ Comparar com outro</a><a class="btn wa" id="wa" href="#" target="_blank" rel="noopener">Compartilhar no WhatsApp</a><button class="btn gh" type="button" id="cp">Copiar link</button></div></div></div>
+  <div class="prof"><img class="big-ph" src="/fotos/302.jpg" alt="Foto de Quique Brown"><div><h1>Quique Brown</h1><p class="civil">Luis Henrique Camargo Duarte</p><div class="tags"><span class="pill">AVANTE</span><span class="pill r">2.713 votos em 2024</span></div><div class="contato"><a class="btn ficha-compare" href="/comparar/?a=302">Comparar vereadores</a><a class="btn lt" href="https://camarabp.sp.gov.br/vereador/290/quique-brown" target="_blank" rel="noopener">Ficha oficial na Câmara ↗</a><a class="btn lt" href="mailto:quique.brown@camarabp.sp.gov.br">quique.brown@camarabp.sp.gov.br</a><a class="btn wa" id="wa" href="#" target="_blank" rel="noopener">Compartilhar no WhatsApp</a><button class="btn gh" type="button" id="cp">Copiar link</button></div></div></div>
+  <nav class="subnav ficha-nav" aria-label="Nesta página"><a href="#s-propostas">Propostas</a><a href="#kpis">Presença</a><a href="#s-votos">Votos e comissões</a><a href="#s-viagens">Viagens</a><a href="#s-voto24">Bairros que votaram</a><a href="#s-ruas">Ruas que voltam</a><a href="#s-blocos">Com quem vota</a></nav>
   <div class="kpis" id="kpis"></div>
-  <nav class="subnav" aria-label="Nesta página"><a href="#s-propostas">Propostas</a><a href="#s-voto24">Bairros que votaram</a><a href="#s-ruas">Ruas que voltam</a><a href="#s-votos">Votos e comissões</a><a href="#s-blocos">Com quem vota</a><a href="#s-viagens">Viagens</a></nav>
 </section>
 <section class="wrap">
   <div class="cols">
@@ -85,7 +86,7 @@
   <p class="fine"><span data-atualizado></span> Este não é um site oficial. Projeto independente, sem ligação com a Câmara, a Prefeitura, candidatos ou partidos. Todos os dados vêm de fontes públicas, citadas em cada página.</p>
 </div></footer>
 <script src="/dados.js?v=2026-11-17T13:59:13-03:00"></script>
-<script src="/assets/radar.js?v=1794934310"></script>
+<script src="/assets/radar.js?v=1794934310&texto=2"></script>
 <script>Radar.vereador(302)</script>
 <!-- Contador de visitas (GoatCounter): sem cookies, não identifica ninguém. -->
 <script data-goatcounter="https://radarbraganca.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

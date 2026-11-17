@@ -23,12 +23,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/radar.css?v=1794934310">
 <script src="/prefeitura.js?v=1794934785"></script>
+<link rel="stylesheet" href="/assets/mobile-nav.css?v=1">
 </head>
 <body>
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 <header class="nav"><div class="wrap">
   <a class="brand" href="/" aria-label="Radar Bragança, página inicial"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#e5322d"/><path d="M19 17a21 21 0 000 30M45 17a21 21 0 010 30M10 9a33 33 0 000 46M54 9a33 33 0 010 46" stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"/></svg><span><b>RADAR</b><b>BRAGANÇA</b></span></a>
-  <nav aria-label="Menu principal"><ul class="menu"><li><a href="/">Início</a></li><li><a href="/vereadores/">Vereadores</a></li><li><a href="/bairros/">Seu bairro</a></li><li><a href="/propostas/">Propostas</a></li><li><a href="/prefeitura/" aria-current=page>Prefeitura</a></li><li><a href="/sobre/">Sobre</a></li><li class=cta><a href="/demandas/">Voz do Bairro</a></li></ul></nav>
+  <nav aria-label="Menu principal"><ul class="menu"><li><a href="/">Início</a></li><li><a href="/vereadores/">Vereadores</a></li><li><a href="/bairros/">Seu bairro</a></li><li><a href="/propostas/">Propostas</a></li><li><a href="/prefeitura/" aria-current=page>Prefeitura</a></li><li><a href="/sobre/">Sobre</a></li><li class=cta><a href="/demandas/">Voz do Bairro</a></li></ul><div class="mobile-nav"><a href="/bairros/">Seu bairro</a><a href="/demandas/">Voz do Bairro</a><details><summary>Menu</summary><div class="mobile-nav-links"><a href="/">Início</a><a href="/vereadores/">Vereadores</a><a href="/propostas/">Propostas</a><a href="/prefeitura/" aria-current=page>Prefeitura</a><a href="/sobre/">Sobre</a></div></details></div></nav>
 </div></header>
 <main id="conteudo">
 <noscript><p class="wrap warn" style="margin-top:20px">Este site precisa do JavaScript ligado no navegador para mostrar os dados.</p></noscript>
@@ -63,7 +64,7 @@
   <p class="eyebrow">Como ler</p>
   <h2>De onde vêm esses números</h2>
   <div class="method">
-    <details open><summary>Fonte</summary><p>Portal da Transparência Municipal do Tribunal de Contas do Estado de São Paulo (TCE-SP), com os dados que a Prefeitura envia todo mês. O robô do site busca esses dados toda madrugada. Os números de um mês costumam aparecer no TCE uns 30 a 60 dias depois. Veja a fonte em <a href="https://transparencia.tce.sp.gov.br/municipio/braganca-paulista" target="_blank" rel="noopener">transparencia.tce.sp.gov.br</a>.</p></details>
+    <details open><summary>Fonte</summary><p>Portal da Transparência Municipal do Tribunal de Contas do Estado de São Paulo (TCE-SP), com os dados que a Prefeitura envia todo mês. O Radar consulta esses dados diariamente. Os números de um mês costumam aparecer no TCE uns 30 a 60 dias depois. Veja a fonte em <a href="https://transparencia.tce.sp.gov.br/municipio/braganca-paulista" target="_blank" rel="noopener">transparencia.tce.sp.gov.br</a>.</p></details>
     <details open><summary>“Pago” e “entrou”</summary><p><b>Pago</b> é o dinheiro que de fato saiu do caixa da Prefeitura naquele mês. Pode incluir contas de meses ou anos anteriores. <b>Entrou</b> é o que a Prefeitura arrecadou: impostos, taxas e repasses do Estado e do governo federal. Os dois não se comparam como um “lucro” ou “prejuízo”: a Prefeitura também guarda dinheiro para pagar depois, e parte das receitas tem destino obrigatório, como saúde e educação.</p></details>
     <details open><summary>Fornecedores</summary><p>A lista soma os pagamentos feitos a cada empresa (CNPJ) no ano. Aparecer na lista não indica nenhum problema: mostra só para onde o dinheiro foi. Pagamentos a pessoas físicas aparecem só como total, sem nomes, para proteger a privacidade de servidores, aposentados e prestadores.</p></details>
     <details open><summary>Câmara</summary><p>O custo da Câmara é o que a própria Câmara pagou no período, com o dinheiro que recebe da Prefeitura: salários, funcionários, contas e serviços.</p></details>
@@ -79,7 +80,7 @@
   <p class="fine"><span data-atualizado></span> Este não é um site oficial. Projeto independente, sem ligação com a Câmara, a Prefeitura, candidatos ou partidos. Todos os dados vêm de fontes públicas, citadas em cada página.</p>
 </div></footer>
 <script src="/dados.js?v=2026-11-17T13:59:13-03:00"></script>
-<script src="/assets/radar.js?v=1794934310"></script>
+<script src="/assets/radar.js?v=1794934310&texto=2"></script>
 <script>Radar.prefeitura()</script>
 <!-- Contador de visitas (GoatCounter): sem cookies, não identifica ninguém. -->
 <script data-goatcounter="https://radarbraganca.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

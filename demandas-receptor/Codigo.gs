@@ -63,7 +63,51 @@ function doPost(e) {
 }
 
 // Abrir o endereço no navegador mostra só isto (serve para testar se está no ar).
-function doGet() { return resposta({ ok: true, servico: 'Voz do Bairro' }); }
+const ABA_PUBLICA = 'Problemas dos bairros';
+const CAMPOS_PUBLICOS = ['Publicar', 'Bairro', 'Problema', 'Local público', 'Situação', 'Atualizado em'];
+const ESTADOS_PUBLICOS = ['Publicado', 'Encaminhado', 'Aguardando retorno', 'Solução informada', 'Resolvido'];
+
+function doGet(e) {
+  if (!e || !e.parameter || e.parameter.painel !== 'bairros') {
+    return resposta({ ok: true, servico: 'Voz do Bairro' });
+  }
+  try {
+    const aba = SpreadsheetApp.openById(PLANILHA_ID).getSheetByName(ABA_PUBLICA);
+    if (!aba) return resposta({ ok: false });
+    const [cabecalho, ...linhas] = aba.getDataRange().getValues();
+    if (!CAMPOS_PUBLICOS.every((nome, i) => cabecalho[i] === nome)) return resposta({ ok: false });
+    return resposta({ ok: true, problemas: problemasPublicos(linhas) });
+  } catch (_) {
+    return resposta({ ok: false });
+  }
+}
+
+function problemasPublicos(linhas) {
+  return linhas.flatMap(([publicar, bairro, problema, local, situacao, atualizado]) => {
+    if (publicar !== true || !ESTADOS_PUBLICOS.includes(situacao)) return [];
+    const titulo = String(problema || '').trim().slice(0, 140);
+    const bairroPublico = String(bairro || '').trim().slice(0, 120);
+    if (!titulo || !bairroPublico) return [];
+    return [{
+      bairro: bairroPublico, titulo, local: String(local || '').trim().slice(0, 160), situacao,
+      atualizado: atualizado instanceof Date && !isNaN(atualizado.getTime())
+        ? Utilities.formatDate(atualizado, 'America/Sao_Paulo', 'yyyy-MM-dd') : ''
+    }];
+  });
+}
+
+function prepararPainelBairros() {
+  const planilha = SpreadsheetApp.openById(PLANILHA_ID);
+  if (planilha.getSheetByName(ABA_PUBLICA)) return;
+  const aba = planilha.insertSheet(ABA_PUBLICA);
+  aba.getRange(1, 1, 1, CAMPOS_PUBLICOS.length).setValues([CAMPOS_PUBLICOS]).setFontWeight('bold');
+  aba.setFrozenRows(1);
+  aba.getRange('A2:A').insertCheckboxes();
+  const estados = SpreadsheetApp.newDataValidation().requireValueInList(ESTADOS_PUBLICOS, true)
+    .setAllowInvalid(false).build();
+  aba.getRange('E2:E').setDataValidation(estados);
+  aba.getRange('F2:F').setNumberFormat('dd/mm/yyyy');
+}
 
 function limpar(x, max) {
   let s = String(x == null ? '' : x).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').trim().slice(0, max);

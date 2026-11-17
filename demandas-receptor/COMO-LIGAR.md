@@ -28,3 +28,22 @@ Obs.: com várias contas Google abertas no Chrome, abra os links acima trocando 
 
 - Não publique as mensagens. Só repasse nome e contato quando a coluna "Autoriza enviar nome" for **Sim**.
 - Se alguém pedir para apagar a mensagem (pelo protocolo), apague a linha da planilha.
+
+## Painel de problemas dos bairros
+
+No projeto Apps Script que recebe as demandas, aplique a versão atualizada de
+Codigo.gs e execute prepararPainelBairros uma vez. Em seguida, edite a implantação
+existente, selecione Nova versão e implante. Assim o formulário conserva o endereço
+já configurado. Para verificar a leitura, abra o endereço /exec da implantação
+com ?painel=bairros e confira se ele retorna ok e problemas.
+
+Na aba Problemas dos bairros, crie uma linha com o bairro, o resumo aprovado,
+uma referência pública de local, a situação e a data, se houver. Marque Publicar
+quando a linha estiver pronta. Desmarque para retirar do site. Edite a situação
+e a data para atualizar o acompanhamento. Marque Resolvido após confirmação.
+Agrupe relatos duplicados em uma única linha pública.
+
+As colunas dessa aba são públicas quando a caixa está marcada. Mantenha
+nomes, contatos, protocolos e relatos originais apenas na aba privada Demandas.
+A prévia local usa exemplos fictícios. No domínio publicado, o painel consulta
+o Apps Script e os dados marcados para publicação.
