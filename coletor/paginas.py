@@ -119,7 +119,7 @@ inicio = f"""
   <div>
     <span class="live"><i></i><span id="livet">Ao vivo</span></span>
     <h1 class="logo" aria-label="Radar Bragança">{LOGO.replace('currentColor', '#111a24')}<span><b>RADAR</b><b>BRAGANÇA</b></span></h1>
-    <p class="intro"><b>Raio-X de Bragança Paulista-SP.</b> O que cada vereador fez desde a posse, contado todo dia com os dados oficiais da Câmara.</p>
+    <p class="intro"><b>Raio-X da Câmara de Bragança Paulista.</b> O que cada um dos 19 vereadores fez desde que assumiu, em 2025. Atualizado todo dia com os dados oficiais da Câmara.</p>
     <form class="search" id="fbq" role="search" style="max-width:none"><label for="hq" class="eyebrow" style="display:block;margin-bottom:8px">O que pediram pelo seu bairro?</label>
       <div style="position:relative">{SEARCH_ICON}<input id="hq" type="search" placeholder="Digite seu bairro ou sua rua" autocomplete="off"></div></form>
     <ul class="chips" id="bairros-chips"></ul>
@@ -135,7 +135,7 @@ inicio = f"""
   <ul class="trust">
     <li>{IC_CHECK}<b>Só dados oficiais</b><span>Câmara, TSE e Portal da Transparência</span></li>
     <li>{IC_CHECK}<b>Atualizado todo dia</b><span>Um robô confere tudo de madrugada</span></li>
-    <li>{IC_CHECK}<b>Mesma régua</b><span>Os 19 vereadores, sem nota nem opinião</span></li>
+    <li>{IC_CHECK}<b>Mesma régua</b><span>Os 19 vereadores medidos do mesmo jeito, sem nota nem opinião</span></li>
     <li>{IC_CHECK}<b>Fonte em cada número</b><span>Cada proposta abre na página da Câmara</span></li>
   </ul>
 </section>
@@ -373,18 +373,18 @@ sobre = """
   <p class="eyebrow">Metodologia</p>
   <h2>Como contamos</h2>
   <div class="method">
-    <details open><summary>Presença no plenário</summary><p id="m-pres"></p></details>
+    <details open><summary>Presença nas reuniões da Câmara</summary><p id="m-pres"></p></details>
     <details open><summary>Presença nas comissões</summary><p id="m-com"></p></details>
-    <details open><summary>Os grupos de propostas</summary><p>A mesma regra vale para todos. <b>Indicação</b> é pedido de melhoria. <b>Pedido de informação</b>, <b>requerimento</b> e moção de <b>apelo</b> são cobranças. Moções, requerimentos e projetos que dão parabéns, votos de pesar, título, medalha, nome de rua ou criam data comemorativa são <b>homenagens</b>. Os demais projetos são <b>propostas de lei</b>. Moções de apoio ou repúdio e regras internas da Câmara ficam em <b>outros</b>.</p></details>
+    <details open><summary>Os grupos de propostas</summary><p>A mesma regra vale para todos.<br>• <b>Pedido de conserto</b> (na Câmara se chama “indicação”): o vereador pede à Prefeitura uma melhoria na rua ou no bairro.<br>• <b>Cobrança</b>: pedido de informação, requerimento ou moção de apelo, quando o vereador pergunta ou cobra algo da Prefeitura ou de outro órgão.<br>• <b>Homenagem</b>: parabéns, voto de pesar, título, medalha, nome de rua ou data comemorativa.<br>• <b>Projeto de lei</b>: cria ou muda uma regra da cidade.<br>• <b>Outros</b>: moções de apoio ou repúdio e regras internas da Câmara.</p></details>
     <details open><summary>Votos</summary><p id="m-vot"></p></details>
     <details open><summary>Com quem vota e apoio à Prefeitura</summary><p id="m-blo"></p></details>
     <details open><summary>Onde foi votado e onde pede</summary><p id="m-loc"></p></details>
     <details open><summary>Salário</summary><p id="m-sal"></p></details>
     <details open><summary>Bairros e ruas</summary><p>O bairro e a rua são lidos do texto oficial de cada pedido (o trecho “Rua tal – Bairro tal”). Quando o texto não segue esse formato, o pedido não entra no cruzamento por rua, mas continua aparecendo na busca por palavra.</p></details>
-    <details open><summary>Viagens oficiais</summary><p>Do Portal da Transparência da Câmara (Despesas de Viagens). O valor de cada viagem é lido da prestação de contas oficial (PDF). Ele soma alimentação e hospedagem de todos que foram na viagem, inclusive motorista e servidores, e não inclui combustível nem pedágio. Viagem com mais de um vereador aparece na página de cada um.</p></details>
-    <details open><summary>Votos em 2024 e comparação com 2021–2024</summary><p>Os votos são o resultado oficial do TSE na eleição de 2024. A comparação usa as propostas que cada vereador apresentou na legislatura 2021–2024, com a mesma regra de grupos, divididas por 4 anos; o “agora” divide as propostas atuais pelo tempo desde a posse. Presença e votos da legislatura anterior não podem ser comparados: a Câmara só passou a registrar o voto de cada vereador em 2026.</p></details>
-    <details open><summary>O que não é falta</summary><p>Se o sistema não registrou ninguém numa sessão, ela não conta. Ausência justificada e licença médica aparecem separadas e não contam como falta.</p></details>
-    <details open><summary>Leis aprovadas</summary><p>O site mostra quantos projetos de lei cada vereador apresentou, mas não quantos viraram lei: o sistema da Câmara não informa a situação de cada projeto de forma confiável.</p></details>
+    <details open><summary>Viagens oficiais</summary><p>Vêm do Portal da Transparência da Câmara. O valor de cada viagem é o da prestação de contas oficial. Ele soma alimentação e hospedagem de todos que foram, inclusive motorista e funcionários. Não inclui combustível nem pedágio. Se mais de um vereador foi, a viagem aparece na página de cada um.</p></details>
+    <details open><summary>Votos em 2024 e comparação com o mandato anterior</summary><p>Os votos são o resultado oficial do TSE na eleição de 2024. A comparação mostra quantas propostas por ano o vereador fazia no mandato anterior (2021–2024) e quantas faz agora, com a mesma regra de grupos. Presença e votos do mandato anterior não podem ser comparados, porque a Câmara só começou a registrar o voto de cada vereador em 2026.</p></details>
+    <details open><summary>O que não é falta</summary><p>Ausência justificada e licença médica aparecem separadas e não contam como falta. Reunião em que o sistema não registrou ninguém também não conta.</p></details>
+    <details open><summary>Leis aprovadas</summary><p>O site mostra quantos projetos de lei cada vereador apresentou, mas ainda não quantos viraram lei. O sistema da Câmara não informa a situação de cada projeto de forma confiável.</p></details>
   </div>
 </section>
 """

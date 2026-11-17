@@ -169,14 +169,14 @@ function ring(v,s=76){
   const t=v.P+v.A+v.F, r=s*.395, sw=s*.118, c=s/2;
   if(!t)return `<div class="ring"><svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}"><circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#eef1f4" stroke-width="${sw}"/></svg><b>–</b></div>`;
   const C=2*Math.PI*r, seg=(n,col,off)=>n?`<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-dasharray="${n/t*C} ${C}" stroke-dashoffset="${-off/t*C}" transform="rotate(-90 ${c} ${c})"/>`:'';
-  return `<div class="ring"><svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" role="img" aria-label="${v.P} presenças em ${t} sessões"><circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#eef1f4" stroke-width="${sw}"/>${seg(v.P,'#111a24',0)}${seg(v.A,'#d99a2b',v.P)}${seg(v.F,'#cf3a2e',v.P+v.A)}</svg><b class="num">${Math.round(v.P/t*100)}%</b></div>`;
+  return `<div class="ring"><svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" role="img" aria-label="${v.P} presenças em ${t} reuniões"><circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#eef1f4" stroke-width="${sw}"/>${seg(v.P,'#111a24',0)}${seg(v.A,'#d99a2b',v.P)}${seg(v.F,'#cf3a2e',v.P+v.A)}</svg><b class="num">${Math.round(v.P/t*100)}%</b></div>`;
 }
 function comHTML(v){
   const c=v.cm; if(!c)return '';
   const t=c.P+c.A+c.F;
   if(!t)return `<div class="com"><span class="cl">Comissões</span><span class="mute">Não aparece em nenhuma lista de presença de comissão registrada no sistema.</span></div>`;
   const por=Object.entries(c.por).map(([s,x])=>`${esc((D.comissoes||{})[s]||s)}: ${x.P} de ${x.P+x.A+x.F}`).join(' · ');
-  return `<div class="com num"><span class="cl">Comissões</span><span><b>${c.P} de ${t}</b> sessões (${Math.round(c.P/t*100)}%) · <b class="${c.F?'bad':''}">${c.F} ${c.F===1?'falta':'faltas'}</b>${c.A?` · ${c.A} justificada${c.A>1?'s':''}`:''}</span><small class="mute">${por}</small></div>`;
+  return `<div class="com num"><span class="cl">Comissões</span><span><b>${c.P} de ${t}</b> reuniões (${Math.round(c.P/t*100)}%) · <b class="${c.F?'bad':''}">${c.F} ${c.F===1?'falta':'faltas'}</b>${c.A?` · ${c.A} justificada${c.A>1?'s':''}`:''}</span><small class="mute">${por}</small></div>`;
 }
 const ANOS_ATUAL=Math.max(.25,(Date.now()-new Date(D.posse+'T00:00:00-03:00').getTime())/(365.25*864e5));
 function antHTML(v){
@@ -235,7 +235,7 @@ P.inicio=function(){
 
 P.vereadores=function(){
   const pct=D.nvot?Math.floor(D.unan/D.nvot*100):0;
-  $('vsub').textContent=`Os ${V.length} vereadores da legislatura 2025–2028, com a mesma régua. Em ${pct} de cada 100 votações nominais, todos votaram igual. Toque em um vereador para ver tudo o que ele fez.`;
+  $('vsub').textContent=`Os ${V.length} vereadores da legislatura 2025–2028, com a mesma régua. Em ${pct} de cada 100 votações com voto registrado, todos votaram igual. Toque em um vereador para ver tudo o que ele fez.`;
   [...new Set(V.map(v=>v.part))].sort((a,b)=>a.localeCompare(b,'pt')).forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=`${p} (${V.filter(v=>v.part===p).length})`;$('partido').appendChild(o)});
   const render=()=>{
     const q=norm($('q').value.trim()),p=$('partido').value,o=$('ordem').value;
@@ -252,9 +252,9 @@ P.vereador=function(id){
   document.documentElement.style.setProperty('--deep',`hsl(${hue(i)} 55% 26%)`);
   const t=v.P+v.A+v.F, cm=v.cm||{P:0,A:0,F:0}, tc=cm.P+cm.A+cm.F;
   $('kpis').innerHTML=`
-    <div class="kpi kpi-pres"><span class="eyebrow">Presença no plenário</span><div class="pres">${ring(v,56)}<b class="num">${v.P} de ${t}</b></div><span>sessões com presença registrada na votação desde ${mesAno(D.pri.replace(/-/g,''))} · <span class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</span></span></div>
-    <div class="kpi"><span class="eyebrow">Presença nas comissões</span><b class="num">${tc?Math.round(cm.P/tc*100)+'%':'–'}</b><span>${tc?`${cm.P} de ${tc} sessões · ${cm.F} ${cm.F===1?'falta':'faltas'}`:'sem lista de presença registrada'}</span></div>
-    <div class="kpi"><span class="eyebrow">Propostas desde a posse</span><b class="num" style="color:var(--b)">${nf(v.tot)}</b><span>${nf(v.cat.b)} pedidos · ${nf(v.cat.c)} cobranças · ${nf(v.cat.l)} de lei</span></div>
+    <div class="kpi kpi-pres"><span class="eyebrow">Presença nas reuniões</span><div class="pres">${ring(v,56)}<b class="num">${v.P} de ${t}</b></div><span>reuniões em que esteve presente e votou, desde ${mesAno(D.pri.replace(/-/g,''))} · <span class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</span></span></div>
+    <div class="kpi"><span class="eyebrow">Presença nas comissões</span><b class="num">${tc?Math.round(cm.P/tc*100)+'%':'–'}</b><span>${tc?`${cm.P} de ${tc} reuniões · ${cm.F} ${cm.F===1?'falta':'faltas'}`:'sem lista de presença registrada'}</span></div>
+    <div class="kpi"><span class="eyebrow">Propostas desde a posse</span><b class="num" style="color:var(--b)">${nf(v.tot)}</b><span>${nf(v.cat.b)} pedidos de conserto · ${nf(v.cat.c)} cobranças à Prefeitura · ${nf(v.cat.l)} projetos de lei</span></div>
     <div class="kpi"><span class="eyebrow">Viagens oficiais</span><b class="num" style="color:var(--c)">${nf((v.vg||[]).length)}</b><span>${(v.vg||[]).length?brl.format(v.vgt||0)+' em despesas':'nenhuma registrada'}</span></div>`;
   // o que propôs
   $('picks').innerHTML=bar5(v)+ORDER.map(c=>`<button class="pick k-${c} num" type="button" data-c="${c}" ${v.cat[c]?'':'disabled'}><i></i><span>${CAT[c][0]}</span><b>${nf(v.cat[c])}</b><span class="ar" aria-hidden="true">›</span></button>`).join('');
@@ -289,7 +289,7 @@ P.vereador=function(id){
     $('jt').innerHTML=jt.length<2?'<p class="mute">Ainda há poucas votações divididas para comparar.</p>':
       `<p class="h3" style="margin-top:0">Vota mais junto com</p><ul class="jt">${jt.slice(0,3).map(lin).join('')}</ul>
        <p class="h3">Vota mais diferente de</p><ul class="jt jt-n">${jt.slice(-3).reverse().map(lin).join('')}</ul>
-       <p class="mute small">Porcentagem de vezes em que os dois votaram igual nas ${nf(D.ndiv||0)} votações nominais em que a Câmara se dividiu.</p>`;
+       <p class="mute small">Porcentagem de vezes em que os dois votaram igual nas ${nf(D.ndiv||0)} votações em que a Câmara se dividiu.</p>`;
     const g=v.gov||[0,0], pc=g[1]?Math.round(g[0]/g[1]*100):null;
     const todos=V.filter(w=>w.gov&&w.gov[1]).map(w=>w.gov[0]/w.gov[1]*100), med=todos.length?Math.round(todos.reduce((s,x)=>s+x,0)/todos.length):null;
     const lo=Math.max(0,Math.floor((Math.min(...todos)-4)/10)*10), esc_=x=>((x-lo)/(100-lo)*100).toFixed(1);
@@ -302,7 +302,7 @@ P.vereador=function(id){
        <p class="mute small">Cada ponto é um vereador; o vermelho é ${esc(v.ap)}. Apoiar ou não a Prefeitura não é bom nem ruim por si só: mostra de que lado cada um costuma ficar.</p>`;
   }
   $('votos').innerHTML=`<div class="vote num"><div><b>${nf(v.vs)}</b><span>vezes sim</span></div><div class="n"><b>${nf(v.vn+v.va)}</b><span>${v.va?'não ou abstenção':'vezes não'}</span></div></div>
-    ${v.naos.length?`<p class="h3">Quando não votou “sim”</p>${naosHTML(v)}`:`<p class="mute" style="margin:12px 0 0">Votou “sim” em todas as votações nominais registradas.</p>`}`;
+    ${v.naos.length?`<p class="h3">Quando não votou “sim”</p>${naosHTML(v)}`:`<p class="mute" style="margin:12px 0 0">Votou “sim” em todas as votações com voto registrado.</p>`}`;
   $('com').innerHTML=comHTML(v);
   $('ant').innerHTML=antHTML(v);
   $('vgs').innerHTML=(v.vg&&v.vg.length)?AVISO_VG+vgHTML(v):`<p class="mute">${v.vg?'Nenhuma viagem oficial registrada no Portal da Transparência.':'Dado ainda não coletado.'}</p>`;
@@ -364,12 +364,12 @@ P.propostas=function(){
 };
 
 P.sobre=function(){
-  $('m-pres').innerHTML=`Presença inferida pelos registros de votação. As listas oficiais de frequência registram momentos específicos e podem apresentar contagens diferentes. Conta a presença na hora das votações nominais do plenário: quem votou (sim, não, abstenção, ou o presidente que não vota) estava lá; quem aparece como “ausente” em todas as votações da sessão teve falta. Foram ${D.sess} sessões${D.pri?' de '+dt(D.pri):''} até ${D.ult?dt(D.ult):'agora'}. <b>A Câmara só passou a registrar no sistema o voto de cada vereador em ${D.pri?mesAno(D.pri.replace(/-/g,'')):'2026'}</b>; antes disso, desde a posse, não há registro nominal, e o site não acusa ninguém por esse período. Sessões só com votação simbólica (sem lista de nomes) não entram.`;
+  $('m-pres').innerHTML=`<b>Contamos como presente quem votou.</b> Em cada reunião da Câmara, quem votou (sim, não, abstenção, ou o presidente, que não vota) estava lá. Quem aparece como “ausente” em todas as votações da reunião teve falta.<br><br>Foram ${D.sess} reuniões${D.pri?' de '+dt(D.pri):''} até ${D.ult?dt(D.ult):'agora'}. <b>A Câmara só começou a registrar o voto de cada vereador em ${D.pri?mesAno(D.pri.replace(/-/g,'')):'2026'}.</b> Antes disso não há registro, e o site não acusa ninguém por esse período.<br><br>Reuniões com votação só “de braço levantado”, sem lista de nomes, não entram. A lista oficial de frequência da Câmara é feita em outros momentos da reunião e pode dar números um pouco diferentes.`;
   $('m-sal').innerHTML=`O valor é o mesmo para os ${V.length} e foi fixado pela <a href="${esc(D.sal.u)}" target="_blank" rel="noopener">${esc(D.sal.lei)}</a>. É o valor bruto. O contador da página inicial é uma estimativa: ${V.length} salários por mês, proporcional ao tempo desde a posse, sem 13º nem outros pagamentos.`+(D.sal.confirmado?'':' <b>O valor de R$ '+nf(D.sal.v)+' foi publicado pela imprensa local e ainda precisa ser conferido no texto oficial.</b>');
-  $('m-com').textContent=`As comissões (Finanças e Orçamento, Justiça e Redação, Educação e Cultura e Socioeconômica) analisam os projetos e dão parecer antes de irem ao plenário. Contamos as ${nf(D.ncom||0)} sessões de comissão${D.pricom?' desde '+dt(D.pricom):''} em que a Câmara registrou a lista de presença no sistema. Cada vereador só é contado nas comissões de que é membro. Sessões sem lista registrada não entram: dado ausente não é falta.`;
-  if($('m-loc'))$('m-loc').textContent=`Os votos de 2024 vêm dos dados abertos do TSE, seção por seção, somados por local de votação; o bairro é o que a Justiça Eleitoral registra para cada local. Mostramos os 5 locais onde cada vereador teve mais votos e quantos pedidos de melhoria ele fez para um bairro com o mesmo nome. A concentração é a parte dos votos que veio desses 5 locais; na média dos ${V.length} vereadores, ${D.locm??'–'}%. O local de votação nem sempre é onde o eleitor mora, então o cruzamento mostra uma tendência, não uma regra.`;
-  if($('m-blo'))$('m-blo').textContent=`“Com quem vota” usa só as ${nf(D.ndiv||0)} votações nominais em que a Câmara se dividiu (pelo menos um vereador votou diferente dos outros); nas unânimes todos concordam e a comparação não diria nada. Para cada par, contamos em quantas dessas votações os dois votaram igual, e só comparamos pares que votaram juntos ao menos 8 vezes. “Projetos da Prefeitura” são as ${nf(D.nexe||0)} votações nominais de projetos de autoria do Executivo Municipal; a porcentagem é dos votos “sim” entre os votos dados. Ausências não contam.`;
-  $('m-vot').textContent=`Só entram as votações nominais, em que o sistema registra o voto de cada um: ${nf(D.nvot)}${D.pri?' desde '+dt(D.pri):''}. Em ${nf(D.unan)} delas, todos votaram igual.`;
+  $('m-com').textContent=`Comissões são grupos de vereadores que estudam os projetos antes da votação: Finanças e Orçamento, Justiça e Redação, Educação e Cultura, e Assuntos Socioeconômicos. Contamos as ${nf(D.ncom||0)} reuniões de comissão${D.pricom?' desde '+dt(D.pricom):''} que têm lista de presença no sistema. Cada vereador só é contado nas comissões de que faz parte. Reunião sem lista não entra: falta de registro não é falta do vereador.`;
+  if($('m-loc'))$('m-loc').textContent=`Os votos de 2024 são os dados oficiais do TSE, somados por escola onde se vota. O bairro de cada escola é o que a Justiça Eleitoral informa. Mostramos as 5 escolas onde cada vereador teve mais votos e quantos pedidos de conserto ele fez para aquele bairro. “Voto concentrado” quer dizer que boa parte dos votos veio dessas 5 escolas; na média da Câmara, ${D.locm??'–'}%. Atenção: o eleitor vota perto de onde morava quando tirou o título, que nem sempre é onde mora hoje. Por isso o cruzamento mostra uma tendência, não uma regra.`;
+  if($('m-blo'))$('m-blo').textContent=`“Com quem vota” olha só as ${nf(D.ndiv||0)} votações em que a Câmara se dividiu, ou seja, em que pelo menos um vereador votou diferente. Quando todos votam igual, não dá para comparar ninguém. Para cada dupla de vereadores, contamos quantas vezes os dois votaram igual. Só comparamos duplas que votaram juntas pelo menos 8 vezes. “Projetos da Prefeitura” são as ${nf(D.nexe||0)} votações de projetos enviados pelo prefeito. A porcentagem é de votos “sim”. Ausências não contam.`;
+  $('m-vot').textContent=`Só entram as votações em que o sistema da Câmara registra o voto de cada vereador: ${nf(D.nvot)}${D.pri?' desde '+dt(D.pri):''}. Em ${nf(D.unan)} delas, todos votaram igual.`;
   $('m-erro').innerHTML=`Escreva para <b>${esc(CONFIG.contato)}</b> com o link da proposta ou da página. A correção é feita rápido.`;
 };
 
