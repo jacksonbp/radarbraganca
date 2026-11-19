@@ -144,7 +144,7 @@ function openRep(g){
   openSheet('b',TH[g.th][1],g.r,`${TH[g.th][0]} · pedido ${g.n} vezes até agora${g.b?' · '+g.b:''}`);
   const cnt=new Map(); g.items.forEach(it=>it[6].forEach(a=>cnt.set(a,(cnt.get(a)||0)+1)));
   const who=[...cnt.entries()].sort((a,b)=>b[1]-a[1]);
-  const msg=a=>`Olá, ${V[a].ap}. Moro em ${CONFIG.cidade}. A Câmara já recebeu ${g.n} pedidos de ${TEMA[g.th]||'melhoria'} na ${g.r}${g.b?', '+g.b:''}, desde ${mesAno(g.d0)}. ${cnt.get(a)===1?'Um deles saiu':cnt.get(a)+' deles saíram'} do seu gabinete, e o problema continua. O que a Prefeitura respondeu? O que ainda dá para fazer?\n\nFonte: ${SITE}`;
+  const msg=a=>`Olá, ${V[a].ap}. Moro em ${CONFIG.cidade}. A Câmara já recebeu ${g.n} pedidos de ${TEMA[g.th]||'melhoria'} na ${g.r}${g.b?', '+g.b:''}, desde ${mesAno(g.d0)}. ${cnt.get(a)===1?'Um deles saiu':cnt.get(a)+' deles saíram'} do seu gabinete. Você pode informar a situação desses pedidos e a resposta da Prefeitura?\n\nFonte: ${SITE}`;
   $('sh-b').innerHTML=`<div class="cob"><h3>Cobre uma resposta</h3>
     <p>A mensagem já vem pronta. Escolha o vereador, ajuste o texto se quiser e envie.</p>
     <label class="field">Para quem<select id="cob-v">${who.map(([a,n])=>`<option value="${a}">${esc(V[a].ap)} (${n} ${n===1?'pedido':'pedidos'} para esta rua)</option>`).join('')}</select></label>
@@ -153,7 +153,7 @@ function openRep(g){
     <p class="h3">Os ${g.n} pedidos, do mais recente ao mais antigo</p><div id="replist"></div>`;
   const sel=$('cob-v'), ta=$('cob-t');
   const links=()=>{const v=V[+sel.value], t=encodeURIComponent(ta.value);
-    $('cob-a').innerHTML=(v.email?`<a class="btn" href="mailto:${esc(v.email)}?subject=${encodeURIComponent(g.r+': o problema continua')}&body=${t}">Enviar por e-mail</a>`:'')
+    $('cob-a').innerHTML=(v.email?`<a class="btn" href="mailto:${esc(v.email)}?subject=${encodeURIComponent(g.r+': situação dos pedidos')}&body=${t}">Enviar por e-mail</a>`:'')
       +`<a class="btn wa" href="https://wa.me/?text=${t}" target="_blank" rel="noopener">Mandar no grupo do bairro</a><button class="btn gh" type="button" id="cob-cp">Copiar mensagem</button>`;
     $('cob-c').innerHTML=(v.email?`E-mail oficial do gabinete: <b>${esc(v.email)}</b> · `:'')+'Telefone da Câmara: <b>(11) 4892-6200</b>';
     $('cob-cp').onclick=async e=>{try{await navigator.clipboard.writeText(ta.value);e.target.textContent='Copiado'}catch(_){ta.focus();ta.select();e.target.textContent='Selecionado: copie com o dedo'}}};
@@ -210,7 +210,7 @@ const GER=new Date(D.gerh);
 function ago(){const m=Math.max(0,Math.round((Date.now()-GER.getTime())/6e4));
   return m<2?'agora mesmo':m<60?`há ${m} minutos`:m<120?'há 1 hora':m<1440?`há ${Math.floor(m/60)} horas`:m<2880?'ontem':`há ${Math.floor(m/1440)} dias`}
 document.querySelectorAll('.phead>.eyebrow').forEach(el=>{el.insertAdjacentText('beforeend',` · atualizado em ${GER.toLocaleDateString('pt-BR',{day:'numeric',month:'long'})}`)});
-document.querySelectorAll('[data-atualizado]').forEach(el=>{el.textContent=`Dados conferidos na Câmara em ${GER.toLocaleDateString('pt-BR',{day:'numeric',month:'long'})}, às ${GER.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}.`});
+document.querySelectorAll('[data-atualizado]').forEach(el=>{el.textContent=`Dados conferidos na Câmara em ${GER.toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric',timeZone:'America/Sao_Paulo'})}, às ${GER.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'})}.`});
 
 /* ================= PÁGINAS ================= */
 const P={};
@@ -230,7 +230,7 @@ P.inicio=function(){
   STATS.forEach(([k,n],i)=>countUp($('st'+i),n));
   const POSSE=new Date(D.posse+'T00:00:00-03:00').getTime(), POR_MS=V.length*D.sal.v*12/(365.25*864e5);
   const tick=()=>{$('tick').textContent=brl.format((Date.now()-POSSE)*POR_MS)}; tick(); if(!reduce)setInterval(tick,120);
-  $('msal').textContent=`${V.length} vereadores × ${brl.format(D.sal.v)} por mês, desde ${dt(D.posse)}`+(D.sal.confirmado?'':' · valor mensal a confirmar no texto oficial');
+  $('msal').textContent=`${V.length} vereadores × ${brl.format(D.sal.v)} por mês · estimativa desde ${dt(D.posse)}`+(D.sal.confirmado?'':' · valor mensal a confirmar no texto oficial');
   $('faces').innerHTML=V.slice().sort(ORD.nome).map(v=>`<li><a href="${urlV(v)}">${foto(v,'')}<span>${esc(v.ap)}</span></a></li>`).join('');
   $('pct').textContent=D.nvot?Math.round(D.unan/D.nvot*100)+'%':'–';
   {const div=D.nvot-D.unan;
@@ -244,7 +244,6 @@ P.inicio=function(){
   $('rzd').textContent=`Desde a posse. Pedido de melhoria é quando o vereador pede à Prefeitura um conserto na rua ou no bairro; projeto de lei cria ou muda uma regra da cidade.`;
   $('bairros-chips').innerHTML=D.bairros.slice(0,8).map(b=>`<li><a class="chip" href="/bairros/?q=${encodeURIComponent(b)}">${esc(b)}</a></li>`).join('');
   if ($('hq-bairros')) $('hq-bairros').replaceChildren(...D.bairros.map(b => new Option(b,b)));
-  $('fbq').addEventListener('submit',e=>{e.preventDefault();location.href='/bairros/?q='+encodeURIComponent($('hq').value.trim())});
   listaReps($('reps'),D.rep.slice(0,CEL?3:6),CEL?3:6);
 };
 
@@ -471,7 +470,7 @@ P.bairros=function(){
        ${th.length?`<div><h3>O que mais pedem</h3><ul class="themes">${th.map(([t,n])=>`<li><span class="ti">${svg(ICON[TH[t][1]],18)}</span><span>${esc(TH[t][0])}</span><b class="num">${nf(n)}</b></li>`).join('')}</ul></div>`:''}
        ${city&&!CEL?`<div><h3>Bairros mais citados</h3><ul class="themes">${D.bairros.slice(0,5).map((b,i)=>`<li><span class="ti">${svg(ICON.pin,18)}</span><button class="lnk" type="button" data-b="${esc(b)}">${esc(b)}</button><b class="num">${nf(D.bairrosn[i])}</b></li>`).join('')}</ul></div>`:''}
      </div>
-     ${reps.length?`<p class="h3" style="margin-top:24px">Problemas que voltam aqui</p><div class="reps">${reps.map(repHTML).join('')}</div>`:''}
+     ${reps.length?`<p class="h3" style="margin-top:24px">Pedidos repetidos nesta região</p><div class="reps">${reps.map(repHTML).join('')}</div>`:''}
      <p class="h3" style="margin-top:24px">${city?'As propostas mais recentes da cidade':'Os pedidos mais recentes'}</p><div id="blist"></div></div>`;
     const list=$('blist');
     const topics=themeCount(items).filter(([key])=>Object.hasOwn(TH,key));

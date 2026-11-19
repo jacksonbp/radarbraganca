@@ -9,6 +9,7 @@ Para cada vereador também é criada a imagem de prévia do WhatsApp (card.jpg),
 Uso: python coletor/paginas.py     (o robô diário roda depois de coletar.py)
 """
 import html, json, os, re, unicodedata
+from datetime import datetime
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = os.path.join(RAIZ, "site")
@@ -148,20 +149,33 @@ IC_MEGA = I('<path d="M3 11v3a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1z"/><path d
 LD = '<script type="application/ld+json">' + json.dumps({"@context": "https://schema.org", "@type": "WebSite", "name": "Radar Bragança", "url": DOMINIO + "/", "inLanguage": "pt-BR", "description": "O que cada vereador de Bragança Paulista fez desde a posse, com dados oficiais."}, ensure_ascii=False) + "</script>\n"
 
 # ------------------------------------------------------------------ Início
+def data_prefeitura():
+    caminho = os.path.join(SITE, "prefeitura.js")
+    if not os.path.exists(caminho):
+        return "Data de atualização indisponível"
+    with open(caminho, encoding="utf-8") as arquivo:
+        dados = json.loads(arquivo.read().removeprefix("window.PF=").strip().removesuffix(";"))
+    data = datetime.fromisoformat(dados["ger"])
+    ano, mes = dados["ult"].split("-")
+    return f"Atualizada em {data:%d/%m/%Y}, às {data:%Hh%M} · dados até {mes}/{ano}"
+
+
 inicio = f"""
 <section class="wrap radar-home">
   <div>
     <span class="live"><i></i><span id="livet">Dados da Câmara</span></span>
     <h1 class="logo" aria-label="Radar Bragança">{LOGO.replace('currentColor', '#111a24')}<span><b>RADAR</b><b>BRAGANÇA</b></span></h1>
     <p class="intro">Veja o que os vereadores propuseram, como votaram e o que pediram para o seu bairro.</p>
-    <form class="search" id="fbq" role="search" ><label for="hq" class="eyebrow" >O que pediram pelo seu bairro?</label>
-      <div class="radar-search-row"><div class="radar-search-field">{SEARCH_ICON}<input id="hq" type="search" list="hq-bairros" placeholder="Digite seu bairro ou sua rua" autocomplete="off"><datalist id="hq-bairros"></datalist></div><button class="btn" type="submit">Buscar</button></div></form>
+    <form class="search" id="fbq" action="/bairros/#busca" role="search"><label for="hq" class="eyebrow">Bairro ou rua</label>
+      <div class="radar-search-row"><div class="radar-search-field">{SEARCH_ICON}<input id="hq" name="q" type="search" list="hq-bairros" placeholder="Digite seu bairro ou sua rua" autocomplete="off"><datalist id="hq-bairros"></datalist></div><button class="btn" type="submit">Consultar pedidos para minha rua</button></div></form>
     <ul class="chips" id="bairros-chips"></ul>
+    <p><a href="/demandas/">Relatar um problema na Voz do Bairro →</a></p>
   </div>
   <div>
-    <div class="meter radar-salary"><p class="t">Estimativa de salários de {len(V)} vereadores desde a posse</p><p class="v num" id="tick">R$ 0,00</p><small id="msal"></small><a href="/sobre/">Como calculamos</a></div>
+    <div class="meter radar-salary"><p class="t">Estimativa acumulada de subsídios desde a posse</p><p class="v num" id="tick">—</p><small id="msal"></small><a href="/sobre/">Como calculamos</a></div>
     <div class="stats" id="stats"></div>
     <p class="upd" data-atualizado></p>
+    <p class="upd"><a href="/prefeitura/">Prefeitura (TCE-SP)</a> · {data_prefeitura()}</p>
   </div>
 </section>
 
@@ -169,9 +183,9 @@ inicio = f"""
   <h2>Explore o Radar</h2>
   <div class="tiles">
     {tile("o", "/vereadores/", "Os 19 vereadores", "Presença, propostas, votos e viagens de cada um, com a mesma régua.", IC_USERS)}
-    {tile("b", "/bairros/", "Seu bairro", "Tudo o que pediram para a sua rua, e por quem.", IC_PIN)}
+    {tile("b", "/bairros/", "Pedidos por bairro", "Veja os pedidos registrados e quem os apresentou.", IC_PIN)}
     {tile("l", "/propostas/", "Propostas", "Consulte pedidos, homenagens e projetos de lei.", IC_LAW)}
-    {tile("h", "/demandas/", "Voz do Bairro", "Tem um problema no seu bairro? Conte aqui e nós encaminhamos.", IC_MEGA)}
+    {tile("h", "/demandas/", "Relatar um problema", "Envie sua demanda pela Voz do Bairro.", IC_MEGA)}
   </div>
 </section>
 
@@ -202,8 +216,8 @@ inicio = f"""
 
 <section class="wrap" id="repetidos">
   <p class="eyebrow">Só aqui</p>
-  <h2>O problema que não some</h2>
-  <p class="lead">Quando o mesmo pedido volta várias vezes para a mesma rua, é sinal de que o problema continua lá. <a href="/bairros/#repetidos">Ver todas as ruas →</a></p>
+  <h2>Pedidos que voltaram à Câmara</h2>
+  <p class="lead">Veja pedidos sobre a mesma rua e o mesmo tema registrados mais de uma vez. <a href="/bairros/#repetidos">Ver todas as ruas →</a></p>
   <div class="reps" id="reps"></div>
 </section>
 """
@@ -373,8 +387,8 @@ bairros = f"""
 </section>
 <section class="wrap" id="repetidos">
   <p class="eyebrow">Só aqui</p>
-  <h2>O problema que não some</h2>
-  <p class="lead">Quando o mesmo pedido volta várias vezes para a mesma rua, é sinal de que o problema continua lá. O site da Câmara mostra os pedidos um por um; aqui eles são cruzados.</p>
+  <h2>Pedidos que voltaram à Câmara</h2>
+  <p class="lead">Veja pedidos sobre a mesma rua e o mesmo tema registrados mais de uma vez. O site da Câmara mostra os pedidos um por um; aqui eles são cruzados.</p>
   <p class="warn"><b>Atenção:</b> pedido repetido não prova que a Prefeitura ignorou. Às vezes o serviço foi feito e o problema voltou, ou o pedido é sobre um trecho diferente da mesma rua.</p>
   <div class="reps" id="reps"></div>
 </section>

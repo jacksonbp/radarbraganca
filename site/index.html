@@ -39,14 +39,16 @@
     <span class="live"><i></i><span id="livet">Dados da Câmara</span></span>
     <h1 class="logo" aria-label="Radar Bragança"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="8" fill="#e5322d"/><path d="M19 17a21 21 0 000 30M45 17a21 21 0 010 30M10 9a33 33 0 000 46M54 9a33 33 0 010 46" stroke="#111a24" stroke-width="5" fill="none" stroke-linecap="round"/></svg><span><b>RADAR</b><b>BRAGANÇA</b></span></h1>
     <p class="intro">Veja o que os vereadores propuseram, como votaram e o que pediram para o seu bairro.</p>
-    <form class="search" id="fbq" role="search" ><label for="hq" class="eyebrow" >O que pediram pelo seu bairro?</label>
-      <div class="radar-search-row"><div class="radar-search-field"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hq" type="search" list="hq-bairros" placeholder="Digite seu bairro ou sua rua" autocomplete="off"><datalist id="hq-bairros"></datalist></div><button class="btn" type="submit">Buscar</button></div></form>
+    <form class="search" id="fbq" action="/bairros/#busca" role="search"><label for="hq" class="eyebrow">Bairro ou rua</label>
+      <div class="radar-search-row"><div class="radar-search-field"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hq" name="q" type="search" list="hq-bairros" placeholder="Digite seu bairro ou sua rua" autocomplete="off"><datalist id="hq-bairros"></datalist></div><button class="btn" type="submit">Consultar pedidos para minha rua</button></div></form>
     <ul class="chips" id="bairros-chips"></ul>
+    <p><a href="/demandas/">Relatar um problema na Voz do Bairro →</a></p>
   </div>
   <div>
-    <div class="meter radar-salary"><p class="t">Estimativa de salários de 19 vereadores desde a posse</p><p class="v num" id="tick">R$ 0,00</p><small id="msal"></small><a href="/sobre/">Como calculamos</a></div>
+    <div class="meter radar-salary"><p class="t">Estimativa acumulada de subsídios desde a posse</p><p class="v num" id="tick">—</p><small id="msal"></small><a href="/sobre/">Como calculamos</a></div>
     <div class="stats" id="stats"></div>
     <p class="upd" data-atualizado></p>
+    <p class="upd"><a href="/prefeitura/">Prefeitura (TCE-SP)</a> · Atualizada em 17/11/2026, às 19h35 · dados até 09/2026</p>
   </div>
 </section>
 
@@ -54,9 +56,9 @@
   <h2>Explore o Radar</h2>
   <div class="tiles">
     <a class="tile k-o" href="/vereadores/"><span class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0M16 4.5a3.5 3.5 0 010 7M18 14a6 6 0 013.5 6"/></svg></span><b>Os 19 vereadores</b><span>Presença, propostas, votos e viagens de cada um, com a mesma régua.</span><span class="go">Abrir →</span></a>
-    <a class="tile k-b" href="/bairros/"><span class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><b>Seu bairro</b><span>Tudo o que pediram para a sua rua, e por quem.</span><span class="go">Abrir →</span></a>
+    <a class="tile k-b" href="/bairros/"><span class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><b>Pedidos por bairro</b><span>Veja os pedidos registrados e quem os apresentou.</span><span class="go">Abrir →</span></a>
     <a class="tile k-l" href="/propostas/"><span class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v4h4M10 12h6M10 16h6"/></svg></span><b>Propostas</b><span>Consulte pedidos, homenagens e projetos de lei.</span><span class="go">Abrir →</span></a>
-    <a class="tile k-h" href="/demandas/"><span class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v3a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M15 9a4 4 0 010 6M18 6a8 8 0 010 12"/></svg></span><b>Voz do Bairro</b><span>Tem um problema no seu bairro? Conte aqui e nós encaminhamos.</span><span class="go">Abrir →</span></a>
+    <a class="tile k-h" href="/demandas/"><span class="ci"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v3a1 1 0 001 1h2l5 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M15 9a4 4 0 010 6M18 6a8 8 0 010 12"/></svg></span><b>Relatar um problema</b><span>Envie sua demanda pela Voz do Bairro.</span><span class="go">Abrir →</span></a>
   </div>
 </section>
 
@@ -87,8 +89,8 @@
 
 <section class="wrap" id="repetidos">
   <p class="eyebrow">Só aqui</p>
-  <h2>O problema que não some</h2>
-  <p class="lead">Quando o mesmo pedido volta várias vezes para a mesma rua, é sinal de que o problema continua lá. <a href="/bairros/#repetidos">Ver todas as ruas →</a></p>
+  <h2>Pedidos que voltaram à Câmara</h2>
+  <p class="lead">Veja pedidos sobre a mesma rua e o mesmo tema registrados mais de uma vez. <a href="/bairros/#repetidos">Ver todas as ruas →</a></p>
   <div class="reps" id="reps"></div>
 </section>
 
@@ -101,7 +103,7 @@
   <p class="fine"><span data-atualizado></span> Este não é um site oficial. Projeto independente, sem ligação com a Câmara, a Prefeitura, candidatos ou partidos. Todos os dados vêm de fontes públicas, citadas em cada página.</p>
 </div></footer>
 <script src="/dados-inicio.js?v=2026-11-17T19:35:48-03:00"></script>
-<script src="/assets/radar.js?v=1794954472"></script>
+<script src="/assets/radar.js?v=1795049170"></script>
 <script>Radar.inicio()</script>
 <!-- Contador de visitas (GoatCounter): sem cookies, não identifica ninguém. -->
 <script data-goatcounter="https://radarbraganca.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

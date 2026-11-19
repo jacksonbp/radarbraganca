@@ -127,6 +127,7 @@ def main():
     disponiveis = sorted(k for k in cache)
     recentes = set(disponiveis[-REBAIXAR:])
     erros = 0
+    atualizou = False
     for a, mm in pendentes:
         k = f"{a}-{mm:02d}"
         if k in cache and k not in recentes:
@@ -146,9 +147,13 @@ def main():
             print(f"{k}: dados incompletos (pago {m['pago']}, receita {m['rec']}); não guardei")
             break
         cache[k] = m
+        atualizou = True
         print(f"{k}: recebeu R$ {m['rec']/1e6:.1f} mi, pagou R$ {m['pago']/1e6:.1f} mi, {len(m['forn'])} empresas")
     if not cache:
         sys.exit("Nenhum dado da Prefeitura disponível.")
+    if not atualizou and os.path.exists(SAIDA):
+        print("Prefeitura: nenhuma competência atualizada; mantendo a última publicação.")
+        return
     json.dump(cache, open(CACHE, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"), sort_keys=True)
 
     # ---- resumo para o site
