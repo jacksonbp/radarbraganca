@@ -10,6 +10,11 @@ on:
   workflow_dispatch:       # botão "Run workflow" para rodar na hora
   push:
     branches: [main]
+    # Só refaz a coleta quando o robô muda. Páginas escritas à mão (jantar, Voz do Bairro…)
+    # vão ao ar pelo publicar-rapido.yml em 1–2 minutos, sem esperar a Câmara.
+    paths:
+      - "coletor/**"
+      - ".github/workflows/atualizar.yml"
 
 permissions:
   contents: write
