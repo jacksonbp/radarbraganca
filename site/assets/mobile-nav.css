@@ -51,3 +51,11 @@
   .mobile-nav-links a { background: #fff; }
   .mobile-nav-links a:hover { background: #f4f6f8; }
 }
+
+@media (max-width: 899px) and (prefers-color-scheme: dark) {
+  .mobile-nav a, .mobile-nav summary { color: #e9eef3; background: #1b2530; }
+  .mobile-nav > a[href="/demandas/"] { background: #d8332e; color: #fff; }
+  .mobile-nav-links { border-color: #26333f; background: #151e28; box-shadow: 0 8px 28px rgba(0,0,0,.5); }
+  .mobile-nav-links a { background: #151e28; }
+  .mobile-nav-links a:hover { background: #1b2530; }
+}

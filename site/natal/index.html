@@ -21,7 +21,7 @@
   --pine:#0e3b2c; --pine-2:#0e5a3a; --red:#c8302b; --gold:#f2b632; --cream:#fbf6ec;
   --ink:#16201b; --mute:#5b6660; --hair:#e3dccd; --ok:#0b8758;
   --display:"Archivo","Inter",system-ui,sans-serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  color-scheme:light;
+  color-scheme:light dark;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -92,6 +92,15 @@ details{background:#fff;border:1px solid var(--hair);border-radius:14px;padding:
 summary{font-weight:700;cursor:pointer}
 details p{margin:8px 0 2px;color:var(--mute);font-size:15px}
 footer{padding:34px 0 40px;text-align:center;color:var(--mute);font-size:13.5px}
+@media (prefers-color-scheme:dark){
+  :root{--cream:#0c1712;--red:#ff5a4f;--ink:#e8efe9;--mute:#a3b2a8;--hair:#25362d;--pine:#7fd6a8;--ok:#5fe0a5}
+  .numeros div,.formas li,.card,details,input[type=text],input[type=tel],textarea,.chips label{background:#12211a;color:var(--ink)}
+  .formas .ic{background:#1a2c23}
+  .chips label:has(input:checked){background:#173527;border-color:#3fbf85}
+  .hero{background:radial-gradient(120% 80% at 50% 0%,#145238 0%,#0b3022 60%,#061b13 100%)}
+  .ig{background:#1e5a40}
+  ::placeholder{color:#7f8f85}
+}
 @media (max-width:380px){.chips{grid-template-columns:1fr}.numeros b{font-size:24px}}
 </style>
 </head>

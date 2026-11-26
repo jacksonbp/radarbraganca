@@ -196,7 +196,7 @@ function antHTML(v){
 const bar5=v=>`<div class="bar5" aria-hidden="true">${ORDER.map(c=>v.cat[c]?`<i class="k-${c}" style="flex:${v.cat[c]} 1 0"></i>`:'').join('')}</div>`;
 function vcard(v){
   const p=pctPres(v), cm=v.cm||{P:0,A:0,F:0}, tc=cm.P+cm.A+cm.F;
-  return `<a class="vcard" href="${urlV(v)}" style="--tint:hsl(${hue(v.i)} 85% 94%)">${foto(v,'')}
+  return `<a class="vcard" href="${urlV(v)}" style="--hue:${hue(v.i)}">${foto(v,'')}
     <h3>${esc(v.ap)}</h3><span class="pill">${esc(v.part)}${v.mesa?' · '+esc(v.mesa):''}</span>
     <div class="kp num"><div><b>${p==null?'–':p+'%'}</b><span>presença</span></div><div><b>${tc?Math.round(cm.P/tc*100)+'%':'–'}</b><span>comissões</span></div><div><b>${nf(v.tot)}</b><span>propostas</span></div></div>
     ${bar5(v)}<span class="go">Ver tudo sobre ${esc(v.ap.split(' ')[0])} →</span></a>`;
@@ -373,8 +373,7 @@ P.prefeitura=function(){
 
 P.vereador=function(id){
   const v=V.find(x=>x.id===id); if(!v)return; const i=v.i;
-  document.documentElement.style.setProperty('--tint',`hsl(${hue(i)} 85% 94%)`);
-  document.documentElement.style.setProperty('--deep',`hsl(${hue(i)} 55% 26%)`);
+  document.documentElement.style.setProperty('--hue',hue(i));
   const t=v.P+v.A+v.F, cm=v.cm||{P:0,A:0,F:0}, tc=cm.P+cm.A+cm.F;
   $('kpis').innerHTML=`
     <div class="kpi kpi-pres"><span class="eyebrow">Presença nas reuniões</span><div class="pres">${ring(v,56)}<b class="num">${v.P} de ${t}</b></div><span>reuniões em que esteve presente e votou, desde ${mesAno(D.pri.replace(/-/g,''))} · <span class="${v.F?'bad':''}">${v.F} ${v.F===1?'falta':'faltas'}</span></span></div>

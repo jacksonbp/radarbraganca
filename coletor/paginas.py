@@ -98,7 +98,7 @@ def pagina(ativa, titulo, descricao, url, corpo, init, imagem="/capa.jpg", titul
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/radar.css?v={VER('radar.css')}">
-<link rel="stylesheet" href="/assets/mobile-nav.css?v=1">
+<link rel="stylesheet" href="/assets/mobile-nav.css?v=3">
 {extra_head}</head>
 <body>
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
@@ -164,7 +164,7 @@ inicio = f"""
 <section class="wrap radar-home">
   <div>
     <span class="live"><i></i><span id="livet">Dados da Câmara</span></span>
-    <h1 class="logo" aria-label="Radar Bragança">{LOGO.replace('currentColor', '#111a24')}<span><b>RADAR</b><b>BRAGANÇA</b></span></h1>
+    <h1 class="logo" aria-label="Radar Bragança">{LOGO}<span><b>RADAR</b><b>BRAGANÇA</b></span></h1>
     <p class="intro">Veja o que os vereadores propuseram, como votaram e o que pediram para o seu bairro.</p>
     <form class="search" id="fbq" action="/bairros/#busca" role="search"><label for="hq" class="eyebrow">Bairro ou rua</label>
       <div class="radar-search-row"><div class="radar-search-field">{SEARCH_ICON}<input id="hq" name="q" type="search" list="hq-bairros" placeholder="Digite seu bairro ou sua rua" autocomplete="off"><datalist id="hq-bairros"></datalist></div><button class="btn" type="submit">Consultar pedidos para minha rua</button></div></form>
@@ -453,7 +453,7 @@ escreve("prefeitura/index.html", pagina("prefeitura", "Prefeitura · Radar Braga
 
 escreve("bairros/index.html", pagina("bairros", "Seu bairro · Radar Bragança",
         "Busque seu bairro ou sua rua e veja tudo o que os vereadores de Bragança Paulista pediram para lá, e por quem.",
-        "/bairros/", bairros, "Radar.bairros()", extra_head='<link rel="stylesheet" href="/assets/problemas-bairro.css?v=5">\n<script defer src="/assets/problemas-bairro.js?v=5"></script>\n'))
+        "/bairros/", bairros, "Radar.bairros()", extra_head='<link rel="stylesheet" href="/assets/problemas-bairro.css?v=6">\n<script defer src="/assets/problemas-bairro.js?v=5"></script>\n'))
 
 # ------------------------------------------------------------------ Propostas
 propostas = f"""
@@ -575,12 +575,13 @@ if os.path.exists(pd):
         '.rb-nav ul{display:flex;gap:4px;list-style:none;margin:0 0 0 auto;padding:0}'
         '.rb-nav li a{display:block;padding:9px 12px;border-radius:10px;text-decoration:none;color:#111a24;font-weight:600;font-size:15px;white-space:nowrap}'
         '.rb-nav li a:hover{background:#f4f6f8}.rb-nav .cta a,.rb-nav .cta a:hover{background:#e5322d;color:#fff}'
-        '@media(max-width:899px){.rb-nav>div{gap:0;padding-top:8px}.rb-nav ul{margin:0 -16px;padding:6px 16px 8px;width:calc(100% + 32px);overflow-x:auto;scrollbar-width:none}.rb-nav li a{padding:7px 11px;font-size:14px;background:#f4f6f8}.rb-nav .cta a{background:#e5322d}}'
+        '@media(prefers-color-scheme:dark){.rb-nav{background:rgba(14,20,27,.92);border-bottom-color:#26333f}.rb-nav .brand,.rb-nav li a{color:#e9eef3}.rb-nav li a:hover{background:#1b2530}.rb-nav .cta a,.rb-nav .cta a:hover{background:#d8332e}}'
+        '@media(max-width:899px){.rb-nav>div{gap:0;padding-top:8px}.rb-nav ul{margin:0 -16px;padding:6px 16px 8px;width:calc(100% + 32px);overflow-x:auto;scrollbar-width:none}.rb-nav li a{padding:7px 11px;font-size:14px;background:var(--soft,#f4f6f8)}.rb-nav .cta a{background:#e5322d}}'
         '.top .back{display:none}')
     bloco = ('<!-- menu:ini --><style>' + css + '</style><nav class="rb-nav" aria-label="Menu principal"><div><a class="brand" href="/">'
              + LOGO + '<span><b>RADAR</b><b>BRAGANÇA</b></span></a><ul class="desktop-nav">' + itens + '</ul>' + menu_mobile("voz") + '</div></nav><!-- menu:fim -->\n')
     if "/assets/mobile-nav.css?" not in h:
-        h = h.replace("</head>", '<link rel="stylesheet" href="/assets/mobile-nav.css?v=1">\n' + "</head>", 1)
+        h = h.replace("</head>", '<link rel="stylesheet" href="/assets/mobile-nav.css?v=3">\n' + "</head>", 1)
     h = h.replace("<body>\n", "<body>\n" + bloco, 1)
     open(pd, "w", encoding="utf-8").write(dados_formulario(h, D))
 

@@ -57,3 +57,21 @@
  .painel-relatar { text-align: center; flex-grow: 1; }
 }
 
+
+@media (prefers-color-scheme: dark) {
+  /* cores fixas deste bloco trocadas para o fundo escuro */
+  .problema-grupo, .problema-total, .painel-metrica, .painel-registros { background: var(--card); }
+  .painel-metrica, .painel-registros, .painel-barra { border-color: var(--hair); box-shadow: none; }
+  .painel-metrica span, #problemas-nota, .painel-vazio p { color: var(--mute); }
+  .metrica-0 { background: var(--inv); border-color: var(--inv); }
+  .metrica-1 strong { color: #f2b24c; }
+  .metrica-2 strong, .problema-status.resolvido { color: #3fcf95; }
+  .problema-status { color: #f2c06b; background: #2a2210; }
+  .problema-status.resolvido { background: #0f2b21; }
+  .painel-progresso { background: var(--soft); }
+  .painel-trilha { background: var(--hair); }
+  .painel-preenchimento { background: #3fcf95; }
+  .painel-filtros button { background: var(--soft); color: var(--ink); }
+  .painel-filtros button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .painel-filtros button:focus-visible, .painel-relatar:focus-visible { outline-color: var(--ink); }
+}
