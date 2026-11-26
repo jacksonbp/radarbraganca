@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jantar de Natal Solidário · Bragança Terra Querida</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Um jantar de Natal para as pessoas em situação de rua de Bragança Paulista. Veja como ajudar com comida, doações ou servindo.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Bragança Terra Querida">
+<meta property="og:title" content="Jantar de Natal Solidário em Bragança Paulista">
+<meta property="og:description" content="Ninguém sem ceia neste Natal. Venha ajudar a servir um jantar para quem está nas ruas de Bragança.">
+<meta name="theme-color" content="#0e3b2c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3l9 14h-5l7 11H5l7-11H7z' fill='%230e5a3a'/%3E%3Ccircle cx='16' cy='4' r='3' fill='%23f2b632'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pine:#0e3b2c; --pine-2:#0e5a3a; --red:#c8302b; --gold:#f2b632; --cream:#fbf6ec;
+  --ink:#16201b; --mute:#5b6660; --hair:#e3dccd; --ok:#0b8758;
+  --display:"Archivo","Inter",system-ui,sans-serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+a{color:var(--pine-2);text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:8px}
+.wrap{max-width:640px;margin:0 auto;padding:0 18px}
+
+/* Capa */
+.hero{position:relative;overflow:hidden;background:radial-gradient(120% 80% at 50% 0%,#17583f 0%,var(--pine) 60%,#082a1f 100%);color:#fff;padding:26px 0 46px}
+.hero .wrap{position:relative;z-index:1}
+.snow{position:absolute;inset:0;pointer-events:none}
+.snow i{position:absolute;top:-10px;width:6px;height:6px;border-radius:50%;background:#fff;opacity:.55;animation:cai linear infinite}
+@keyframes cai{to{transform:translateY(110vh) translateX(30px)}}
+@media (prefers-reduced-motion:reduce){.snow{display:none}}
+.marca{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;letter-spacing:.04em;text-transform:uppercase;opacity:.92}
+.marca svg{width:30px;height:30px}
+.selo{display:inline-block;margin:28px 0 0;background:var(--gold);color:var(--pine);font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border-radius:999px;padding:6px 13px}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(38px,11vw,60px);line-height:.98;letter-spacing:-.025em;margin:14px 0 14px}
+h1 em{font-style:normal;color:var(--gold)}
+.lead{font-size:18px;line-height:1.45;margin:0 0 22px;color:#e6efe9;max-width:30em}
+.cta{display:inline-flex;align-items:center;gap:10px;font-family:var(--display);font-weight:900;font-size:19px;text-decoration:none;color:#fff;background:var(--red);border-radius:16px;padding:15px 22px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:28px 0 0}
+.info div{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:12px 14px}
+.info small{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.info b{display:block;font-size:16px;line-height:1.3;margin-top:2px}
+
+/* Seções */
+section{padding:34px 0 6px}
+h2{font-family:var(--display);font-weight:900;font-size:28px;line-height:1.1;letter-spacing:-.015em;margin:0 0 12px;color:var(--pine)}
+.txt{margin:0 0 12px;font-size:16.5px}
+.numeros{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 6px}
+.numeros div{background:#fff;border:1px solid var(--hair);border-radius:16px;padding:14px 10px;text-align:center}
+.numeros b{display:block;font-family:var(--display);font-weight:900;font-size:30px;color:var(--red);line-height:1}
+.numeros span{display:block;font-size:13px;color:var(--mute);margin-top:6px;line-height:1.25}
+.formas{display:grid;gap:10px;margin:16px 0 0;padding:0;list-style:none}
+.formas li{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:14px 16px}
+.formas .ic{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:24px;background:var(--cream)}
+.formas b{display:block;font-size:16.5px}
+.formas p{margin:2px 0 0;color:var(--mute);font-size:14.5px;line-height:1.4}
+
+/* Formulário */
+.card{background:#fff;border:1px solid var(--hair);border-radius:22px;padding:22px 18px;margin:14px 0 0;box-shadow:0 10px 30px rgba(14,59,44,.08)}
+fieldset{border:0;margin:0 0 20px;padding:0}
+legend,.lab{display:block;font-weight:700;font-size:15.5px;margin:0 0 8px;padding:0}
+.opt{font-weight:400;color:var(--mute);font-size:14px}
+input[type=text],input[type=tel],textarea{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:2px solid var(--hair);border-radius:12px;background:#fff;color:var(--ink)}
+input:focus,textarea:focus{border-color:var(--pine-2);outline:none}
+textarea{min-height:96px;resize:vertical}
+.campo{margin:0 0 16px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chips label{position:relative;display:block;border:2px solid var(--hair);border-radius:14px;padding:11px 10px 11px 40px;cursor:pointer;font-weight:600;font-size:14.5px;line-height:1.25}
+.chips input{position:absolute;left:13px;top:13px;width:18px;height:18px;margin:0;accent-color:var(--pine-2)}
+.chips label:has(input:checked){border-color:var(--pine-2);background:#eef7f1}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--mute);margin:4px 0 16px}
+.check input{flex:none;width:20px;height:20px;margin:1px 0 0;accent-color:var(--pine-2)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.send{width:100%;font:inherit;font-family:var(--display);font-weight:900;font-size:20px;border:0;border-radius:16px;padding:16px;background:var(--red);color:#fff;cursor:pointer}
+.send:disabled{opacity:.6;cursor:wait}
+.err{color:var(--red);font-size:14px;font-weight:600;margin:10px 0 0;min-height:1em}
+.done{display:none;text-align:center;padding:10px 4px}
+.done .big{font-size:54px;line-height:1}
+.done h3{font-family:var(--display);font-weight:900;font-size:28px;color:var(--ok);margin:10px 0 8px}
+.done p{margin:0 0 10px}
+.ig{display:inline-flex;align-items:center;gap:8px;font-weight:700;text-decoration:none;background:var(--pine);color:#fff;border-radius:999px;padding:10px 16px;margin-top:4px}
+
+details{background:#fff;border:1px solid var(--hair);border-radius:14px;padding:12px 16px;margin:0 0 8px}
+summary{font-weight:700;cursor:pointer}
+details p{margin:8px 0 2px;color:var(--mute);font-size:15px}
+footer{padding:34px 0 40px;text-align:center;color:var(--mute);font-size:13.5px}
+@media (max-width:380px){.chips{grid-template-columns:1fr}.numeros b{font-size:24px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="snow" aria-hidden="true" id="snow"></div>
+  <div class="wrap">
+    <div class="marca">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4l9 13h-5l7 11H5l7-11H7z" fill="#2f8a5f"/><circle cx="16" cy="4.5" r="3" fill="#f2b632"/><rect x="14" y="27" width="4" height="4" fill="#8a5a2b"/></svg>
+      Bragança Terra Querida
+    </div>
+    <span class="selo">Natal Solidário 2026</span>
+    <h1>Ninguém sem ceia <em>neste Natal.</em></h1>
+    <p class="lead">Vamos preparar e servir um jantar de Natal para as pessoas em situação de rua de Bragança Paulista. Com comida quente, um abraço e dignidade. E queremos fazer isso junto com você.</p>
+    <a class="cta" href="#ajudar">Quero ajudar <span aria-hidden="true">→</span></a>
+    <div class="info">
+      <div><small>Quando</small><b id="i-data"></b></div>
+      <div><small>Onde</small><b id="i-local"></b></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section>
+    <h2>Por que um jantar?</h2>
+    <p class="txt">Natal é mesa cheia, família reunida e conversa boa. Muita gente em Bragança passa essa noite sozinha, na rua, sem um prato de comida. A gente quer mudar isso, pelo menos por uma noite, e mostrar que essa cidade cuida de quem é dela.</p>
+    <div class="numeros" aria-label="Nossa meta">
+      <div><b id="m-pratos"></b><span>pratos de ceia</span></div>
+      <div><b id="m-vol"></b><span>voluntários</span></div>
+      <div><b>1</b><span>noite de Natal inesquecível</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Como você pode ajudar</h2>
+    <ul class="formas">
+      <li><span class="ic" aria-hidden="true">🍲</span><div><b>Cozinhar ou doar comida</b><p>Arroz, farofa, frango, salada, panetone, refrigerante, suco. Tudo é bem-vindo.</p></div></li>
+      <li><span class="ic" aria-hidden="true">🙌</span><div><b>Servir no dia</b><p>Montar as mesas, servir os pratos, conversar e acolher.</p></div></li>
+      <li><span class="ic" aria-hidden="true">🧥</span><div><b>Doar roupas e kits</b><p>Agasalhos, cobertores, kits de higiene (sabonete, escova, pasta, desodorante).</p></div></li>
+      <li><span class="ic" aria-hidden="true">🚗</span><div><b>Transporte</b><p>Buscar doações e levar a comida até o local.</p></div></li>
+      <li><span class="ic" aria-hidden="true">📣</span><div><b>Divulgar</b><p>Compartilhe com amigos, igreja, empresa, grupo do bairro.</p></div></li>
+    </ul>
+  </section>
+
+  <section id="ajudar">
+    <h2>Quero participar</h2>
+    <p class="txt">Deixe seu nome e WhatsApp. A equipe do Bragança Terra Querida vai entrar em contato com os detalhes.</p>
+    <div class="card">
+      <form id="f" novalidate>
+        <div class="campo">
+          <label class="lab" for="nome">Seu nome</label>
+          <input type="text" id="nome" autocomplete="name" maxlength="100">
+        </div>
+        <div class="campo">
+          <label class="lab" for="contato">WhatsApp com DDD</label>
+          <input type="tel" id="contato" autocomplete="tel" inputmode="tel" placeholder="(11) 9 0000-0000" maxlength="20">
+        </div>
+        <div class="campo">
+          <label class="lab" for="bairro">Bairro <span class="opt">(opcional)</span></label>
+          <input type="text" id="bairro" maxlength="120">
+        </div>
+        <fieldset>
+          <legend>Como você quer ajudar? <span class="opt">(pode marcar mais de um)</span></legend>
+          <div class="chips">
+            <label><input type="checkbox" name="ajuda" value="Cozinhar / doar comida">Cozinhar ou doar comida</label>
+            <label><input type="checkbox" name="ajuda" value="Servir no dia">Servir no dia</label>
+            <label><input type="checkbox" name="ajuda" value="Roupas e kits">Roupas e kits</label>
+            <label><input type="checkbox" name="ajuda" value="Transporte">Transporte</label>
+            <label><input type="checkbox" name="ajuda" value="Divulgar">Divulgar</label>
+            <label><input type="checkbox" name="ajuda" value="Outra forma">Outra forma</label>
+          </div>
+        </fieldset>
+        <div class="campo">
+          <label class="lab" for="recado">Recado <span class="opt">(opcional)</span></label>
+          <textarea id="recado" maxlength="800" placeholder="Ex.: posso levar 2 travessas de farofa; tenho um carro grande…"></textarea>
+        </div>
+        <div class="hp" aria-hidden="true"><label>Não preencha<input type="text" name="site_web" tabindex="-1" autocomplete="off"></label></div>
+        <label class="check"><input type="checkbox" id="aceite">Concordo que a equipe do Bragança Terra Querida use meu nome e WhatsApp só para combinar o jantar. Não divulgamos seus dados.</label>
+        <button class="send" type="submit" id="btn">Quero ajudar 🎄</button>
+        <p class="err" id="err" role="alert"></p>
+      </form>
+      <div class="done" id="done" role="status" tabindex="-1">
+        <div class="big" aria-hidden="true">🎄</div>
+        <h3>Obrigado!</h3>
+        <p>Seu nome está na lista. Em breve a gente chama você no WhatsApp com os detalhes.</p>
+        <p>Enquanto isso, chama mais gente para ajudar:</p>
+        <a class="ig" id="ig" href="#">Siga no Instagram</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Dúvidas</h2>
+    <details><summary>Preciso ter experiência?</summary><p>Não. Basta vontade de ajudar. A gente organiza as funções antes do dia.</p></details>
+    <details><summary>Posso ajudar só com doação?</summary><p>Pode. Marque "Cozinhar ou doar comida" ou "Roupas e kits" e combinamos onde entregar.</p></details>
+    <details><summary>Posso levar minha família?</summary><p>Pode e deve. Crianças acompanhadas são muito bem-vindas.</p></details>
+    <details><summary>Quem organiza?</summary><p>A página Bragança Terra Querida, feita por moradores de Bragança Paulista, sem ligação com partidos ou com a Prefeitura.</p></details>
+  </section>
+</main>
+
+<footer class="wrap">Bragança Terra Querida · Natal Solidário 2026<br>Bragança Paulista, SP</footer>
+
+<script>
+// ===== Ajuste aqui os dados do evento =====
+const CONFIG = {
+  data: 'Dezembro · data a confirmar',
+  local: 'Centro de Bragança · a confirmar',
+  metaPratos: '200',
+  metaVoluntarios: '50',
+  instagram: 'bragancaterraqueridaoficial'
+};
+// Mesmo receptor do Voz do Bairro (ver demandas-receptor/COMO-LIGAR.md). Vazio = modo de teste.
+const ENDERECO = 'https://script.google.com/macros/s/AKfycbx0kbVSCYo3pb3Xj8LdKBKomcxVt-quGMtMc9zs2XYX26IxU4zHliCuPp41OJla03UcGA/exec';
+
+const $ = id => document.getElementById(id);
+$('i-data').textContent = CONFIG.data;
+$('i-local').textContent = CONFIG.local;
+$('m-pratos').textContent = CONFIG.metaPratos;
+$('m-vol').textContent = CONFIG.metaVoluntarios;
+$('ig').href = 'https://www.instagram.com/' + CONFIG.instagram + '/';
+$('ig').textContent = '@' + CONFIG.instagram;
+
+// Neve leve na capa
+const snow = $('snow');
+for (let i = 0; i < 28; i++) {
+  const s = document.createElement('i');
+  const t = 3 + Math.random() * 3;
+  s.style.cssText = `left:${Math.random()*100}%;width:${t}px;height:${t}px;animation-duration:${7+Math.random()*8}s;animation-delay:-${Math.random()*12}s;opacity:${.3+Math.random()*.5}`;
+  snow.appendChild(s);
+}
+
+$('f').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, err = $('err'); err.textContent = '';
+  const falta = (el, t) => { err.textContent = t; el.scrollIntoView({block:'center',behavior:'smooth'}); el.focus({preventScroll:true}); };
+  if ($('nome').value.trim().length < 2) return falta($('nome'), 'Escreva seu nome.');
+  if ($('contato').value.replace(/\D/g,'').length < 10) return falta($('contato'), 'Escreva seu WhatsApp com DDD.');
+  const ajuda = [...f.querySelectorAll('input[name=ajuda]:checked')].map(x => x.value);
+  if (!ajuda.length) return falta(f.querySelector('input[name=ajuda]'), 'Marque pelo menos uma forma de ajudar.');
+  if (!$('aceite').checked) return falta($('aceite'), 'Marque que você concorda com o uso do contato.');
+  if (f.site_web.value) return;
+
+  const dados = { formulario:'natal', nome:$('nome').value.trim(), contato:$('contato').value.trim(),
+    bairro:$('bairro').value.trim(), ajuda, recado:$('recado').value.trim() };
+  const btn = $('btn'); btn.disabled = true; btn.textContent = 'Enviando…';
+  try {
+    if (ENDERECO && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
+      const r = await fetch(ENDERECO, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(dados)});
+      const j = await r.json().catch(() => ({ok:false}));
+      if (!j.ok) throw new Error(j.erro || 'falha');
+    } else {
+      await new Promise(r => setTimeout(r, 700));
+      console.log('[natal] modo de teste, nada enviado:', dados);
+    }
+    f.style.display = 'none'; $('done').style.display = 'block'; $('done').focus();
+  } catch (x) {
+    err.textContent = 'Não foi possível enviar agora. Tente de novo em alguns minutos ou chame a gente no Instagram @' + CONFIG.instagram + '.';
+  } finally { btn.disabled = false; btn.textContent = 'Quero ajudar 🎄'; }
+});
+</script>
+</body>
+</html>

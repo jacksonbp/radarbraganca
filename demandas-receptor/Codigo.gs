@@ -18,6 +18,7 @@ function doPost(e) {
   try {
     const d = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     if (d.site_web) return resposta({ ok: true }); // armadilha de robô
+    if (d.formulario === 'natal') return receberNatal(d);
     if (!d.mensagem || String(d.mensagem).trim().length < 15) return resposta({ ok: false, erro: 'mensagem curta' });
 
     // Limite simples contra enxurrada: no máximo 60 envios por hora no total.
@@ -240,6 +241,40 @@ function pegarAba() {
     aba.getRange('L2:L').setDataValidation(regra);
   }
   return aba;
+}
+
+// ------------------------------------------------------------------ Jantar de Natal (página /natal/)
+// Cada voluntário vira uma linha na aba "Jantar de Natal" da mesma planilha e chega um e-mail.
+const ABA_NATAL = 'Jantar de Natal';
+const COLUNAS_NATAL = ['Recebido em', 'Nome', 'WhatsApp', 'Bairro', 'Como quer ajudar', 'Recado', 'Situação'];
+
+function receberNatal(d) {
+  const nome = limpar(d.nome, 100), contato = limpar(d.contato, 40);
+  if (nome.length < 2 || contato.replace(/\D/g, '').length < 10) return resposta({ ok: false, erro: 'dados incompletos' });
+  const cache = CacheService.getScriptCache();
+  const n = Number(cache.get('natal') || 0);
+  if (n > 80) return resposta({ ok: false, erro: 'muitos envios, tente mais tarde' });
+  cache.put('natal', String(n + 1), 3600);
+
+  const ajuda = limpar([].concat(d.ajuda || []).join(', '), 300);
+  const bairro = limpar(d.bairro, 120), recado = limpar(d.recado, 800);
+  const pl = SpreadsheetApp.openById(PLANILHA_ID);
+  let aba = pl.getSheetByName(ABA_NATAL);
+  if (!aba) {
+    aba = pl.insertSheet(ABA_NATAL);
+    aba.appendRow(COLUNAS_NATAL);
+    aba.setFrozenRows(1);
+    aba.getRange(1, 1, 1, COLUNAS_NATAL.length).setFontWeight('bold').setBackground('#0e5a3a').setFontColor('#ffffff');
+  }
+  aba.appendRow([new Date(), nome, contato, bairro, ajuda, recado, 'Novo']);
+  MailApp.sendEmail({
+    to: AVISAR,
+    subject: '[Jantar de Natal] Novo voluntário: ' + nome,
+    body: 'Nome: ' + nome + '\nWhatsApp: ' + contato + '\nBairro: ' + (bairro || '-') +
+      '\nComo quer ajudar: ' + (ajuda || '-') + '\nRecado: ' + (recado || '-') +
+      '\n\nLista completa: ' + pl.getUrl()
+  });
+  return resposta({ ok: true });
 }
 
 function resposta(obj) {

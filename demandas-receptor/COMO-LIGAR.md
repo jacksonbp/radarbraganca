@@ -79,3 +79,15 @@ mudar de novo na aba Demandas. Confira o **Local público**: tire número de cas
 
 Proteção extra: se o nome de quem mandou aparece no Bairro ou no Local (ex.: a pessoa escreveu o próprio nome
 no campo Bairro), a linha é criada em "Problemas dos bairros" com **Publicar desmarcado**. Corrija e marque à mão.
+
+## Jantar de Natal (página /natal/)
+
+A página <https://vozdascidades.com.br/braganca/natal/> usa o mesmo receptor. Ela fica fora do menu, do sitemap e do Google
+(`noindex`), para o link ser mandado só para quem comentar "AJUDA" no Instagram.
+
+Para ligar: cole o `Codigo.gs` atualizado no editor do Apps Script, salve e faça
+**Implantar → Gerenciar implantações → Editar (lápis) → Nova versão**. O endereço continua o mesmo.
+Cada voluntário vira uma linha na aba **Jantar de Natal** da planilha (criada sozinha no primeiro envio) e chega um e-mail.
+Antes disso, o formulário da página mostra "não foi possível enviar" (nada vai parar na aba Demandas).
+
+Data, local e metas do jantar: abra `site/natal/index.html`, procure `CONFIG` no fim do arquivo e troque os textos.
