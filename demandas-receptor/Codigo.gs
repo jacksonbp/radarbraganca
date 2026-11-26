@@ -42,9 +42,21 @@ function doPost(e) {
       v.repetidas = contarParecidas(aba, v.bairro, v.tema);
       aba.appendRow([new Date(), v.protocolo, v.tipo, v.tema, v.bairro, v.local, v.mensagem,
         v.destino, v.nome, v.contato, v.autoriza_nome, 'Nova', '']);
+      v.linha = aba.getLastRow();
     } finally { lock.releaseLock(); }
 
-    avisarTelegram(v);
+    // Fotos (opcional): vão para uma pasta privada no Drive; o link fica na coluna "Fotos".
+    const fotos = salvarFotos(d.fotos, v.protocolo);
+    v.fotos = fotos.map(f => f.url);
+    if (fotos.length) {
+      const aba = pegarAba();
+      if (aba.getRange(1, COL_FOTOS).getValue() !== 'Fotos') {
+        aba.getRange(1, COL_FOTOS).setValue('Fotos').setFontWeight('bold').setBackground('#111a24').setFontColor('#ffffff');
+      }
+      aba.getRange(v.linha, COL_FOTOS).setValue(v.fotos.join(BR));
+    }
+
+    avisarTelegram(v, fotos.map(f => f.blob));
     MailApp.sendEmail({
       to: AVISAR,
       subject: '[Voz do Bairro] ' + v.tipo + ' – ' + v.tema + ' – ' + v.bairro,
@@ -57,6 +69,7 @@ function doPost(e) {
         'Nome: ' + (v.nome || '(não informado)') + '\n' +
         'Contato: ' + (v.contato || '(não informado)') + '\n' +
         'Autoriza enviar nome ao vereador: ' + v.autoriza_nome + '\n\n' +
+        (v.fotos.length ? 'Fotos:\n' + v.fotos.join('\n') + '\n\n' : '') +
         'Todas as mensagens ficam na planilha: ' + SpreadsheetApp.openById(PLANILHA_ID).getUrl()
     });
     return resposta({ ok: true, protocolo: v.protocolo });
@@ -288,6 +301,43 @@ function receberNatal(d) {
   return resposta({ ok: true });
 }
 
+// ------------------------------------------------------------------ Fotos do Voz do Bairro
+// O site reduz cada foto (máx. 1600 px, JPEG) e tira a localização GPS antes de enviar.
+const COL_FOTOS = 14;       // coluna N da aba Demandas
+const MAX_FOTOS = 3;
+const MAX_BYTES_FOTO = 3 * 1024 * 1024;
+
+function salvarFotos(lista, protocolo) {
+  const salvas = [];
+  if (!Array.isArray(lista) || !lista.length) return salvas;
+  try {
+    const pasta = pastaFotos();
+    lista.slice(0, MAX_FOTOS).forEach((b64, i) => {
+      if (typeof b64 !== 'string' || b64.length > MAX_BYTES_FOTO * 1.4) return;
+      const bytes = Utilities.base64Decode(b64);
+      // Só aceita JPEG de verdade (começa com FF D8).
+      if (bytes.length < 100 || bytes.length > MAX_BYTES_FOTO || (bytes[0] & 255) !== 0xFF || (bytes[1] & 255) !== 0xD8) return;
+      const blob = Utilities.newBlob(bytes, 'image/jpeg', protocolo + '-foto' + (i + 1) + '.jpg');
+      salvas.push({ url: pasta.createFile(blob).getUrl(), blob: blob });
+    });
+  } catch (err) { console.error('Fotos falharam: ' + err); /* a mensagem continua gravada mesmo sem as fotos */ }
+  return salvas;
+}
+
+function pastaFotos() {
+  const props = PropertiesService.getScriptProperties();
+  const id = props.getProperty('PASTA_FOTOS');
+  if (id) { try { return DriveApp.getFolderById(id); } catch (e) { /* pasta apagada: cria outra */ } }
+  const pasta = DriveApp.createFolder('Voz do Bairro - Fotos');
+  props.setProperty('PASTA_FOTOS', pasta.getId());
+  return pasta;
+}
+
+/** Rode UMA vez no editor (Executar) ANTES de implantar: pede a permissão do Google Drive e cria a pasta. */
+function autorizarFotos() {
+  Logger.log('Pasta das fotos: ' + pastaFotos().getUrl());
+}
+
 function resposta(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
@@ -297,7 +347,7 @@ function resposta(obj) {
 // com o nome TELEGRAM_TOKEN. Ele nunca vai para o código nem para o GitHub.
 
 /** Avisa no Telegram. Se o Telegram falhar, a mensagem continua gravada na planilha e o e-mail sai igual. */
-function avisarTelegram(v) {
+function avisarTelegram(v, fotos) {
   try {
     const props = PropertiesService.getScriptProperties();
     const token = props.getProperty('TELEGRAM_TOKEN'), chat = props.getProperty('TELEGRAM_CHAT');
@@ -306,6 +356,7 @@ function avisarTelegram(v) {
       '📣 Voz do Bairro · ' + v.protocolo,
       v.tipo + ' · ' + v.tema,
       '📍 ' + v.bairro + (v.local ? ' · ' + v.local : ''),
+      v.fotos && v.fotos.length ? '📷 ' + v.fotos.length + (v.fotos.length > 1 ? ' fotos (logo abaixo)' : ' foto (logo abaixo)') : '',
       v.repetidas ? '🔁 Já são ' + (v.repetidas + 1) + ' mensagens sobre "' + v.tema + '" neste bairro nos últimos 90 dias' : '',
       '',
       v.mensagem,
@@ -318,6 +369,13 @@ function avisarTelegram(v) {
     ].filter((x, i, a) => x !== '' || (a[i - 1] !== '' && i > 0));
     const r = enviarTelegram(token, chat, linhas.join(BR).slice(0, 4000));
     if (!r.ok) console.error('Telegram recusou: ' + JSON.stringify(r));
+    (fotos || []).forEach((b, i) => {
+      const f = JSON.parse(UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendPhoto', {
+        method: 'post', muteHttpExceptions: true,
+        payload: { chat_id: chat, caption: v.protocolo + ' · foto ' + (i + 1), photo: b }
+      }).getContentText());
+      if (!f.ok) console.error('Telegram recusou a foto: ' + JSON.stringify(f));
+    });
   } catch (err) { console.error('Telegram falhou: ' + err); /* aviso é extra: nunca impede a gravação */ }
 }
 

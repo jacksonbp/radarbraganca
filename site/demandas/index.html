@@ -74,6 +74,15 @@ textarea{min-height:150px;resize:vertical}
 .again{font:inherit;font-weight:700;background:var(--ink);color:#fff;border:0;border-radius:12px;padding:12px 16px;cursor:pointer}
 .test{background:#fff6dd;border:1px solid #f0d58a;border-radius:12px;padding:10px 14px;font-size:14px;margin:16px 0 0}
 footer{color:var(--mute);font-size:13.5px;padding:26px 16px 40px;border-top:1px solid var(--hair);margin-top:30px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.addfoto{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:15px;border:2px dashed var(--hair);border-radius:14px;padding:12px 16px;cursor:pointer;background:var(--soft)}
+.addfoto:hover,#fotos:focus-visible+.addfoto{border-color:var(--ink)}
+.addfoto svg{width:22px;height:22px}
+.thumbs{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 0}
+.thumbs:empty{display:none}
+.thumb{position:relative;width:96px;height:96px;border-radius:12px;overflow:hidden;background:var(--soft)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb button{position:absolute;top:4px;right:4px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(17,26,36,.8);color:#fff;font-size:17px;line-height:1;cursor:pointer}
 @media (max-width:520px){.tipos,.row{grid-template-columns:1fr}}
 </style>
 <link rel="stylesheet" href="/assets/mobile-nav.css?v=1">
@@ -141,6 +150,14 @@ footer{color:var(--mute);font-size:13.5px;padding:26px 16px 40px;border-top:1px 
       <label class="lab" for="msg">Conte o que está acontecendo <span class="count" id="cnt">0 / 2000</span></label>
       <textarea id="msg" name="mensagem" maxlength="2000" required placeholder="Descreva o problema: o que é, desde quando, quem é afetado."></textarea>
       <p class="hint">Não escreva o nome de outras pessoas nem acusações sem prova. Descreva os fatos.</p>
+    </fieldset>
+
+    <fieldset>
+      <span class="lab">Fotos <span class="opt">(opcional, até 3)</span></span>
+      <input class="sr" type="file" id="fotos" accept="image/*" multiple>
+      <label class="addfoto" for="fotos" id="addfoto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Adicionar foto</label>
+      <div class="thumbs" id="thumbs" aria-live="polite"></div>
+      <p class="hint">Uma foto ajuda muito: buraco, lixo, mato, vazamento… Evite rosto de pessoas e placa de carro. A localização gravada na foto é apagada antes do envio.</p>
     </fieldset>
 
     <fieldset>
@@ -257,7 +274,8 @@ $('f').addEventListener('submit', async e=>{
     nome:$('nome').value.trim(), contato:$('contato').value.trim(),
     autoriza_nome:$('mostrar').checked?'Sim':'Não', pagina:location.href
   };
-  const btn=$('btn'); btn.disabled=true; btn.textContent='Enviando…';
+  if(FOTOS.length) dados.fotos=FOTOS.map(u=>u.split(',')[1]);
+  const btn=$('btn'); btn.disabled=true; btn.textContent=FOTOS.length?'Enviando fotos…':'Enviando…';
   try{
     if(ENDERECO){
       // text/plain evita bloqueio de segurança do navegador com o Google.
@@ -280,7 +298,43 @@ $('f').addEventListener('submit', async e=>{
   }finally{ btn.disabled=false; btn.textContent='Enviar'; }
 });
 
-$('again').addEventListener('click',()=>{ $('f').reset(); $('cnt').textContent='0 / 2000'; $('done').style.display='none'; $('f').style.display='block'; window.scrollTo({top:0}); });
+// ---------- Fotos: reduz no próprio celular (máx. 1600 px, JPEG) e apaga os dados de GPS
+const FOTOS=[], MAX_FOTOS=3;
+function reduzFoto(file){
+  return new Promise((ok,falha)=>{
+    const url=URL.createObjectURL(file), img=new Image();
+    img.onload=()=>{
+      const k=Math.min(1,1600/Math.max(img.naturalWidth,img.naturalHeight));
+      const c=document.createElement('canvas'); c.width=Math.round(img.naturalWidth*k); c.height=Math.round(img.naturalHeight*k);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(url);
+      ok(c.toDataURL('image/jpeg',0.8));
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url); falha(new Error('imagem'));};
+    img.src=url;
+  });
+}
+function mostrarFotos(){
+  const t=$('thumbs'); t.innerHTML='';
+  FOTOS.forEach((u,i)=>{
+    const d=document.createElement('div'); d.className='thumb';
+    const im=document.createElement('img'); im.src=u; im.alt='Foto '+(i+1);
+    const b=document.createElement('button'); b.type='button'; b.textContent='×'; b.setAttribute('aria-label','Tirar a foto '+(i+1));
+    b.addEventListener('click',()=>{FOTOS.splice(i,1); mostrarFotos();});
+    d.append(im,b); t.appendChild(d);
+  });
+  $('addfoto').style.display=FOTOS.length>=MAX_FOTOS?'none':'';
+}
+$('fotos').addEventListener('change',async e=>{
+  const err=$('err'); err.textContent='';
+  for(const file of [...e.target.files]){
+    if(FOTOS.length>=MAX_FOTOS){ err.textContent='Dá para enviar no máximo '+MAX_FOTOS+' fotos.'; break; }
+    if(!/^image\//.test(file.type)&&!/\.(jpe?g|png|heic|heif|webp)$/i.test(file.name)) continue;
+    try{ FOTOS.push(await reduzFoto(file)); }catch(_){ err.textContent='Não conseguimos abrir uma das fotos. Tente outra.'; }
+  }
+  e.target.value=''; mostrarFotos();
+});
+
+$('again').addEventListener('click',()=>{ FOTOS.length=0; mostrarFotos(); $('f').reset(); $('cnt').textContent='0 / 2000'; $('done').style.display='none'; $('f').style.display='block'; window.scrollTo({top:0}); });
 </script>
 </body>
 </html>
