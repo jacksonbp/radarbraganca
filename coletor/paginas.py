@@ -98,7 +98,7 @@ def pagina(ativa, titulo, descricao, url, corpo, init, imagem="/capa.jpg", titul
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/radar.css?v={VER('radar.css')}">
-<link rel="stylesheet" href="/assets/mobile-nav.css?v=3">
+<link rel="stylesheet" href="/assets/mobile-nav.css?v=4">
 {extra_head}</head>
 <body>
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
@@ -568,20 +568,20 @@ if os.path.exists(pd):
     h = re.sub(r"<!-- menu:ini -->.*?<!-- menu:fim -->\n?", "", h, flags=re.S)
     itens = "".join(f'<li{" class=cta" if k == "voz" else ""}><a href="{hh}"{" aria-current=page" if k == "voz" else ""}>{n}</a></li>' for k, hh, n in MENU)
     css = (
-        '.rb-nav{position:sticky;top:0;z-index:15;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid #e4e8ec;font-family:"Inter",system-ui,sans-serif}'
+        '.rb-nav{position:sticky;top:0;z-index:15;background:rgba(236,242,236,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid #d3ded3;font-family:"Inter",system-ui,sans-serif}'
         '.rb-nav>div{max-width:1120px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:18px;min-height:62px;flex-wrap:wrap}'
         '.rb-nav .brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:#111a24;font-family:"Archivo","Inter",sans-serif;font-weight:900;letter-spacing:-.02em;line-height:.9;font-size:15px}'
         '.rb-nav .brand svg{width:34px;height:34px}.rb-nav .brand b{display:block}.rb-nav .brand b+b{color:#e5322d}'
         '.rb-nav ul{display:flex;gap:4px;list-style:none;margin:0 0 0 auto;padding:0}'
         '.rb-nav li a{display:block;padding:9px 12px;border-radius:10px;text-decoration:none;color:#111a24;font-weight:600;font-size:15px;white-space:nowrap}'
-        '.rb-nav li a:hover{background:#f4f6f8}.rb-nav .cta a,.rb-nav .cta a:hover{background:#e5322d;color:#fff}'
+        '.rb-nav li a:hover{background:#e1e9e1}.rb-nav .cta a,.rb-nav .cta a:hover{background:#e5322d;color:#fff}'
         '@media(prefers-color-scheme:dark){.rb-nav{background:rgba(14,20,27,.92);border-bottom-color:#26333f}.rb-nav .brand,.rb-nav li a{color:#e9eef3}.rb-nav li a:hover{background:#1b2530}.rb-nav .cta a,.rb-nav .cta a:hover{background:#d8332e}}'
-        '@media(max-width:899px){.rb-nav>div{gap:0;padding-top:8px}.rb-nav ul{margin:0 -16px;padding:6px 16px 8px;width:calc(100% + 32px);overflow-x:auto;scrollbar-width:none}.rb-nav li a{padding:7px 11px;font-size:14px;background:var(--soft,#f4f6f8)}.rb-nav .cta a{background:#e5322d}}'
+        '@media(max-width:899px){.rb-nav>div{gap:0;padding-top:8px}.rb-nav ul{margin:0 -16px;padding:6px 16px 8px;width:calc(100% + 32px);overflow-x:auto;scrollbar-width:none}.rb-nav li a{padding:7px 11px;font-size:14px;background:var(--soft,#e1e9e1)}.rb-nav .cta a{background:#e5322d}}'
         '.top .back{display:none}')
     bloco = ('<!-- menu:ini --><style>' + css + '</style><nav class="rb-nav" aria-label="Menu principal"><div><a class="brand" href="/">'
              + LOGO + '<span><b>RADAR</b><b>BRAGANÇA</b></span></a><ul class="desktop-nav">' + itens + '</ul>' + menu_mobile("voz") + '</div></nav><!-- menu:fim -->\n')
     if "/assets/mobile-nav.css?" not in h:
-        h = h.replace("</head>", '<link rel="stylesheet" href="/assets/mobile-nav.css?v=3">\n' + "</head>", 1)
+        h = h.replace("</head>", '<link rel="stylesheet" href="/assets/mobile-nav.css?v=4">\n' + "</head>", 1)
     h = h.replace("<body>\n", "<body>\n" + bloco, 1)
     open(pd, "w", encoding="utf-8").write(dados_formulario(h, D))
 

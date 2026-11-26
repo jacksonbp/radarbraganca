@@ -1,6 +1,6 @@
 :root{
   /* Cada cor tem uma função fixa: azul = pedido no bairro, laranja = cobrança, rosa = homenagem, verde = lei, cinza = outros. */
-  --paper:#fff; --card:#fff; --inv:#111a24; --nav:rgba(255,255,255,.94); --warn-t:var(--warn-t); --warn-h:var(--warn-h); --ok-t:#e3f6ee; --no-t:#fde9e7; --dot:#c3cad3; --ink:#111a24; --mute:#5d6976; --hair:#e4e8ec; --soft:#f4f6f8;
+  --paper:#ecf2ec; --card:#fff; --inv:#111a24; --nav:rgba(236,242,236,.94); --warn-t:var(--warn-t); --warn-h:var(--warn-h); --ok-t:#e3f6ee; --no-t:#fde9e7; --dot:#c3cad3; --ink:#111a24; --mute:#5d6976; --hair:#d3ded3; --soft:#e1e9e1;
   --b:#1f5fd6; --b-t:#e9f0ff; --c:#d2570f; --c-t:#fff0e5; --h:#c42a6e; --h-t:#ffe9f2; --l:#0b8758; --l-t:#e3f6ee; --o:#5d6976; --o-t:#eef1f4;
   --red:#e5322d; --bad:#cf3a2e; --warn:#d99a2b;
   --shadow:0 1px 2px rgba(17,26,36,.05),0 10px 26px -14px rgba(17,26,36,.18);
