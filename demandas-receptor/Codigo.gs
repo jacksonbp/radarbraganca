@@ -267,6 +267,17 @@ function receberNatal(d) {
     aba.getRange(1, 1, 1, COLUNAS_NATAL.length).setFontWeight('bold').setBackground('#0e5a3a').setFontColor('#ffffff');
   }
   aba.appendRow([new Date(), nome, contato, bairro, ajuda, recado, 'Novo']);
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const token = props.getProperty('TELEGRAM_TOKEN'), chat = props.getProperty('TELEGRAM_CHAT');
+    if (token && chat) enviarTelegram(token, chat, [
+      '🎄 Jantar de Natal · novo voluntário',
+      '👤 ' + nome + ' · 📱 ' + contato + (bairro ? ' · 📍 ' + bairro : ''),
+      '🙌 ' + (ajuda || '-'),
+      recado ? '💬 ' + recado : '',
+      'Total na lista: ' + (aba.getLastRow() - 1)
+    ].filter(Boolean).join('\n'));
+  } catch (err) { console.warn('Telegram falhou: ' + err); }
   MailApp.sendEmail({
     to: AVISAR,
     subject: '[Jantar de Natal] Novo voluntário: ' + nome,
