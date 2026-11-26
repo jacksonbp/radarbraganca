@@ -19,6 +19,7 @@ function doPost(e) {
     const d = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     if (d.site_web) return resposta({ ok: true }); // armadilha de robô
     if (d.formulario === 'natal') return receberNatal(d);
+    if (d.formulario === 'robo') return receberRobo(d);
     if (!d.mensagem || String(d.mensagem).trim().length < 15) return resposta({ ok: false, erro: 'mensagem curta' });
 
     // Limite simples contra enxurrada: no máximo 60 envios por hora no total.
@@ -434,4 +435,86 @@ function verTelegram() {
 function prepararPlanilha() {
   pegarAba();
   MailApp.sendEmail(AVISAR, '[Voz do Bairro] Teste de aviso', 'Se você recebeu este e-mail, os avisos estão funcionando.');
+}
+
+// ------------------------------------------------------------------ Robô do site (GitHub Actions)
+// Ao fim de cada rodada, o GitHub manda só o número dela. Aqui conferimos no próprio GitHub
+// o que aconteceu (texto vindo de fora nunca vai para o Telegram), anotamos na aba "Robô do site"
+// e avisamos no Telegram quando o site foi atualizado ou quando algo falhou.
+const REPO = 'jacksonbp/radarbraganca';
+const ABA_ROBO = 'Robô do site';
+const SITE = 'https://www.bragancaterraquerida.com.br/';
+
+function receberRobo(d) {
+  const id = String(d.rodada || '');
+  if (!/^\d{6,15}$/.test(id)) return resposta({ ok: false, erro: 'rodada inválida' });
+  const cache = CacheService.getScriptCache();
+  if (cache.get('robo_' + id)) return resposta({ ok: true, repetido: true });
+  const n = Number(cache.get('robo_n') || 0);
+  if (n > 40) return resposta({ ok: false, erro: 'muitos avisos' });
+  cache.put('robo_n', String(n + 1), 3600);
+
+  const pegar = url => {
+    const r = UrlFetchApp.fetch(url, { muteHttpExceptions: true, headers: { Accept: 'application/vnd.github+json' } });
+    if (r.getResponseCode() !== 200) throw new Error('GitHub respondeu ' + r.getResponseCode());
+    return JSON.parse(r.getContentText());
+  };
+  let run, jobs;
+  try {
+    run = pegar('https://api.github.com/repos/' + REPO + '/actions/runs/' + id);
+    jobs = pegar('https://api.github.com/repos/' + REPO + '/actions/runs/' + id + '/jobs').jobs || [];
+  } catch (err) {
+    console.error('Robô: não consegui consultar o GitHub: ' + err);
+    return resposta({ ok: false, erro: 'GitHub indisponível' });
+  }
+  if (!run || run.repository && run.repository.full_name !== REPO) return resposta({ ok: false, erro: 'rodada de outro lugar' });
+  cache.put('robo_' + id, '1', 21600);
+
+  const outros = jobs.filter(j => j.name !== 'avisar');
+  const ruim = outros.find(j => ['failure', 'timed_out'].indexOf(j.conclusion) >= 0);
+  const passo = ruim ? ((ruim.steps || []).find(s => s.conclusion === 'failure') || {}).name || ruim.name : '';
+  let resultado;
+  if (ruim) resultado = 'Falhou';
+  else if (outros.length && outros.every(j => j.conclusion === 'success')) resultado = 'Publicado';
+  else if (outros.some(j => j.conclusion === 'cancelled')) resultado = 'Cancelada';
+  else resultado = 'Pulada (rodada mais nova publica)';
+
+  const tipo = run.event === 'schedule' ? 'Coleta diária' : run.event === 'push' ? 'Envio de mudança' : 'Rodada manual';
+  const mudanca = run.event === 'push' && run.head_commit ? String(run.head_commit.message || '').split(BR)[0].slice(0, 200) : '';
+  const minutos = Math.max(1, Math.round((Date.now() - new Date(run.run_started_at || run.created_at).getTime()) / 60000));
+  const nome = (run.name || 'Robô') + ' #' + run.run_number;
+
+  try {
+    const pl = SpreadsheetApp.openById(PLANILHA_ID);
+    let aba = pl.getSheetByName(ABA_ROBO);
+    if (!aba) {
+      aba = pl.insertSheet(ABA_ROBO);
+      aba.appendRow(['Quando', 'Rodada', 'Tipo', 'Resultado', 'Passo que falhou', 'Mudança', 'Minutos', 'Detalhes']);
+      aba.getRange(1, 1, 1, 8).setFontWeight('bold').setBackground('#111a24').setFontColor('#ffffff');
+      aba.setFrozenRows(1);
+    }
+    aba.appendRow([new Date(), nome, tipo, resultado, passo, mudanca, minutos, run.html_url]);
+  } catch (err) { console.error('Robô: não gravou na planilha: ' + err); }
+
+  // Telegram só quando interessa: site atualizado ou falha.
+  let texto = '';
+  if (resultado === 'Publicado') {
+    texto = ['✅ Site atualizado', nome + ' · ' + tipo + ' · ' + minutos + ' min',
+      mudanca ? 'Mudança: ' + mudanca : '', SITE].filter(Boolean).join(BR);
+  } else if (resultado === 'Falhou') {
+    texto = ['❌ O robô do site falhou', nome + ' · ' + tipo,
+      'Passo: ' + passo, mudanca ? 'Mudança: ' + mudanca : '',
+      'O site continua no ar com a última versão boa.', 'Detalhes: ' + run.html_url].filter(Boolean).join(BR);
+  }
+  if (texto) {
+    try {
+      const props = PropertiesService.getScriptProperties();
+      const token = props.getProperty('TELEGRAM_TOKEN'), chat = props.getProperty('TELEGRAM_CHAT');
+      if (token && chat) {
+        const r = enviarTelegram(token, chat, texto);
+        if (!r.ok) console.error('Telegram recusou: ' + JSON.stringify(r));
+      }
+    } catch (err) { console.error('Robô: Telegram falhou: ' + err); }
+  }
+  return resposta({ ok: true, resultado: resultado });
 }

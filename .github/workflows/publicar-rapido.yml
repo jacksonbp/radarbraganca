@@ -43,3 +43,17 @@ jobs:
     steps:
       - id: deploy
         uses: actions/deploy-pages@v5
+
+  # Aviso no Telegram. O robô manda só o número da rodada; a planilha confere no próprio GitHub
+  # se deu certo ou falhou e só então avisa (ninguém consegue mandar aviso falso por esse caminho).
+  avisar:
+    needs: [empacotar, publicar]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Avisar no Telegram
+        run: |
+          curl -sS -L --max-time 90 -H "Content-Type: text/plain" \
+            --data '{"formulario":"robo","rodada":"${{ github.run_id }}"}' \
+            "https://script.google.com/macros/s/AKfycbx0kbVSCYo3pb3Xj8LdKBKomcxVt-quGMtMc9zs2XYX26IxU4zHliCuPp41OJla03UcGA/exec" || echo "Aviso não saiu; não muda nada no site"
