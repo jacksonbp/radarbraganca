@@ -223,11 +223,20 @@ def coletar_documentos(V):
 
 
 # ---------------------------------------------------------------- classificação
+# Dar nome a rua ou prédio ("Dispõe sobre denominação de bem público", "Passa a denominar-se…").
+# Não vale "via sem denominação oficial" nem "loteamento denominado X": aí é só o endereço de um pedido.
+NOMEIA = r"\bdenominacao (?:a|ao|aos|de|do|da|dos|das)\b|\bda denominacao\b|\bdenominar-se\b|^denomina\b|\bdenomina (?:a|o|as|os|de|do|da)\b|\bda nome\b"
+
+
+def sem_denominacao(t):
+    return re.sub(r"\bsem denominacao(?: oficial)?\b", " ", t)
+
+
 def classificar(doc):
     """Mesma regra para todos. Devolve o grupo: b pedido no bairro, c pergunta/cobrança, h homenagem, l lei, o outros."""
-    t, tipo = norm(doc["txt"]), norm(doc["tipo"])
+    t, tipo = sem_denominacao(norm(doc["txt"])), norm(doc["tipo"])
     homen = re.search(r"congratula|aplauso|parabeniz|parabens|cumpriment|felicita|enaltec|agradec|louvor|homenag|pesar|falecimento|condolenc|titulo de cidadao|cidadao bragantino|cidada bragantina|cidadania bragantina|"
-                      r"medalha|diploma|honra ao merito|denomina|da nome|da denominacao|institui o dia|institui a semana|institui o mes|dia municipal|semana municipal|calendario oficial|data comemorativa|reconhecimento", t)
+                      r"medalha|diploma|honra ao merito|" + NOMEIA + r"|institui o dia|institui a semana|institui o mes|dia municipal|semana municipal|calendario oficial|data comemorativa|reconhecimento", t)
     if tipo.startswith("indicac"):
         return "b"
     if tipo.startswith("pedido de informac"):
@@ -261,14 +270,14 @@ TEMAS = [  # assunto do pedido, pelas palavras do texto oficial (ordem importa)
 TEMAS_H = [
     ("pes", r"pesar|falecimento|condolenc"),
     ("tit", r"titulo|medalha|diploma|honra ao merito|cidadao bragantino|cidada bragantina"),
-    ("nom", r"denomina|da nome"),
+    ("nom", NOMEIA),
     ("dat", r"institui o dia|institui a semana|institui o mes|dia municipal|semana municipal|calendario|data comemorativa"),
     ("par", r"."),
 ]
 
 
 def tema(doc, g):
-    t = norm(doc["txt"])
+    t = sem_denominacao(norm(doc["txt"]))
     for k, rx in (TEMAS_H if g == "h" else TEMAS):
         if re.search(rx, t):
             return k
